@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Dependencies\gizmos\AIE\Gizmos.cpp" />
+    <ClCompile Include="..\Dependencies\gl_core\gl_core_4_4.cpp" />
+    <ClCompile Include="Source\Engine\Objects\BaseObject.cpp" />
+    <ClCompile Include="Source\Engine\Renderer\FBO_RenderScreen.cpp" />
+    <ClCompile Include="Source\Engine\Renderer\FBOMesh.cpp" />
+    <ClCompile Include="Source\Engine\Renderer\SkyBox.cpp" />
+    <ClCompile Include="Source\Engine\InputManager.cpp" />
+    <ClCompile Include="Source\Engine\Particles\GPUParticleEmitter.cpp" />
+    <ClCompile Include="Source\Engine\Particles\CPUParticleEmitter.cpp" />
+    <ClCompile Include="Source\Engine\Objects\FBXModel.cpp" />
+    <ClCompile Include="Source\Engine\GUI\AntTweak.cpp" />
+    <ClCompile Include="Source\Engine\Lighting.cpp" />
+    <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Cameras\BaseCamera.cpp" />
+    <ClCompile Include="Source\Cameras\FlyCamera.cpp" />
+    <ClCompile Include="Source\Engine\Core\GLApplication.cpp" />
+    <ClCompile Include="Source\Engine\Objects\ObjectLoader.cpp" />
+    <ClCompile Include="Source\Engine\Objects\ObjMesh.cpp" />
+    <ClCompile Include="Source\Engine\Core\ShaderHandler.cpp" />
+    <ClCompile Include="Tutorials\Tutorial12.cpp" />
+    <ClCompile Include="Tutorials\Tutorial01.cpp" />
+    <ClCompile Include="Tutorials\Tutorial02.cpp" />
+    <ClCompile Include="Tutorials\Tutorial03.cpp" />
+    <ClCompile Include="Tutorials\Tutorial04.cpp" />
+    <ClCompile Include="Tutorials\Tutorial05.cpp" />
+    <ClCompile Include="Tutorials\Tutorial06.cpp" />
+    <ClCompile Include="Tutorials\Tutorial07.cpp" />
+    <ClCompile Include="Tutorials\Tutorial08.cpp" />
+    <ClCompile Include="Tutorials\Tutorial10.cpp" />
+    <ClCompile Include="Source\Engine\Textures\TextureHandler.cpp" />
+    <ClCompile Include="Tutorials\Tutorial09.cpp" />
+    <ClCompile Include="Tutorials\Tutorial11.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Engine\Objects\BaseObject.h" />
+    <ClInclude Include="Source\Engine\Renderer\FBO_RenderScreen.h" />
+    <ClInclude Include="Source\Engine\Renderer\FBOMesh.h" />
+    <ClInclude Include="Source\Engine\Renderer\SkyBox.h" />
+    <ClInclude Include="Source\Engine\Culling.h" />
+    <ClInclude Include="Source\Engine\InputManager.h" />
+    <ClInclude Include="Source\Engine\Particles\GPUParticleEmitter.h" />
+    <ClInclude Include="Source\Engine\Particles\CPUParticleEmitter.h" />
+    <ClInclude Include="Source\Engine\Objects\FBXModel.h" />
+    <ClInclude Include="Source\Engine\GUI\AntTweak.h" />
+    <ClInclude Include="Source\Engine\Objects\FBXAnimation.h" />
+    <ClInclude Include="Source\Engine\Lighting.h" />
+    <ClInclude Include="Source\Cameras\BaseCamera.h" />
+    <ClInclude Include="Source\Cameras\FlyCamera.h" />
+    <ClInclude Include="Source\Engine\Core\GLApplication.h" />
+    <ClInclude Include="Source\Engine\Objects\ObjectLoader.h" />
+    <ClInclude Include="Source\Engine\Objects\ObjMesh.h" />
+    <ClInclude Include="Source\Engine\Core\ShaderHandler.h" />
+    <ClInclude Include="Source\Engine\Particles\ParticleTypes.h" />
+    <ClInclude Include="Tutorials\Tutorial12.h" />
+    <ClInclude Include="Tutorials\Tutorial01.h" />
+    <ClInclude Include="Tutorials\Tutorial02.h" />
+    <ClInclude Include="Tutorials\Tutorial03.h" />
+    <ClInclude Include="Tutorials\Tutorial04.h" />
+    <ClInclude Include="Tutorials\Tutorial05.h" />
+    <ClInclude Include="Tutorials\Tutorial06.h" />
+    <ClInclude Include="Tutorials\Tutorial07.h" />
+    <ClInclude Include="Tutorials\Tutorial08.h" />
+    <ClInclude Include="Tutorials\Tutorial10.h" />
+    <ClInclude Include="Source\Engine\Textures\TextureHandler.h" />
+    <ClInclude Include="Tutorials\Tutorial09.h" />
+    <ClInclude Include="Tutorials\Tutorial11.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{68C8DABB-A9CA-41A7-BE9B-BE809F13DF60}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>OpenGL_Intro</RootNamespace>
+    <ProjectName>GenGein</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(Configuration)\Tmp\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_SWIZZLE;GLM_FORCE_PURE;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\stb-master;$(SolutionDir)Dependencies\gl_core;$(SolutionDir)Dependencies\gizmos;$(SolutionDir)Dependencies\AntTweak\include;$(SolutionDir)Dependencies\FBXLoader\include;$(ProjectDir)\Source\;</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw\lib12;$(SolutionDir)Dependencies\AntTweak\lib;$(SolutionDir)Dependencies\FBXLoader\lib;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;FBXLoader_d.lib;AntTweakBar.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Profile>true</Profile>
+    </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

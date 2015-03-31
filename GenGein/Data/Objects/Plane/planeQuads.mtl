@@ -1,0 +1,7 @@
+# Plane MTL file
+newmtl texture
+Kd 0 0 0
+map_Kd rock_diffuse.tga
+map_Ns rock_normal.tga
+map_Ks rock_specular.tga
+map_d rock_displacement.tga
