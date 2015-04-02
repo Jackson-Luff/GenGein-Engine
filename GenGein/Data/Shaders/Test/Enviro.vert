@@ -16,7 +16,7 @@ void main()
 {
 	vec4 Position = vec4(vertPosition,1.0);
 	vec4 texel = texture(heightMap, vertCoords);
-	Position.y = -25 + (texel.y * 75);
+//	Position.y = -25 + (texel.y * 75);
 
 	gl_Position = Projection * View * Position;
 

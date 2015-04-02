@@ -30,6 +30,7 @@
     <ClCompile Include="Source\Engine\Objects\ObjectLoader.cpp" />
     <ClCompile Include="Source\Engine\Objects\ObjMesh.cpp" />
     <ClCompile Include="Source\Engine\Core\ShaderHandler.cpp" />
+    <ClCompile Include="Tutorials\Tutorial13.cpp" />
     <ClCompile Include="Tutorials\Tutorial12.cpp" />
     <ClCompile Include="Tutorials\Tutorial01.cpp" />
     <ClCompile Include="Tutorials\Tutorial02.cpp" />
@@ -64,6 +65,7 @@
     <ClInclude Include="Source\Engine\Objects\ObjMesh.h" />
     <ClInclude Include="Source\Engine\Core\ShaderHandler.h" />
     <ClInclude Include="Source\Engine\Particles\ParticleTypes.h" />
+    <ClInclude Include="Tutorials\Tutorial13.h" />
     <ClInclude Include="Tutorials\Tutorial12.h" />
     <ClInclude Include="Tutorials\Tutorial01.h" />
     <ClInclude Include="Tutorials\Tutorial02.h" />

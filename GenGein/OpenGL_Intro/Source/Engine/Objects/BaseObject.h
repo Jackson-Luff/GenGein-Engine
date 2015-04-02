@@ -2,6 +2,8 @@
 #include <glm\glm.hpp>
 #include <glm\ext.hpp>
 
+typedef unsigned int uint;
+
 using glm::vec3;
 using glm::vec4;
 using glm::mat4;

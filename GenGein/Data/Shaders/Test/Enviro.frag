@@ -16,7 +16,7 @@ void main()
 	vec3 eyePos = World[3].xyz;
 	vec4 fogColour = vec4(0.76,0.80,0.85, 1.0);
 
-	vec4 grass = texture(grassMap, vCoords);
+	vec4 grass = texture(heightMap, vCoords);
 
 	float camdist = length( eyePos - vPosition.xyz );
 	float fogMin = 400.0,fogMax = 500.0;

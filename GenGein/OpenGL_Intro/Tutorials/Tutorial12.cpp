@@ -31,11 +31,11 @@ void Tutorial12::CreatePerlinPlane(c_uint a_dim)
 	// Populate verts with row + cols input
 	VertexData* verts = new VertexData[a_dim * a_dim];
 
-	for (uint r = 0; r <a_dim; ++r)
+	for (GLuint r = 0; r <a_dim; ++r)
 	{
-		for (uint c = 0; c < a_dim; ++c)
+		for (GLuint c = 0; c < a_dim; ++c)
 		{
-			verts[r * a_dim + c].position = glm::vec4(-center + (c * scale), 0, -center + (r * scale), 0);
+			verts[r * a_dim + c].position = glm::vec4(-center + (float)c * scale, 0, -center + (float)r * scale, 0);
 			verts[r * a_dim + c].uv = glm::vec2((float)r / a_dim, (float)c / a_dim);
 		}
 	}
@@ -44,9 +44,9 @@ void Tutorial12::CreatePerlinPlane(c_uint a_dim)
 	GLuint* indices = new GLuint[((a_dim - 1) * (a_dim - 1) * 6)];
 	m_indexCount = 0;
 
-	for (uint r = 0; r < (a_dim - 1); ++r)
+	for (GLuint r = 0; r < (a_dim - 1); ++r)
 	{
-		for (uint c = 0; c < (a_dim - 1); ++c)
+		for (GLuint c = 0; c < (a_dim - 1); ++c)
 		{
 			// triangle 1
 			indices[m_indexCount++] = r * a_dim + c;
@@ -198,19 +198,20 @@ void Tutorial12::StartUp()
 	//Initialise camera
 	InitialiseFlyCamera(5.0f, 20.0f, 0.5f,
 		glm::vec3(-571, 0.5, 342), glm::vec3(-426, 0, -374));
-	
-	ShaderHandler::LoadShaderProgram("PerlinNoise",
-		"Data/Shaders/ProGenReGen.vert",
-		"Data/Shaders/ProGenReGen.frag");
-	m_pMainProgramID = &ShaderHandler::GetShader("PerlinNoise");
-
-	ShaderHandler::LoadShaderProgram("EnviroMap",
-		"Data/Shaders/Test/Enviro.vert",
-		"Data/Shaders/Test/Enviro.frag");
-	m_enviroProg = &ShaderHandler::GetShader("EnviroMap");
-
-	CreatePerlinPlane(2);
-	CreateEnviroGrid(128);
+	//
+	//ShaderHandler::LoadShaderProgram("PerlinNoise",
+	//	"Data/Shaders/ProGenReGen.vert",
+	//	"Data/Shaders/ProGenReGen.frag");
+	//m_pMainProgramID = &ShaderHandler::GetShader("PerlinNoise");
+	//
+	//ShaderHandler::LoadShaderProgram("EnviroMap",
+	//	"Data/Shaders/Test/Enviro.vert",
+	//	"Data/Shaders/Test/Enviro.frag");
+	//m_enviroProg = &ShaderHandler::GetShader("EnviroMap");
+	//
+	//CreatePerlinPlane(2);
+	//CreateEnviroGrid(128);
+	//CreateTexture(128);
 }
 
 // Destroy things
@@ -230,15 +231,13 @@ void Tutorial12::Render()
 {
 	GLApplication::Render();
 	
-	TextureHandler::RenderAllTextures();
-
 	//glUseProgram(*m_pMainProgramID);
 	//glBindVertexArray(m_VAO);
 	//glBindBuffer(GL_ARRAY_BUFFER, m_VAO);
 	//glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_INT, 0);
 	
-	glUseProgram(*m_enviroProg);
-	glBindVertexArray(m_enviroVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, m_enviroVAO);
-	glDrawElements(GL_TRIANGLES, m_enviroIndexCount, GL_UNSIGNED_INT, 0);
+	//glUseProgram(*m_enviroProg);
+	//glBindVertexArray(m_enviroVAO);
+	//glBindBuffer(GL_ARRAY_BUFFER, m_enviroVAO);
+	//glDrawElements(GL_TRIANGLES, m_enviroIndexCount, GL_UNSIGNED_INT, 0);
 }

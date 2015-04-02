@@ -123,7 +123,7 @@ float pattern( in vec2 p, out vec2 q, out vec2 r , in float time)
 {
     float l = 2.3;
     float g = 0.4;
-    int oc = 10;
+    int oc = 6;
 
     q.x = fbm( p + vec2(time,time),oc,l,g);
     q.y = fbm( p + vec2(5.2*time,1.3*time) ,oc,l,g);
@@ -141,18 +141,18 @@ void main()
 	vec4 aqua 		= vec4(0,1,1,1);
 	vec4 finalColour;
 
-	//if(dist < 100)
-	//{
+	if(dist < 10)
+	{
 		//perlin data
-	//	vec2 p = (vPosition.xz+World[3].xz) * 2.0 - 1.0;
-	//	vec2 qq, r;
-	//	float result = pattern(p,qq,r,time*0.05);
-	//	vec4 perlin = vec4(result, result, result, result);
-	//	finalColour = (aqua * perlin.a);
-	//	finalColour = finalColour + (1 - perlin.a) * darkBlue;
-	//}
-	//else
-		finalColour = mix(darkBlue, aqua, dist/100);
+		vec2 p = (vPosition.xz+World[3].xz) * 2.0 - 1.0;
+		vec2 qq, r;
+		float result = pattern(p,qq,r,time*0.05);
+		vec4 perlin = vec4(result, result, result, result);
+		finalColour = (aqua * perlin.a);
+		finalColour = finalColour + (1 - perlin.a) * darkBlue;
+	}
+	else
+		finalColour = darkBlue;
 
 	gl_FragColor = finalColour;
 }

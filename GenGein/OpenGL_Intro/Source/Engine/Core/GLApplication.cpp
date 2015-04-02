@@ -42,7 +42,6 @@ GLApplication::GLApplication(c_int a_width, c_int a_height, c_charp a_title)
 
 GLApplication::~GLApplication() 
 {
-	delete m_pMainProgramID;
 	delete m_pSkyBox;
 	delete m_pBaseCamera;
 }
