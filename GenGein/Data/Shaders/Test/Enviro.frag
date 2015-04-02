@@ -4,24 +4,29 @@ in vec4 vPosition;
 in vec2 vCoords;
 
 uniform mat4 World;
-uniform sampler2D grassMap;
-uniform sampler2D heightMap;
+uniform sampler2D SandMap;
+uniform sampler2D GrassMap;
 
 uniform float time;
 
 out vec4 pixelColour;
 
+float waterHeight = 0.0;
 void main()
 {
 	vec3 eyePos = World[3].xyz;
-	vec4 fogColour = vec4(0.76,0.80,0.85, 1.0);
 
-	vec4 grass = texture(heightMap, vCoords);
-
-	float camdist = length( eyePos - vPosition.xyz );
+	float dist = length( eyePos - vPosition.xyz );
 	float fogMin = 400.0,fogMax = 500.0;
 
-	vec4 outputColour = grass;//mix(grass, stone, vPosition.y/50);
+	vec4 outColour;
+	vec4 sand = texture(SandMap, vCoords*1024/1);
+	vec4 grass = texture(GrassMap, vCoords*128/1);
 
-	pixelColour = outputColour;//mix( grass, fogColour, camdist / fogMax );
+	if(vPosition.y <= waterHeight+1)
+		outColour = mix(sand,grass, vPosition.y);
+	else
+		outColour = grass;
+
+	pixelColour = outColour;
 }

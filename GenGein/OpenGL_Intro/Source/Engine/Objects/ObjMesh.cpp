@@ -19,18 +19,6 @@ ObjMesh::ObjMesh(vec3 a_position)
 // Constructor with folder and file directory
 void ObjMesh::LoadObject( c_charp a_folderDir, c_charp a_fileName )
 {
-	/*
-	c_charp folderDir;
-	c_charp fileName;
-	bool fileNameBuff = true;
-
-	for (uint i = strlen(a_fileDir)-1; i <= 0; --i)
-	{
-		if (fileNameBuff)
-			fileName += a_fileDir[i];
-		else
-			folderDir += a_fileDir[i];
-	}*/
 
 	m_obj = new ObjectLoader( a_folderDir, a_fileName);
 
@@ -73,10 +61,10 @@ ObjMesh::~ObjMesh()
 
 void ObjMesh::ApplyDataToVertNIndexBuffers(ObjectLoader* a_obj )
 {
-	ShaderHandler::LoadShaderProgram("ParticleDrawShader",
-		"Data/Shaders/ObjShader.vert",
-		"Data/Shaders/ObjShader.frag");
-	m_programID = ShaderHandler::GetShader("ParticleDrawShader");
+	ShaderHandler::LoadShaderProgram("ObjShader",
+		"Data/Shaders/Geometry/ObjShader.vert",
+		"Data/Shaders/Geometry/ObjShader.frag");
+	m_programID = ShaderHandler::GetShader("ObjShader");
 
 	glGenVertexArrays(1, &m_VAO);
 	glBindVertexArray( m_VAO );
@@ -154,6 +142,8 @@ void ObjMesh::CalcTangentNBiNormals()
 // Draw mesh and send textures to shader
 void ObjMesh::Render()
 {
+
+
 	glUseProgram(m_programID);
 
 	//Rebind VAO

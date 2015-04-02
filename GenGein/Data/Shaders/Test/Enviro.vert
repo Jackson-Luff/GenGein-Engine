@@ -1,6 +1,6 @@
 #version 430
 
-in layout(location=0) vec3 vertPosition;
+in layout(location=0) vec4 vertPosition;
 in layout(location=1) vec2 vertCoords;
 
 out vec4 vPosition;
@@ -14,10 +14,8 @@ uniform sampler2D heightMap;
 
 void main()
 {
-	vec4 Position = vec4(vertPosition,1.0);
-	vec4 texel = texture(heightMap, vertCoords);
-//	Position.y = -25 + (texel.y * 75);
-
+	vec4 Position = vertPosition;
+	Position.y += -100/1.25 + (texture(heightMap, vertCoords).r * 100);
 	gl_Position = Projection * View * Position;
 
 	vPosition = Position;

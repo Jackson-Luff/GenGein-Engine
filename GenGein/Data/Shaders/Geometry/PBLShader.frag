@@ -36,6 +36,7 @@ out vec4 pixelColour;
 
 void main()
 {
+	/*
 	// =========== LIGHTING ============
 
 	// Diffused Light Calc's
@@ -51,7 +52,7 @@ void main()
 	vec4 specularLight = vec4(specularity, specularity, specularity, 1.0);
 
 	// =========== TEXTURES ============
-	
+
 	mat3 TBN = mat3(
 		normalize( vTangent ),
 		normalize( vBiNormal ),
@@ -59,7 +60,7 @@ void main()
 
     vec3 N = texture(normalMap, vCoords).xyz * 2 - 1;
 	float d = max( 0, dot( normalize( TBN * N ), lightVector ));
-
+	*/
 	// ============ POLISH ==============
 	pixelColour = texture(diffuseMap, vCoords);
 	//pixelColour.rgb *= d;

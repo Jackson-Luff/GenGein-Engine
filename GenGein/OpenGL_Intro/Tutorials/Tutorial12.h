@@ -3,6 +3,8 @@
 
 typedef const unsigned int c_uint;
 
+class ObjMesh;
+
 ////
 // Author: Jackson Luff
 // Name: Tutorial12
@@ -31,7 +33,6 @@ public:
 	virtual void Render();
 
 	void CreatePerlinPlane(c_uint a_dim);
-	void CreateTexture(c_uint a_dim);
 	void UpdatePerlin( const glm::vec4& camWorldMat);
 	void CreateEnviroGrid(c_uint a_dim);
 private:
@@ -51,4 +52,6 @@ private:
 
 	uint* m_enviroProg;
 	uint m_enviroIndexCount, m_enviroVAO;
+
+	ObjMesh* m_palmTree;
 };

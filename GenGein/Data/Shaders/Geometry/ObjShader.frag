@@ -32,7 +32,7 @@ out vec4 pixelColour;
 
 void main()
 {
-	
+
 	// =========== LIGHTING ============
 
 	// Diffused Light Calc's
@@ -49,7 +49,7 @@ void main()
 	vec4 specularLight = vec4(specularity, specularity, specularity, 1.0);
 
 	// =========== TEXTURES ============
-	
+
 	mat3 TBN = mat3(
 		normalize( vTangent ),
 		normalize( vBiNormal ),

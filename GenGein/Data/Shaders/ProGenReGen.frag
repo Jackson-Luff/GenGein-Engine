@@ -104,12 +104,14 @@ float cnoise(vec2 P)
 	return 2.3 * n_xy;
 }
 
-float fbm(vec2 P, int octaves, float lacunarity, float gain)
+float fbm(vec2 P, float lacunarity, float gain)
 {
 	float sum = 0.0;
 	float amp = 1.0;
 	vec2 pp = P;
+	const int octaves = 6;
 	int i;
+
 	for(i = 0; i < octaves; i+=1)
 	{
 		amp *= gain;
@@ -123,15 +125,14 @@ float pattern( in vec2 p, out vec2 q, out vec2 r , in float time)
 {
     float l = 2.3;
     float g = 0.4;
-    int oc = 6;
 
-    q.x = fbm( p + vec2(time,time),oc,l,g);
-    q.y = fbm( p + vec2(5.2*time,1.3*time) ,oc,l,g);
+    q.x = fbm( p + vec2(time,time),l,g);
+    q.y = fbm( p + vec2(5.2*time,1.3*time),l,g);
 
-    r.x = fbm( p + 4.0*q + vec2(1.7,9.2),oc,l,g );
-    r.y = fbm( p + 4.0*q + vec2(8.3,2.8) ,oc,l,g);
+    r.x = fbm( p + 4.0*q + vec2(1.7,9.2),l,g );
+    r.y = fbm( p + 4.0*q + vec2(8.3,2.8),l,g);
 
-	return fbm( (p + 4.0 * r) , oc, l, g);
+	return fbm( (p + 4.0 * r) , l, g);
 }
 
 void main()
@@ -141,18 +142,16 @@ void main()
 	vec4 aqua 		= vec4(0,1,1,1);
 	vec4 finalColour;
 
-	if(dist < 10)
-	{
-		//perlin data
-		vec2 p = (vPosition.xz+World[3].xz) * 2.0 - 1.0;
-		vec2 qq, r;
-		float result = pattern(p,qq,r,time*0.05);
-		vec4 perlin = vec4(result, result, result, result);
-		finalColour = (aqua * perlin.a);
-		finalColour = finalColour + (1 - perlin.a) * darkBlue;
-	}
-	else
-		finalColour = darkBlue;
+	//perlin data
+	vec2 p = (vPosition.xz) * 2.0 - 1.0;
+	vec2 qq, r;
+	float result = pattern(p,qq,r,time*0.05);
+	vec4 perlin = vec4(result, result, result, result);
+	finalColour = (aqua * perlin.a);
+	finalColour = finalColour + (1 - perlin.a) * darkBlue;
+
+	finalColour.a = 0.75;
+
 
 	gl_FragColor = finalColour;
 }

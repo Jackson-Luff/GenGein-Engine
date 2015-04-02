@@ -34,8 +34,8 @@ ObjectLoader::ObjectLoader( c_string a_folderName, c_string a_fileName)
 	loadObjects( m_folderDirectory + "/" + a_fileName+ ".obj");
 
 	ShaderHandler::LoadShaderProgram("ObjShader",
-		"Data/Shaders/ObjShader.vert",
-		"Data/Shaders/ObjShader.frag");
+		"Data/Shaders/Geometry/ObjShader.vert",
+		"Data/Shaders/Geometry/ObjShader.frag");
 }
 							
 ObjectLoader::ObjectLoader( c_string a_folderName, c_string a_fileName, c_string a_textureName ) 
@@ -215,7 +215,7 @@ void ObjectLoader::addIndices( c_string a_str )
 	v--; u--; n--;
 
 	//Apply indexed triangle(s)
-	if(v.z >= 0)
+	if(v.x >= 0)
 	{
 		std::string key;
 
