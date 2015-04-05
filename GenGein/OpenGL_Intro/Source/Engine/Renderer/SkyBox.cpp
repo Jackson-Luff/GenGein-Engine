@@ -2,7 +2,7 @@
 #include <gl_core_4_4.h>
 #include <stb\stb_image.h>
 #include "Engine\Core\ShaderHandler.h"
-#include "Engine\Textures\TextureHandler.h"
+#include "Engine\Renderer\TextureHandler.h"
 #include "Skybox.h"
 
 SkyBox::SkyBox()

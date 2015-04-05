@@ -1,9 +1,10 @@
+#include <string>
 #include <gl_core_4_4.h>
 #include <glm\glm.hpp>
 #include <glm\ext.hpp>
 #include <GLFW\glfw3.h>
 
-#include "Engine\Textures\TextureHandler.h"
+#include "Engine\Renderer\TextureHandler.h"
 #include "Engine\Core\ShaderHandler.h"
 #include "Engine\GUI\AntTweak.h"
 #include "Engine\Renderer\SkyBox.h"
@@ -109,6 +110,12 @@ void GLApplication::StartUp()
 
 void GLApplication::DebugControls()
 {
+	if (glfwGetKey(m_pWindow, GLFW_KEY_O))
+	{
+		int seed = std::atoi(m_seeder.c_str());
+		TextureHandler::UpdatePerlin("heightMap", 128, (float)seed);
+	}
+
 	if (glfwGetKey(m_pWindow, GLFW_KEY_GRAVE_ACCENT))
 	{
 		glEnable(GL_CULL_FACE);
@@ -166,6 +173,9 @@ void GLApplication::InitialiseAppElements()
 	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Camera Z: ", TW_TYPE_FLOAT, (void*)&m_pBaseCamera->GetPosition().z);
 	
 	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Camera Speed: ", TW_TYPE_FLOAT, (void*)&m_pBaseCamera->GetBaseSpeed());
+
+	m_seeder = "HelloWorld";
+	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Seeder Seeder", TwType::TW_TYPE_STDSTRING, (void*)&m_seeder);
 }
 
 void GLApplication::ApplyCameraUniformSetup()

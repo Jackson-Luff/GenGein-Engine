@@ -152,6 +152,5 @@ void main()
 
 	finalColour.a = 0.75;
 
-
 	gl_FragColor = finalColour;
 }

@@ -1,4 +1,6 @@
 #pragma once
+#include <FBXFile.h>
+#include <vector>
 #include <glm\glm.hpp>
 #include <glm\ext.hpp>
 
@@ -33,6 +35,25 @@ public:
 	}
 
 protected:
+	// Vertex holds the layout info for the VBO
+	struct OBJVertex
+	{
+		glm::vec4 position;
+		glm::vec4 colour;
+		glm::vec4 normal;
+		glm::vec4 tangent;
+		glm::vec4 binormal;
+		glm::vec2 uv;
+	};
+	
+	struct Temp_OBJ_Data
+	{
+		std::vector<glm::vec4> position, normals, colours;
+		std::vector<glm::vec2> texCoords;
+		std::vector<OBJVertex> vertices;
+		std::vector<uint> indices;
+	};
+
 	uint m_indexCount;
 
 	uint m_VAO, m_VBO, m_IBO;
@@ -40,5 +61,9 @@ protected:
 
 	mat4 m_localTransform;
 	mat4 m_globalTransform;
+
+	std::vector< FBXVertex > m_FBX_verts;
+	std::vector< OBJVertex > m_OBJ_verts;
+	std::vector< uint > m_indices;
 };
 

@@ -1,6 +1,6 @@
 #include <gl_core_4_4.h>
 #include "Engine\Core\ShaderHandler.h"
-#include "Engine\Textures\TextureHandler.h"
+#include "Engine\Renderer\TextureHandler.h"
 #include "ParticleTypes.h"
 #include "GPUParticleEmitter.h"
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include <GLFW\glfw3.h>
 #include <AntTweakBar.h>
 #include <glm\glm.hpp>
 

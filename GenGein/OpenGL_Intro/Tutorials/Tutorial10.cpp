@@ -4,7 +4,7 @@
 
 #include "Engine\Core\GLApplication.h"
 #include "Engine\Core\ShaderHandler.h"
-#include "Engine\Textures\TextureHandler.h"
+#include "Engine\Renderer\TextureHandler.h"
 #include "Engine\Renderer\FBOMesh.h"
 #include "Engine\Lighting.h"
 
@@ -194,24 +194,24 @@ void Tutorial10::StartUp()
 	// Water Texture use
 
 	TextureHandler::LoadTexture(*m_waterProg, "heightMap",
-		"Data/Textures/water.jpg");
+		"Data/Renderer/water.jpg");
 
 	TextureHandler::LoadTexture(*m_waterProg, "water",
-		"Data/Textures/water01.jpg");
+		"Data/Renderer/water01.jpg");
 
 	// Enviro Texture use
 
 	TextureHandler::LoadTexture(*m_enviroProg, "envheightMap",
-		"Data/Textures/PerlinNoise/Noise2.jpg");
+		"Data/Renderer/PerlinNoise/Noise2.jpg");
 
 	TextureHandler::LoadTexture(*m_enviroProg, "grassMap",
-		"Data/Textures/grass.png");
+		"Data/Renderer/grass.png");
 
 	TextureHandler::LoadTexture(*m_enviroProg, "stoneMap",
-		"Data/Textures/stone.jpg");
+		"Data/Renderer/stone.jpg");
 
 	TextureHandler::LoadTexture(*m_enviroProg, "grasssMap",
-		"Data/Textures/GRASSS.png");
+		"Data/Renderer/GRASSS.png");
 }
 
 // Destroy things 

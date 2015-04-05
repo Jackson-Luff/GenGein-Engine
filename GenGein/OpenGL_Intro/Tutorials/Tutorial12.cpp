@@ -2,7 +2,8 @@
 #include <gl_core_4_4.h>
 #include <glm\ext.hpp>
 #include "Engine\Core\ShaderHandler.h"
-#include "Engine\Textures\TextureHandler.h"
+#include "Engine\GUI\AntTweak.h"
+#include "Engine\Renderer\TextureHandler.h"
 #include "Engine\Objects\ObjMesh.h"
 #include "Cameras\BaseCamera.h"
 
@@ -182,8 +183,9 @@ void Tutorial12::StartUp()
 	TextureHandler::LoadTexture(*m_enviroProg, "SandMap", "Data/Textures/sand_tile.jpg");
 	TextureHandler::LoadTexture(*m_enviroProg, "GrassMap", "Data/Textures/grass_tiled.tga");
 
-	m_palmTree = new ObjMesh(vec3(0));
-	m_palmTree->LoadObject("Data/Objects/PalmTree02", "Palma 001");
+	//m_palmTree = new ObjMesh(vec3(0));
+	//m_palmTree->LoadObject("Data/Objects/PalmTree02", "Palma 001");
+
 }
 
 // Destroy things
@@ -205,7 +207,7 @@ void Tutorial12::Render()
 	
 	TextureHandler::RenderAllTextures();
 
-	m_palmTree->Render();
+	//m_palmTree->Render();
 
 	glUseProgram(*m_enviroProg);
 	glBindVertexArray(m_enviroVAO);

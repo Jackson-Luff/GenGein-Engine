@@ -15,7 +15,7 @@ uniform sampler2D heightMap;
 void main()
 {
 	vec4 Position = vertPosition;
-	Position.y += -100/1.25 + (texture(heightMap, vertCoords).r * 100);
+	Position.y += -100/2 + (texture(heightMap, vertCoords).r * 100);
 	gl_Position = Projection * View * Position;
 
 	vPosition = Position;

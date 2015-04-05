@@ -44,7 +44,6 @@ private:
 
 	uint m_VAO, m_indexCount, m_perlinTexture;
 	int perlinTextureUniLoc;
-
 	float* m_perlin_data;
 	uint m_dims;
 
