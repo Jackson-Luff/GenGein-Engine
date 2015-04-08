@@ -26,8 +26,8 @@ GPUParticleEmitter::~GPUParticleEmitter()
 	glDeleteBuffers(2, m_vbo);
 
 	// Delete shaders
-	glDeleteProgram(m_drawShader);
-	glDeleteProgram(m_updateShader);
+	glDeleteProgram(*m_drawShader);
+	glDeleteProgram(*m_updateShader);
 }
 
 void GPUParticleEmitter::Initialise(
@@ -115,33 +115,33 @@ void GPUParticleEmitter::CreateDrawShader()
 		"Data/Shaders/Particles/Particle.vert",
 		"Data/Shaders/Particles/Particle.frag",
 		"Data/Shaders/Particles/Particle.geom");
-	m_drawShader = ShaderHandler::GetShader("ParticleShader");
+	m_drawShader = &ShaderHandler::GetShader("ParticleShader");
 
 	TextureHandler::LoadTexture(m_drawShader, "pTexture", "Data/Textures/smoke.png");
 
 	// Bind the shader so that we can set -
 	// some uniforms that don't change per-frame
-	glUseProgram(m_drawShader);
+	glUseProgram(*m_drawShader);
 
 	// Pre-process Uniform Locations
-	ProjViewUniLoc = glGetUniformLocation(m_drawShader, "projectionView");
-	CamTransUniLoc = glGetUniformLocation(m_drawShader, "cameraTransform");
+	ProjViewUniLoc = glGetUniformLocation(*m_drawShader, "projectionView");
+	CamTransUniLoc = glGetUniformLocation(*m_drawShader, "cameraTransform");
 
 	// Bind size information for interpolation that won't change
-	int loc = glGetUniformLocation(m_drawShader, "sizeStart");
+	int loc = glGetUniformLocation(*m_drawShader, "sizeStart");
 	glUniform1f(loc, m_startSize);
-	loc = glGetUniformLocation(m_drawShader, "sizeEnd");
+	loc = glGetUniformLocation(*m_drawShader, "sizeEnd");
 	glUniform1f(loc, m_endSize);
 
 	// Bind colour information for the interpolation that won't change
-	loc = glGetUniformLocation(m_drawShader, "colourStart");
+	loc = glGetUniformLocation(*m_drawShader, "colourStart");
 	glUniform4fv(loc, 1, &m_startColour[0]);
-	loc = glGetUniformLocation(m_drawShader, "colourEnd");
+	loc = glGetUniformLocation(*m_drawShader, "colourEnd");
 	glUniform4fv(loc, 1, &m_endColour[0]);
 
 	// Bind colour information for the interpolation that won't change
-	StartColourUniLoc = glGetUniformLocation(m_drawShader, "colourStrtOvrRid");
-	EndColourUniLoc = glGetUniformLocation(m_drawShader, "colourEndOvrRid");
+	StartColourUniLoc = glGetUniformLocation(*m_drawShader, "colourStrtOvrRid");
+	EndColourUniLoc = glGetUniformLocation(*m_drawShader, "colourEndOvrRid");
 }
 
 void GPUParticleEmitter::CreateUpdateShader()
@@ -150,36 +150,36 @@ void GPUParticleEmitter::CreateUpdateShader()
 	uint vs = ShaderHandler::CreateShader(
 		"Data/Shaders/Particles/ParticleUpdate.vert", GL_VERTEX_SHADER);
 
-	m_updateShader = glCreateProgram();
-	glAttachShader(m_updateShader, vs);
+	*m_updateShader = glCreateProgram();
+	glAttachShader(*m_updateShader, vs);
 
 	// Specify the data that we will stream back
 	const char* varyings[] = 
 	{ "vPosition", "vVelocity",
 	  "vLifetime", "vLifespan" };
 
-	glTransformFeedbackVaryings(m_updateShader,
+	glTransformFeedbackVaryings(*m_updateShader,
 		4, varyings, GL_INTERLEAVED_ATTRIBS);
 
 	// Bind the shader so that we can set some -
 	// uniforms that don't change per-frame
-	glLinkProgram(m_updateShader);
+	glLinkProgram(*m_updateShader);
 
 	// Remove unneeded handles
 	glDeleteShader(vs);
 
 	// Bind the shader so that we can set some 
 	// uniforms that don't change per-fram
-	glUseProgram(m_updateShader);
+	glUseProgram(*m_updateShader);
 
 	// Bind lifetime minimum and maximum
-	int loc = glGetUniformLocation(m_updateShader, "lifeMin");
+	int loc = glGetUniformLocation(*m_updateShader, "lifeMin");
 	glUniform1f(loc, m_lifeSpanMin);
-	loc = glGetUniformLocation(m_updateShader, "lifeMax");
+	loc = glGetUniformLocation(*m_updateShader, "lifeMax");
 	glUniform1f(loc, m_lifeSpanMax);
-	loc = glGetUniformLocation(m_updateShader, "veloMin");
+	loc = glGetUniformLocation(*m_updateShader, "veloMin");
 	glUniform1f(loc, m_velocityMin);
-	loc = glGetUniformLocation(m_updateShader, "veloMax");
+	loc = glGetUniformLocation(*m_updateShader, "veloMax");
 	glUniform1f(loc, m_velocityMax);
 }
 
@@ -192,19 +192,19 @@ void GPUParticleEmitter::Render(float a_dt,
 	const glm::vec3& a_spherePos)
 {	 
 	// Update the particles using transform feedback
-	glUseProgram(m_updateShader);
+	glUseProgram(*m_updateShader);
 
 	// Bind time info
-	int loc = glGetUniformLocation(m_updateShader, "time");
+	int loc = glGetUniformLocation(*m_updateShader, "time");
 	glUniform1f(loc, a_incrTime);
-	loc = glGetUniformLocation(m_updateShader, "deltaTime");
+	loc = glGetUniformLocation(*m_updateShader, "deltaTime");
 	glUniform1f(loc, a_dt);
 
 	// Bind emitter's position
-	loc = glGetUniformLocation(m_updateShader, "emitterPosition");
+	loc = glGetUniformLocation(*m_updateShader, "emitterPosition");
 	glUniform3fv(loc, 1, &m_position[0]);
 
-	loc = glGetUniformLocation(m_updateShader, "SpherePos");
+	loc = glGetUniformLocation(*m_updateShader, "SpherePos");
 	glUniform3fv(loc, 1, &a_spherePos[0]);
 	
 	// Disable rasterisation
@@ -231,7 +231,7 @@ void GPUParticleEmitter::Render(float a_dt,
 
 	// Draw the particles using the geo shader to billboard them
 	glDisable(GL_DEPTH_TEST);
-	glUseProgram(m_drawShader);
+	glUseProgram(*m_drawShader);
 	TextureHandler::RenderAllTextures();
 	glUniformMatrix4fv(CamTransUniLoc, 1,
 		false, &a_cameraTransform[0][0]);

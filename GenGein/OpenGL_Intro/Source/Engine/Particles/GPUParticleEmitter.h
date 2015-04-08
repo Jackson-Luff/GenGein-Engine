@@ -45,8 +45,8 @@ protected:
 	uint m_vao[2];
 	uint m_vbo[2];
 
-	uint m_drawShader;
-	uint m_updateShader;
+	uint* m_drawShader;
+	uint* m_updateShader;
 
 	glm::vec3 m_position;
 

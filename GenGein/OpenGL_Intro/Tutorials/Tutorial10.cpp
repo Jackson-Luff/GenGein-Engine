@@ -193,24 +193,24 @@ void Tutorial10::StartUp()
 
 	// Water Texture use
 
-	TextureHandler::LoadTexture(*m_waterProg, "heightMap",
+	TextureHandler::LoadTexture(m_waterProg, "heightMap",
 		"Data/Renderer/water.jpg");
 
-	TextureHandler::LoadTexture(*m_waterProg, "water",
+	TextureHandler::LoadTexture(m_waterProg, "water",
 		"Data/Renderer/water01.jpg");
 
 	// Enviro Texture use
 
-	TextureHandler::LoadTexture(*m_enviroProg, "envheightMap",
+	TextureHandler::LoadTexture(m_enviroProg, "envheightMap",
 		"Data/Renderer/PerlinNoise/Noise2.jpg");
 
-	TextureHandler::LoadTexture(*m_enviroProg, "grassMap",
+	TextureHandler::LoadTexture(m_enviroProg, "grassMap",
 		"Data/Renderer/grass.png");
 
-	TextureHandler::LoadTexture(*m_enviroProg, "stoneMap",
+	TextureHandler::LoadTexture(m_enviroProg, "stoneMap",
 		"Data/Renderer/stone.jpg");
 
-	TextureHandler::LoadTexture(*m_enviroProg, "grasssMap",
+	TextureHandler::LoadTexture(m_enviroProg, "grasssMap",
 		"Data/Renderer/GRASSS.png");
 }
 

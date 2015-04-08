@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "Engine\Core\GLApplication.h"
 
 typedef const unsigned int c_uint;
@@ -53,4 +54,5 @@ private:
 	uint m_enviroIndexCount, m_enviroVAO;
 
 	ObjMesh* m_palmTree;
+	std::vector<glm::mat4> m_treeSpawns;
 };

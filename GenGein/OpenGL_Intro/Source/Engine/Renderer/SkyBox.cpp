@@ -17,7 +17,7 @@ void SkyBox::Create(c_str a_folderDir)
 	ShaderHandler::LoadShaderProgram("SkyBox",
 		"Data/SkyBox/skybox.vert",
 		"Data/SkyBox/skybox.frag");
-	m_programID = ShaderHandler::GetShader("SkyBox");
+	m_programID = &ShaderHandler::GetShader("SkyBox");
 
 	std::vector<c_str> faces;
 	faces.push_back(a_folderDir + "right"  + ".png");
@@ -98,7 +98,7 @@ void SkyBox::Render()
 {
 	glDepthMask(GL_FALSE);
 
-	glUseProgram(m_programID);
+	glUseProgram(*m_programID);
 	glBindVertexArray(m_VAO);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, m_cubeMapTexture.ID);
 	glDrawArrays(GL_TRIANGLES, 0, 36);

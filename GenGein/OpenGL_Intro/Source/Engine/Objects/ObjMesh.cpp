@@ -36,14 +36,15 @@ void ObjMesh::LoadObject( c_charp a_folderDir, c_charp a_fileName )
 	m_indexChecked = false;
 	m_isQuads = false;
 
+	ShaderHandler::LoadShaderProgram("ObjShader",
+		"Data/Shaders/Geometry/ObjShader.vert",
+		"Data/Shaders/Geometry/ObjShader.frag");
+	m_programID = &ShaderHandler::GetShader("ObjShader");
+
 	// Apply the material based upon the input directory
 	m_folderDirectory = a_folderDir;
 	loadMaterials(m_folderDirectory + "/" + a_fileName + ".mtl");
 	loadObjects(m_folderDirectory + "/" + a_fileName + ".obj");
-
-	ShaderHandler::LoadShaderProgram("ObjShader",
-		"Data/Shaders/Geometry/ObjShader.vert",
-		"Data/Shaders/Geometry/ObjShader.frag");
 
 	CalcTangentNBiNormals();
 
@@ -74,14 +75,15 @@ void ObjMesh::LoadObject( c_charp a_folderDir, c_charp a_fileDir, c_charp a_text
 	m_indexChecked = false;
 	m_isQuads = false;
 
+	ShaderHandler::LoadShaderProgram("ObjShader",
+		"Data/Shaders/Geometry/ObjShader.vert",
+		"Data/Shaders/Geometry/ObjShader.frag");
+	m_programID = &ShaderHandler::GetShader("ObjShader");
+
 	// Apply the material based upon the input directory
 	m_folderDirectory = a_folderDir;
 	loadMaterials(m_folderDirectory + "/" + a_fileDir + ".mtl");
 	loadObjects(m_folderDirectory + "/" + a_fileDir + ".obj");
-
-	ShaderHandler::LoadShaderProgram("ObjShader",
-		"Data/Shaders/Geometry/ObjShader.vert",
-		"Data/Shaders/Geometry/ObjShader.frag");
 
 	CalcTangentNBiNormals();
 
@@ -101,10 +103,7 @@ ObjMesh::~ObjMesh()
 
 void ObjMesh::ApplyDataToVertNIndexBuffers()
 {
-	ShaderHandler::LoadShaderProgram("ObjShader",
-		"Data/Shaders/Geometry/ObjShader.vert",
-		"Data/Shaders/Geometry/ObjShader.frag");
-	m_programID = ShaderHandler::GetShader("ObjShader");
+	m_localUniMat = glGetUniformLocation(*m_programID, "LocalMatrix");
 
 	glGenVertexArrays(1, &m_VAO);
 	glBindVertexArray( m_VAO );
@@ -180,11 +179,13 @@ void ObjMesh::CalcTangentNBiNormals()
 }
 
 // Draw mesh and send Rendererto shader
-void ObjMesh::Render()
+void ObjMesh::Render(const mat4& a_SRT)
 {
-
-
-	glUseProgram(m_programID);
+	glUseProgram(*m_programID);
+	
+	//Apply scale, rotation and translation
+	m_localTransform = a_SRT;
+	glUniformMatrix4fv(m_localUniMat, 1, GL_FALSE, &m_localTransform[0][0]);
 
 	//Rebind VAO
 	glBindVertexArray(m_VAO);
@@ -515,13 +516,13 @@ void ObjMesh::loadMaterials(c_string a_matPath)
 			else if (buffer.find("illum ") == 0)
 				m_currentMaterial->illum = parseFloat(buffer, "illum ");
 			else if (buffer.find("map_Ka") == 0)
-				TextureHandler::LoadTexture(m_shaderID, "ambientMap", m_folderDirectory + parseString(buffer, "map_Ka "));
+				TextureHandler::LoadTexture(m_programID, "ambientMap", m_folderDirectory + parseString(buffer, "map_Ka "));
 			else if (buffer.find("map_Kd") == 0)
-				TextureHandler::LoadTexture(m_shaderID, "diffuseMap", m_folderDirectory + parseString(buffer, "map_Ka "));
+				TextureHandler::LoadTexture(m_programID, "diffuseMap", m_folderDirectory + parseString(buffer, "map_Ka "));
 			else if (buffer.find("map_Ks") == 0)
-				TextureHandler::LoadTexture(m_shaderID, "specularMap", m_folderDirectory + parseString(buffer, "map_Ka "));
+				TextureHandler::LoadTexture(m_programID, "specularMap", m_folderDirectory + parseString(buffer, "map_Ka "));
 			else if (buffer.find("map_Ns") == 0)
-				TextureHandler::LoadTexture(m_shaderID, "normalMap", m_folderDirectory + parseString(buffer, "map_Ka "));
+				TextureHandler::LoadTexture(m_programID, "normalMap", m_folderDirectory + parseString(buffer, "map_Ka "));
 		}
 
 		if (m_currentMaterial != NULL)

@@ -96,15 +96,30 @@ void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 	float center = (a_dim*scale) * 0.5f;
 
 	// Populate verts with row + cols input
-
 	VertexData* m_enviroVerts = new VertexData[a_dim * a_dim];
-
+	uint treeSeed;
+	int range = 1000;
 	for (GLuint r = 0; r < a_dim; ++r)
 	{
 		for (GLuint c = 0; c < a_dim; ++c)
 		{
 			m_enviroVerts[r * a_dim + c].position = glm::vec4(-center + (float)(c * scale), 0, -center + (float)(r * scale), 1);
+			//m_enviroVerts[r * a_dim + c].position.y += 
 			m_enviroVerts[r * a_dim + c].uv = glm::vec2((float)r / a_dim, (float)c / a_dim);
+
+			// Save off possible tree data for tree positions
+
+			vec3 scale = vec3(0.05);
+			float angle = 0;
+			vec3 direction = vec3(1);
+
+			treeSeed = r * a_dim + c;
+			treeSeed += -range / 2 + (rand() % range);
+			if (treeSeed > (r * a_dim + c) - 5 && treeSeed < (r * a_dim + c) + 5)
+			{
+				m_treeSpawns.push_back(glm::scale(scale) *
+					glm::translate(vec3(m_enviroVerts[r * a_dim + c].position)*3 ) );
+			}
 		}
 	}
 
@@ -135,7 +150,7 @@ void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 	// Create and bind buffers to a vertex array object
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, a_dim * a_dim * sizeof(VertexData), m_enviroVerts, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, a_dim * a_dim * sizeof(VertexData), &m_enviroVerts[0], GL_DYNAMIC_DRAW);
 
 	// Initialise Vertex Element data 
 	glEnableVertexAttribArray(0);
@@ -161,7 +176,7 @@ void Tutorial12::StartUp()
 
 	//Initialise camera
 	InitialiseFlyCamera(5.0f, 20.0f, 0.5f,
-		glm::vec3(0, 0.5, 0), glm::vec3(50, 0, 50));
+		glm::vec3(218, 146, 167), glm::vec3(0, 0, 0));
 	
 	ShaderHandler::LoadShaderProgram("WaterMap",
 		"Data/Shaders/ProGenReGen.vert",
@@ -179,12 +194,12 @@ void Tutorial12::StartUp()
 	// ENVIRO PLANE
 	CreateEnviroGrid(128);
 
-	TextureHandler::LoadPerlin(*m_enviroProg, "heightMap", 128);
-	TextureHandler::LoadTexture(*m_enviroProg, "SandMap", "Data/Textures/sand_tile.jpg");
-	TextureHandler::LoadTexture(*m_enviroProg, "GrassMap", "Data/Textures/grass_tiled.tga");
+	TextureHandler::LoadPerlin(m_enviroProg, "heightMap", 128);
+	TextureHandler::LoadTexture(m_enviroProg, "SandMap", "Data/Textures/sand_tile.jpg");
+	TextureHandler::LoadTexture(m_enviroProg, "GrassMap", "Data/Textures/grass_tiled.tga");
 
-	//m_palmTree = new ObjMesh(vec3(0));
-	//m_palmTree->LoadObject("Data/Objects/PalmTree02", "Palma 001");
+	m_palmTree = new ObjMesh(vec3(0));
+	m_palmTree->LoadObject("Data/Objects/PalmTree02", "Palma 001");
 
 }
 
@@ -207,7 +222,10 @@ void Tutorial12::Render()
 	
 	TextureHandler::RenderAllTextures();
 
-	//m_palmTree->Render();
+	for (uint i = 0; i < m_treeSpawns.size(); i++)
+	{
+		m_palmTree->Render(m_treeSpawns[i]);
+	}
 
 	glUseProgram(*m_enviroProg);
 	glBindVertexArray(m_enviroVAO);

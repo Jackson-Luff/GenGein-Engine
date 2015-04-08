@@ -22,7 +22,7 @@ TextureHandler::~TextureHandler()
 }
 
 // Add a texture based on desired name and directory
-sTexture TextureHandler::LoadTexture(c_uint& a_prog, c_charp a_name, c_str a_dir)
+sTexture TextureHandler::LoadTexture(c_uint* a_prog, c_charp a_name, c_str a_dir)
 {
 	if (DoesTextureExist(a_name)) return m_textureMap[a_name];
 
@@ -63,14 +63,14 @@ sTexture TextureHandler::LoadTexture(c_uint& a_prog, c_charp a_name, c_str a_dir
 	printf("SUCCESS: %s Texture Loaded.\n", a_name);
 
 	texture.programID = a_prog;
-	texture.textureUniLoc = glGetUniformLocation(a_prog, a_name);
+	texture.textureUniLoc = glGetUniformLocation(*a_prog, a_name);
 	m_textureMap[a_name] = texture;
 	
 	return texture;
 }
 
 // Add a texture based on desired name and directory
-sTexture TextureHandler::LoadPerlin(c_uint& a_prog, c_charp a_name, c_uint a_dim)
+sTexture TextureHandler::LoadPerlin(c_uint* a_prog, c_charp a_name, c_uint a_dim)
 {
 	if (DoesTextureExist(a_name)) return m_textureMap[a_name];
 
@@ -105,7 +105,7 @@ sTexture TextureHandler::LoadPerlin(c_uint& a_prog, c_charp a_name, c_uint a_dim
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	perlin.textureUniLoc = glGetUniformLocation(a_prog, a_name);
+	perlin.textureUniLoc = glGetUniformLocation(*a_prog, a_name);
 	perlin.programID = a_prog;
 
 	m_textureMap[a_name] = perlin;
@@ -116,7 +116,7 @@ sTexture TextureHandler::LoadPerlin(c_uint& a_prog, c_charp a_name, c_uint a_dim
 }
 
 // Add a cube map desired by name and dir
-sTexture TextureHandler::LoadCubeMap(uint a_prog, c_charp a_name, std::vector<c_str> a_faces)
+sTexture TextureHandler::LoadCubeMap(c_uint* a_prog, c_charp a_name, std::vector<c_str> a_faces)
 {
 	sTexture cubeMapTexture;
 	glGenTextures(1, &cubeMapTexture.ID);
@@ -159,7 +159,7 @@ sTexture TextureHandler::LoadCubeMap(uint a_prog, c_charp a_name, std::vector<c_
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 	cubeMapTexture.programID = a_prog;
-	cubeMapTexture.textureUniLoc = glGetUniformLocation(a_prog, a_name);
+	cubeMapTexture.textureUniLoc = glGetUniformLocation(*a_prog, a_name);
 
 	//m_cubeMap[a_name] = cubeMapTexture;
 
@@ -224,7 +224,7 @@ void TextureHandler::UpdatePerlin(c_charp a_name, c_uint a_dim, const float& a_s
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	perlin.textureUniLoc = glGetUniformLocation(perlin.programID, a_name);
+	perlin.textureUniLoc = glGetUniformLocation(*perlin.programID, a_name);
 }
 
 // Rendering the textures
@@ -237,7 +237,7 @@ void TextureHandler::RenderAllTextures()
 			continue;
 	
 		//Set Texture Slot
-		glUseProgram(it.second.programID);
+		glUseProgram(*it.second.programID);
 		glUniform1i(it.second.textureUniLoc, i);
 		glActiveTexture(GL_TEXTURE0 + i);
 		glBindTexture(GL_TEXTURE_2D, it.second.ID);

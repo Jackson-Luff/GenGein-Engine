@@ -34,15 +34,10 @@ public:
 	void LoadObject( c_charp a_folderDir, c_charp a_fileDir, c_charp a_textureName);
 	
 	// Draw the mesh to screen
-	void Render();
-private:
+	void Render(const mat4& a_SRT);
 
-	//Calculates the tangent of the vertex
-	void CalcTangentNBiNormals();
-	// Returns size of index
-	inline const int GetIndexSize() const { return m_indexCount; }
-	// Apply the data from the obj to the buffers
-	void ApplyDataToVertNIndexBuffers();
+	// Getter for localMatrix
+private:
 
 	// Holds most attributes of a material
 	struct Material
@@ -51,6 +46,13 @@ private:
 		glm::vec3 Ka, Kd, Ks;
 		float d, Ns, illum;
 	};
+
+	//Calculates the tangent of the vertex
+	void CalcTangentNBiNormals();
+	// Returns size of index
+	inline const int GetIndexSize() const { return m_indexCount; }
+	// Apply the data from the obj to the buffers
+	void ApplyDataToVertNIndexBuffers();
 
 	// returns float stored after string
 	float parseFloat(c_string a_src, c_string a_code);
@@ -73,6 +75,13 @@ private:
 	// Loads and explores the .mtl file format
 	void loadMaterials(c_string a_matPath);
 
+	// Returns the mesh object (FIX!!)
+	inline ObjMesh& GetMesh() const { return ObjMesh(); }
+	// Returns the list of material pointers
+	inline const std::vector<Material*>& GetMaterials() { return m_materials; }
+	// Clean up unused data in initialisation process
+	void CleanUp();
+
 	// Points to current material used
 	Material* m_currentMaterial;
 	// Points to completed mesh
@@ -85,13 +94,8 @@ private:
 	std::vector< Material* > m_materials;
 	// Map the indices based on key input e.g '5/1/1'
 	std::map<std::string, unsigned int> m_vertexMap;
-
-	uint m_shaderID;
-
-	// Returns the mesh object (FIX!!)
-	inline ObjMesh& GetMesh() const { return ObjMesh(); }
-	// Returns the list of material pointers
-	inline const std::vector<Material*>& GetMaterials() { return m_materials; }
-	// Clean up unused data in initialisation process
-	void CleanUp();
+	// Holds id for shader program
+	uint* m_programID;
+	// Holds uniform id for localMat
+	int m_localUniMat;
 };

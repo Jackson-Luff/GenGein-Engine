@@ -40,7 +40,6 @@ private:
 	int bonesUniform;
 	FBXMaterial* m_material;
 	std::vector<FBXVertex> m_vertices;
-	std::vector<uint> m_indices;
 	void* m_userData;
 
 	FBXFile* m_pFbx;

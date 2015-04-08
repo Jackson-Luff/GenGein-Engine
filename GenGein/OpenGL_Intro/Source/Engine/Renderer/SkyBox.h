@@ -20,6 +20,7 @@ public:
 private:
 	
 	uint LoadCubeVertices(); 
-	uint m_programID, m_VAO;
+	uint* m_programID;
+	uint m_VAO;
 	sTexture m_cubeMapTexture;
 };
