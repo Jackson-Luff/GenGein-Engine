@@ -20,8 +20,8 @@ void main()
 	float fogMin = 400.0,fogMax = 500.0;
 
 	vec4 outColour;
-	vec4 sand = texture(SandMap, vCoords*1024/1);
-	vec4 grass = texture(GrassMap, vCoords*128/1);
+	vec4 sand = texture(SandMap, vCoords*64/1);
+	vec4 grass = texture(GrassMap, vCoords*4/1);
 	
 	if(vPosition.y < 10)
 		outColour = mix(sand,grass, vPosition.y/10);
