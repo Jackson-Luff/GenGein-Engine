@@ -97,28 +97,43 @@ void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 
 	// Populate verts with row + cols input
 	VertexData* m_enviroVerts = new VertexData[a_dim * a_dim];
-	uint treeSeed;
-	int range = 1000;
+	
+	float pscale = (1.0f / a_dim) * 3;
+	int octaves = 6;
+
 	for (GLuint r = 0; r < a_dim; ++r)
 	{
 		for (GLuint c = 0; c < a_dim; ++c)
 		{
 			m_enviroVerts[r * a_dim + c].position = glm::vec4(-center + (float)(c * scale), 0, -center + (float)(r * scale), 1);
-			//m_enviroVerts[r * a_dim + c].position.y += 
 			m_enviroVerts[r * a_dim + c].uv = glm::vec2((float)r / a_dim, (float)c / a_dim);
 
-			// Save off possible tree data for tree positions
+			// Perlin data
+			float persistence = 0.3f;
+			float ampli = m_amplitude;
+			for (int o = 0; o < octaves; ++o)	
+			{
+				float freq = powf(2, (float)o);
+				float perlin_sample = glm::perlin((glm::vec2((float)c, (float)r) + m_seeder) * pscale * freq) * 0.5f + 0.5f;
 
-			vec3 scale = vec3(0.05);
+				m_enviroVerts[r * a_dim + c].position.y += -m_amplitude/10 + (perlin_sample * ampli);
+				ampli *= persistence;
+			}
+
+			// Save off possible tree data for tree positions
+			vec3 scale = vec3(1);
 			float angle = 0;
 			vec3 direction = vec3(1);
-
-			treeSeed = r * a_dim + c;
+			
+			int range = 100;
+			uint treeSeed = r * a_dim + c;
 			treeSeed += -range / 2 + (rand() % range);
-			if (treeSeed > (r * a_dim + c) - 5 && treeSeed < (r * a_dim + c) + 5)
+			if (treeSeed == (r * a_dim + c) && m_enviroVerts[r * a_dim + c].position.y > 3)
 			{
-				m_treeSpawns.push_back(glm::scale(scale) *
-					glm::translate(vec3(m_enviroVerts[r * a_dim + c].position)*3 ) );
+				m_treeSpawns.push_back(
+					glm::scale(scale) *
+					glm::rotate(angle, direction) *
+					glm::translate(vec3(m_enviroVerts[r * a_dim + c].position)));
 			}
 		}
 	}
@@ -174,6 +189,9 @@ void Tutorial12::StartUp()
 {
 	GLApplication::StartUp();
 
+	m_amplitude = 100;
+	m_seeder = 12;
+
 	//Initialise camera
 	InitialiseFlyCamera(5.0f, 20.0f, 0.5f,
 		glm::vec3(218, 146, 167), glm::vec3(0, 0, 0));
@@ -194,13 +212,15 @@ void Tutorial12::StartUp()
 	// ENVIRO PLANE
 	CreateEnviroGrid(128);
 
-	TextureHandler::LoadPerlin(m_enviroProg, "heightMap", 128);
+	//TextureHandler::LoadPerlin(m_enviroProg, "heightMap", 128);
 	TextureHandler::LoadTexture(m_enviroProg, "SandMap", "Data/Textures/sand_tile.jpg");
 	TextureHandler::LoadTexture(m_enviroProg, "GrassMap", "Data/Textures/grass_tiled.tga");
 
 	m_palmTree = new ObjMesh(vec3(0));
-	m_palmTree->LoadObject("Data/Objects/PalmTree02", "Palma 001");
+	m_palmTree->LoadObject("Data/Objects/Cow", "testCow");
 
+	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Environment", "Seed", TwType::TW_TYPE_FLOAT, (void*)&m_seeder);
+	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Environment", "Amplitude", TwType::TW_TYPE_FLOAT, (void*)&m_amplitude);
 }
 
 // Destroy things
@@ -213,6 +233,12 @@ void Tutorial12::ShutDown()
 void Tutorial12::Update(const double a_dt)
 {
 	m_pBaseCamera->Update(a_dt);
+
+	if (glfwGetKey(m_pWindow, GLFW_KEY_O))
+	{
+		m_treeSpawns.clear();
+		CreateEnviroGrid(128);
+	}
 }
 
 // Render things to screen

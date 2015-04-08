@@ -106,11 +106,11 @@ void Tutorial11::StartUp()
 		vec3(0.25, 0.25, 0.4), LIGHT_TYPE::AMBIENT_L);
 	m_pPointLight = new Lighting(*m_pMainProgramID, "pointLight",
 		vec3(5, 5, 5), LIGHT_TYPE::POINT_L);
-
+	/*
 	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Point X", TW_TYPE_FLOAT, (void*)&m_pPointLight->GetPosition().x);
 	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Point Y", TW_TYPE_FLOAT, (void*)&m_pPointLight->GetPosition().y);
 	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Point Z", TW_TYPE_FLOAT, (void*)&m_pPointLight->GetPosition().z);
-
+	*/
 	m_pBunny = new FBXModel(vec3(0));
 	m_pBunny->LoadFBX(*m_pMainProgramID,
 		"Data/Models/stanford/bunny.fbx",

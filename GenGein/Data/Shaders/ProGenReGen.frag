@@ -145,11 +145,11 @@ void main()
 	//perlin data
 	vec2 p = (vPosition.xz) * 2.0 - 1.0;
 	vec2 qq, r;
-	float result = pattern(p,qq,r,time*0.05);
-	vec4 perlin = vec4(result, result, result, result);
-	finalColour = (aqua * perlin.a);
-	finalColour = finalColour + (1 - perlin.a) * darkBlue;
-
+	//float result = pattern(p,qq,r,time*0.05);
+	//vec4 perlin = vec4(result, result, result, result);
+	//finalColour = (aqua * perlin.a);
+	//finalColour = finalColour + (1 - perlin.a) * darkBlue;
+	finalColour = darkBlue;
 	finalColour.a = 0.75;
 
 	gl_FragColor = finalColour;

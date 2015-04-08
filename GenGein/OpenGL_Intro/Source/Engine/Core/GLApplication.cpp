@@ -101,8 +101,8 @@ void GLApplication::StartUp()
 
 	// Initialise GUI and create a tweaker
 	m_pAntTweakGUI->Initialise(m_pWindow, m_width, m_height);
-	m_pAntTweakGUI->AddTweaker("Main Tweaker", "GL Colour", m_backColour);
-	m_pAntTweakGUI->AddVarRO("Main Tweaker", "GL DeltaTime", TW_TYPE_DOUBLE, (void*)&m_deltaTime);
+	m_pAntTweakGUI->AddTweaker("Main Tweaker", "Colour", m_backColour);
+	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug", "DeltaTime", TW_TYPE_DOUBLE, (void*)&m_deltaTime);
 
 	m_pSkyBox = new SkyBox();
 	m_pSkyBox->Create("Data/SkyBox/Faces/Space/");
@@ -110,11 +110,6 @@ void GLApplication::StartUp()
 
 void GLApplication::DebugControls()
 {
-	if (glfwGetKey(m_pWindow, GLFW_KEY_O))
-	{
-		int seed = std::atoi(m_seeder.c_str());
-		TextureHandler::UpdatePerlin("heightMap", 128, (float)seed);
-	}
 
 	if (glfwGetKey(m_pWindow, GLFW_KEY_GRAVE_ACCENT))
 	{
@@ -164,18 +159,13 @@ void GLApplication::InitialiseAppElements()
 	ApplyCameraUniformSetup();
 
 	// Add a read only FPS output variable to the GUI tweaker specified
-	m_pAntTweakGUI->AddVarRO("Main Tweaker", "FPS: ", TW_TYPE_DOUBLE, (void*)&m_FPS);
+	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug", "FPS: ", TW_TYPE_DOUBLE, (void*)&m_FPS);
 
-	// Add read only Camera position variables to the GUI tweaker specified
-	
-	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Camera X: ", TW_TYPE_FLOAT, (void*)&m_pBaseCamera->GetPosition().x);
-	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Camera Y: ", TW_TYPE_FLOAT, (void*)&m_pBaseCamera->GetPosition().y);
-	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Camera Z: ", TW_TYPE_FLOAT, (void*)&m_pBaseCamera->GetPosition().z);
-	
-	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Camera Speed: ", TW_TYPE_FLOAT, (void*)&m_pBaseCamera->GetBaseSpeed());
-
-	m_seeder = "HelloWorld";
-	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Seeder Seeder", TwType::TW_TYPE_STDSTRING, (void*)&m_seeder);
+	// Add read only Camera position/speed variables to the GUI tweaker specified
+	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug",  "X: ", TW_TYPE_FLOAT, (void*)&m_pBaseCamera->GetPosition().x);
+	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug",  "Y: ", TW_TYPE_FLOAT, (void*)&m_pBaseCamera->GetPosition().y);
+	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug",  "Z: ", TW_TYPE_FLOAT, (void*)&m_pBaseCamera->GetPosition().z);
+	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Debug", "Speed: ", TW_TYPE_FLOAT, (void*)&m_pBaseCamera->GetBaseSpeed());
 }
 
 void GLApplication::ApplyCameraUniformSetup()

@@ -18,8 +18,8 @@ public:
 	void AddTweaker( c_charp a_tweakName, c_charp a_colourName, glm::vec4& a_colour );
 	void RemoveTweaker( c_charp a_tweakName );
 
-	void AddVarRW( c_charp a_tweakName, c_charp a_varName, TwType a_type, void* a_addressOfData );
-	void AddVarRO( c_charp a_tweakName, c_charp a_varName, TwType a_type, void* a_addressOfData );
+	void AddVarRW(c_charp a_tweakName, c_charp a_groupName, c_charp a_varName, TwType a_type, void* a_addressOfData);
+	void AddVarRO(c_charp a_tweakName, c_charp a_groupName, c_charp a_varName, TwType a_type, void* a_addressOfData);
 	void RemoveVar( c_charp a_tweakName, c_charp a_varName );
 	void RemoveAllVars( c_charp a_tweakName );
 

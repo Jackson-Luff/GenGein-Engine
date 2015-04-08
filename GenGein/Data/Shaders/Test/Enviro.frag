@@ -22,11 +22,11 @@ void main()
 	vec4 outColour;
 	vec4 sand = texture(SandMap, vCoords*1024/1);
 	vec4 grass = texture(GrassMap, vCoords*128/1);
-
-	if(vPosition.y <= waterHeight+1)
-		outColour = mix(sand,grass, vPosition.y);
+	
+	if(vPosition.y < 10)
+		outColour = mix(sand,grass, vPosition.y/10);
 	else
 		outColour = grass;
-
+		
 	pixelColour = outColour;
 }

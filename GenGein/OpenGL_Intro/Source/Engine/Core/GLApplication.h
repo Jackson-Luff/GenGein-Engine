@@ -98,9 +98,6 @@ protected:
 	SkyBox* m_pSkyBox;
 
 private:
-	// REMOVE:
-	std::string m_seeder;
-
 	// Initialise internal app variables and functionalities
 	void InitialiseAppElements();
 	// Holds value for elapsed time

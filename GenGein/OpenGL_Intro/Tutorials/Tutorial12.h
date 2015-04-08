@@ -55,4 +55,8 @@ private:
 
 	ObjMesh* m_palmTree;
 	std::vector<glm::mat4> m_treeSpawns;
+
+	//Environment variables
+	float m_amplitude;
+	float m_seeder;
 };

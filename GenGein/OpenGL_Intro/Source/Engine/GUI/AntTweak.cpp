@@ -36,35 +36,25 @@ void AntTweak::AddTweaker( c_charp a_name, c_charp a_colourName, glm::vec4& a_co
 	std::string description = "group= Tweaker";
 	TwBar* bar = TwNewBar(a_name);
 	
-	AddVarRW(a_name, a_colourName, TW_TYPE_COLOR4F, (void*)&a_colour);
+	AddVarRW(a_name, "BackColour",a_colourName, TW_TYPE_COLOR4F, (void*)&a_colour);
 }
 
-void AntTweak::AddVarRO( c_charp a_Tweakname, c_charp a_varName, TwType a_type, void* a_addressOfData)
+void AntTweak::AddVarRO( c_charp a_Tweakname, c_charp a_groupName, c_charp a_varName, TwType a_type, void* a_addressOfData)
 {
 	// Get the first word of the variable name
 	// for the description
-	std::string c;
-	
-	for(int i = 0; !(isspace(a_varName[i])); i++)
-		c += a_varName[i];
-
-	std::string description = "group = " + c;
-
+	std::string groupName = a_groupName;
+	std::string description = "group = " + groupName;
 	TwAddVarRO( TwGetBarByName(a_Tweakname), a_varName,
 		a_type, a_addressOfData, description.c_str());
 }
 
-void AntTweak::AddVarRW( c_charp a_Tweakname, c_charp a_varName, TwType a_type, void* a_addressOfData)
+void AntTweak::AddVarRW( c_charp a_Tweakname, c_charp a_groupName, c_charp a_varName, TwType a_type, void* a_addressOfData)
 {
 	// Get the first word of the variable name
 	// for the description
-	std::string c;
-	
-	for(int i = 0; !(isspace(a_varName[i])); i++)
-		c += a_varName[i];
-
-	std::string description = "group = " + c;
-
+	std::string groupName = a_groupName;
+	std::string description = "group =" + groupName;
 	TwAddVarRW( TwGetBarByName(a_Tweakname), a_varName,
 		a_type, a_addressOfData, description.c_str());
 }
