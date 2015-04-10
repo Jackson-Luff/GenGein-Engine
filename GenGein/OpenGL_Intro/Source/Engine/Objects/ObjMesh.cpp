@@ -29,7 +29,6 @@ ObjMesh::ObjMesh(vec3 a_position)
 // Constructor with folder and file directory
 void ObjMesh::LoadObject( c_charp a_folderDir, c_charp a_fileName )
 {
-
 	// Initialise bool's
 	m_hasUV = false;
 	m_hasNormals = false;

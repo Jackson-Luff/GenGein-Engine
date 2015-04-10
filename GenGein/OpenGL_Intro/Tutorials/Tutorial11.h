@@ -6,7 +6,6 @@ typedef unsigned int uint;
 typedef const int c_int;
 
 class FBXModel;
-class Lighting;
 
 ////
 // Author: Jackson Luff
@@ -42,14 +41,11 @@ public:
 	void RenderStuff();
 
 private:
-	uint m_useShadowProg;
-	uint m_genShadowProg;
+	uint* m_useShadowProg;
+	uint* m_genShadowProg;
 
 	FBXModel* m_pBunny;
 	FBXModel* m_pPlane;
-
-	Lighting* m_pAmbientLight;
-	Lighting* m_pPointLight;
 
 	uint m_FBO, m_FBODepth;
 

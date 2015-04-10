@@ -5,6 +5,7 @@
 typedef const unsigned int c_uint;
 
 class ObjMesh;
+class FBXModel;
 
 ////
 // Author: Jackson Luff
@@ -33,6 +34,12 @@ public:
 	// Render things to screen
 	virtual void Render();
 
+	// STRT SHADOW FUNC'S //
+	void CalcLightingMatrix();
+	void SetUpShadowRender();
+	void UpdateShadowTexture();
+	// END SHADOW FUNC'S //
+
 	void CreatePerlinPlane(c_uint a_dim);
 	void UpdatePerlin( const glm::vec4& camWorldMat);
 	void CreateEnviroGrid(c_uint a_dim);
@@ -40,6 +47,7 @@ private:
 	struct VertexData
 	{
 		glm::vec4 position;
+		glm::vec4 normal;
 		glm::vec2 uv;
 	};
 
@@ -48,15 +56,27 @@ private:
 	float* m_perlin_data;
 	uint m_dims;
 
-	// Enviro progrma
-
+	// Enviro program
 	uint* m_enviroProg;
 	uint m_enviroIndexCount, m_enviroVAO;
 
 	ObjMesh* m_palmTree;
+	FBXModel* m_tree;
 	std::vector<glm::mat4> m_treeSpawns;
 
 	//Environment variables
 	float m_amplitude;
 	float m_seeder;
+
+	uint* m_genShadowProg;
+	uint m_lightDirUniLoc;
+	uint m_shadowMapUniLoc;
+	uint m_ulightMatUniLoc;
+	uint m_glightMatUniLoc;
+
+	uint m_shadowID, m_FBODepth;
+	glm::vec3 m_lightDirection;
+	glm::mat4 m_lightMatrix;
+
+
 };

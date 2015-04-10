@@ -30,13 +30,11 @@ void AntTweak::Initialise( GLFWwindow* a_window, const uint a_scrnWidth, const u
 	glfwSetCharCallback(a_window, TweakBarFunc::OnChar);
 	glfwSetWindowSizeCallback(a_window, TweakBarFunc::OnWindowResize);};
 
-void AntTweak::AddTweaker( c_charp a_name, c_charp a_colourName, glm::vec4& a_colour )
+void AntTweak::AddTweaker( c_charp a_name )
 {
 	// NOTE: MAY POINT TO THE ADDRESS AND BREAK
 	std::string description = "group= Tweaker";
 	TwBar* bar = TwNewBar(a_name);
-	
-	AddVarRW(a_name, "BackColour",a_colourName, TW_TYPE_COLOR4F, (void*)&a_colour);
 }
 
 void AntTweak::AddVarRO( c_charp a_Tweakname, c_charp a_groupName, c_charp a_varName, TwType a_type, void* a_addressOfData)

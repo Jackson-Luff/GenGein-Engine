@@ -80,6 +80,13 @@ protected:
 	// Sends camera data to ALL shaderprograms
 	void ApplyCameraUniformSetup();
 
+	// Set-up basic camera data
+	void ApplyLightingSetup(
+		const glm::vec4& a_ambient,
+		const glm::vec4& a_diffuse = glm::vec4(1),
+		const glm::vec4& a_specular = glm::vec4(1),
+		const glm::mat4& a_shadowMatrix = glm::mat4(1));
+
 	// Initialises BaseCamera
 	void InitialiseFlyCamera(c_float a_minSpeed,
 		c_float a_maxSpeed, c_float a_rotationSpeed,

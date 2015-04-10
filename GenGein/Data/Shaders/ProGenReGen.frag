@@ -143,8 +143,8 @@ void main()
 	vec4 finalColour;
 
 	//perlin data
-	vec2 p = (vPosition.xz) * 2.0 - 1.0;
-	vec2 qq, r;
+	//vec2 p = (vPosition.xz) * 2.0 - 1.0;
+	//vec2 qq, r;
 	//float result = pattern(p,qq,r,time*0.05);
 	//vec4 perlin = vec4(result, result, result, result);
 	//finalColour = (aqua * perlin.a);

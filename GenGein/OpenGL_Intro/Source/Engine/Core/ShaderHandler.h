@@ -41,11 +41,18 @@ public:
 	// Initialise Shader Content
 	static uint CreateShader(c_charp a_shaderDir, c_uint a_type);
 
-	static const void SetUpUniformData(const glm::mat4& a_ProjMat,
+	static const void SetUpCameraUniforms(
+		const glm::mat4& a_ProjMat,
 		const glm::mat4& a_ViewMat,
 		const glm::mat4& a_WorldMat,
 		const glm::vec4& a_EyeMat,
 		const float& a_elapsedTime);
+
+	static const void SetUpLightingUniforms(
+		const glm::vec4& a_ambientLight,
+		const glm::vec4& a_diffuseLight,
+		const glm::vec4& a_specularLight,
+		const glm::mat4& a_shadowMat);
 
 	static const void ReloadAllPrograms();
 private:

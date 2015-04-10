@@ -40,14 +40,11 @@ void main()
 
 	// case the indices to the integer's so they can index an array
 	ivec4 index = ivec4(vertIndices);
-	
+
 	vec4 P = bones[ index.x ] * vertPosition * vertWeight.x;
 	P += bones[ index.y ] * vertPosition * vertWeight.y;
 	P += bones[ index.z ] * vertPosition * vertWeight.z;
 	P += bones[ index.w ] * vertPosition * vertWeight.w;
-	
-	//vPosition.x += 5 * sin(time);
-	//vPosition.z += 5 * cos(time);
-	
+
 	gl_Position = Projection * View * vertPosition;
 }

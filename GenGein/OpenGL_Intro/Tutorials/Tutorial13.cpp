@@ -56,5 +56,5 @@ void Tutorial13::Render()
 {
 	GLApplication::Render();
 	glUseProgram(*m_pMainProgramID);
-	m_model->Render();
+	m_model->Render(mat4(1));
 }

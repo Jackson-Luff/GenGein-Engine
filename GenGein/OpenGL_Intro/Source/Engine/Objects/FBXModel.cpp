@@ -132,8 +132,10 @@ void FBXModel::Update(const double a_elapsedTime)
 	}
 }
 
-void FBXModel::Render()
+void FBXModel::Render(const glm::mat4& a_SRT)
 {
+	m_localTransform = a_SRT;
+
 	if (m_pFbx->getSkeletonCount() > 0)
 	{
 		FBXSkeleton* skeleton = m_pFbx->getSkeletonByIndex(0);
@@ -158,6 +160,9 @@ void FBXModel::Render()
 		}
 
 		uint* glData = (uint*)mesh->m_userData;
+		int locMatUniLoc = glGetUniformLocation(glData[0], "LocalMatrix");
+		glUniformMatrix4fv(locMatUniLoc, 1, GL_FALSE, &m_localTransform[0][0]);
+
 		glBindVertexArray(glData[0]);
 		glDrawElements(GL_TRIANGLES, (uint)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
 

@@ -12,6 +12,7 @@ in layout(location=7) vec2 vertCoords;
 uniform mat4 Projection;
 uniform mat4 View;
 uniform mat4 World;
+uniform mat4 LocalMatrix;
 uniform float time;
 
 out vec4 vPosition;
@@ -46,5 +47,5 @@ void main()
 	P += bones[ index.z ] * vertPosition * vertWeight.z;
 	P += bones[ index.w ] * vertPosition * vertWeight.w;
 
-	gl_Position = Projection * View * vertPosition;
+	gl_Position = Projection * View * LocalMatrix * vertPosition;
 }

@@ -83,17 +83,17 @@ void Tutorial11::StartUp()
 	ShaderHandler::LoadShaderProgram("UseShadow",
 		"Data/Shaders/UseShadow.vert",
 		"Data/Shaders/UseShadow.frag");
-	m_useShadowProg = ShaderHandler::GetShader("UseShadow");
+	m_useShadowProg = &ShaderHandler::GetShader("UseShadow");
 
-	m_lightDirUniLoc = glGetUniformLocation(m_useShadowProg, "lightDir");
-	m_shadowMapUniLoc = glGetUniformLocation(m_useShadowProg, "shadowMap");
-	m_ulightMatUniLoc = glGetUniformLocation(m_useShadowProg, "LightMatrix");
+	m_lightDirUniLoc = glGetUniformLocation(*m_useShadowProg, "lightDir");
+	m_shadowMapUniLoc = glGetUniformLocation(*m_useShadowProg, "shadowMap");
+	m_ulightMatUniLoc = glGetUniformLocation(*m_useShadowProg, "LightMatrix");
 
 	ShaderHandler::LoadShaderProgram("GenShadow",
 		"Data/Shaders/GenShadow.vert",
 		"Data/Shaders/GenShadow.frag");
-	m_genShadowProg = ShaderHandler::GetShader("GenShadow");
-	m_glightMatUniLoc = glGetUniformLocation(m_genShadowProg, "LightMatrix");
+	m_genShadowProg = &ShaderHandler::GetShader("GenShadow");
+	m_glightMatUniLoc = glGetUniformLocation(*m_genShadowProg, "LightMatrix");
 	
 	SetUpFBO();
 	CalcLightMat();
@@ -102,22 +102,18 @@ void Tutorial11::StartUp()
 	InitialiseFlyCamera(5.f, 20.0f, 0.1f,
 		glm::vec3(1,1,1), glm::vec3(0,0,0));
 
-	m_pAmbientLight = new Lighting(*m_pMainProgramID, "ambientLight",
-		vec3(0.25, 0.25, 0.4), LIGHT_TYPE::AMBIENT_L);
-	m_pPointLight = new Lighting(*m_pMainProgramID, "pointLight",
-		vec3(5, 5, 5), LIGHT_TYPE::POINT_L);
 	/*
 	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Point X", TW_TYPE_FLOAT, (void*)&m_pPointLight->GetPosition().x);
 	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Point Y", TW_TYPE_FLOAT, (void*)&m_pPointLight->GetPosition().y);
 	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Point Z", TW_TYPE_FLOAT, (void*)&m_pPointLight->GetPosition().z);
 	*/
 	m_pBunny = new FBXModel(vec3(0));
-	m_pBunny->LoadFBX(*m_pMainProgramID,
+	m_pBunny->LoadFBX(*m_useShadowProg,
 		"Data/Models/stanford/bunny.fbx",
 		FBXFile::UNITS_CENTIMETER);
 
 	m_pPlane = new FBXModel(vec3(0));
-	m_pPlane->LoadFBX(*m_pMainProgramID,
+	m_pPlane->LoadFBX(*m_useShadowProg,
 		"Data/Models/plane.fbx",
 		FBXFile::UNITS_CENTIMETER);
 }
@@ -140,10 +136,10 @@ void Tutorial11::UpdateShadowTexture()
 	glViewport(0, 0, 4096, 4096);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	glUseProgram(m_genShadowProg);
+	glUseProgram(*m_genShadowProg);
 	glUniformMatrix4fv(m_glightMatUniLoc, 1, GL_FALSE, &m_lightMatrix[0][0]);
 	
-	m_pBunny->Render();
+	m_pBunny->Render(mat4(1));
 }
 
 void Tutorial11::RenderStuff()
@@ -152,7 +148,7 @@ void Tutorial11::RenderStuff()
 	glViewport(0, 0, GetWidth(), GetHeight());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glUseProgram(m_useShadowProg);
+	glUseProgram(*m_useShadowProg);
 
 	// bind the light matrix
 	glm::mat4 textureSpaceOffset(
@@ -170,8 +166,8 @@ void Tutorial11::RenderStuff()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_FBODepth);
 
-	m_pBunny->Render();
-	m_pPlane->Render();
+	m_pBunny->Render(mat4(1));
+	m_pPlane->Render(mat4(1));
 }
 
 // Draws the stuff to screen
@@ -180,6 +176,4 @@ void Tutorial11::Render()
 	GLApplication::Render();
 	UpdateShadowTexture();
 	RenderStuff();
-	m_pAmbientLight->Render();
-	m_pPointLight->Render();
 }

@@ -33,7 +33,7 @@ public:
 	void CleanupOpenGLBuffers();
 
 	void Update(const double a_dt);
-	void Render();
+	void Render(const glm::mat4& a_SRT);
 private:
 	void CreateOpenGLBuffers();
 

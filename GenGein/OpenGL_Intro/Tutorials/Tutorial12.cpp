@@ -22,6 +22,55 @@ Tutorial12::~Tutorial12()
 {
 }
 
+void Tutorial12::SetUpShadowRender()
+{
+	// Setup shadow map buffer
+	glGenFramebuffers(1, &m_shadowID);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_shadowID);
+
+	glGenTextures(1, &m_FBODepth);
+	glBindTexture(GL_TEXTURE_2D, m_FBODepth);
+
+	// Texture uses a 16-bit depth component format
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, 4096, 4096,
+		0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	// attached as a depth attachment to capture depth not colour
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+		m_FBODepth, 0);
+
+	// No colour targets are used
+	glDrawBuffer(GL_NONE);
+
+	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (status != GL_FRAMEBUFFER_COMPLETE)
+	{
+		printf("ERROR: FRAMEBUFFER UNSUCCESSFUL.\n");
+		return;
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Tutorial12::CalcLightingMatrix()
+{
+	m_lightDirection = glm::normalize(glm::vec3(-35, 339, 118));
+
+	glm::mat4 lightProjection = glm::ortho<float>(
+		-100, 100, -100, 100, -100, 100);
+
+	glm::mat4 lightView = glm::lookAt(m_lightDirection,
+		glm::vec3(0), glm::vec3(0, 1, 0));
+
+	m_lightMatrix = lightProjection * lightView;
+
+	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Debug", "Sun Dir", TW_TYPE_DIR3F, (void*)&m_lightDirection[0]);
+}
+
 void Tutorial12::CreatePerlinPlane(c_uint a_dim)
 {
 	m_dims = a_dim;
@@ -125,7 +174,7 @@ void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 			float angle = 0;
 			vec3 direction = vec3(1);
 			
-			int range = 100;
+			int range = 10;
 			uint treeSeed = r * a_dim + c;
 			treeSeed += -range / 2 + (rand() % range);
 			if (treeSeed == (r * a_dim + c) && m_enviroVerts[r * a_dim + c].position.y > 3)
@@ -135,6 +184,28 @@ void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 					glm::rotate(angle, direction) *
 					glm::translate(vec3(m_enviroVerts[r * a_dim + c].position)));
 			}
+		}
+	}
+
+	// Calculating normals
+	for (GLuint row = 0; row < a_dim; ++row)
+	{
+		for (GLuint col = 0; col < a_dim; ++col)
+		{
+			int nextRowInc = 1, nextColInc = 1;
+
+			if (row == a_dim - 1) nextRowInc = -1;
+			else nextRowInc = 1;
+			if (col == a_dim - 1) nextColInc = -1;
+			else nextColInc = 1;
+
+			//current | across | across + above
+			uint a = col*a_dim + row;
+			uint b = a + (a_dim * nextColInc);
+			uint c = a + nextColInc;
+
+			vec3 dir = glm::cross(vec3(m_enviroVerts[b].position - m_enviroVerts[a].position), vec3(m_enviroVerts[c].position - m_enviroVerts[a].position));
+			m_enviroVerts[a].normal = vec4(normalize(dir),0);
 		}
 	}
 
@@ -170,8 +241,10 @@ void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 	// Initialise Vertex Element data 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(VertexData), (void*)offsetof(VertexData, position));
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexData), (void*)offsetof(VertexData, uv));
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(VertexData), (void*)offsetof(VertexData, normal));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexData), (void*)offsetof(VertexData, uv));
 
 	// Gen and bind data to Index buffer object
 	glGenBuffers(1, &ibo);
@@ -205,7 +278,20 @@ void Tutorial12::StartUp()
 		"Data/Shaders/Test/Enviro.vert",
 		"Data/Shaders/Test/Enviro.frag");
 	m_enviroProg = &ShaderHandler::GetShader("EnviroMap");
-	
+
+	ShaderHandler::LoadShaderProgram("GenShadow",
+		"Data/Shaders/GenShadow.vert",
+		"Data/Shaders/GenShadow.frag");
+	m_genShadowProg = &ShaderHandler::GetShader("GenShadow");
+
+	m_lightDirUniLoc = glGetUniformLocation(*m_enviroProg, "lightDir");
+	m_shadowMapUniLoc = glGetUniformLocation(*m_enviroProg, "shadowMap");
+	m_ulightMatUniLoc = glGetUniformLocation(*m_enviroProg, "LightMatrix");
+	m_glightMatUniLoc = glGetUniformLocation(*m_genShadowProg, "LightMatrix");
+
+	//SetUpShadowRender();
+	//CalcLightingMatrix();
+
 	// WATER PLANE
 	CreatePerlinPlane(2);
 
@@ -241,22 +327,53 @@ void Tutorial12::Update(const double a_dt)
 	}
 }
 
-// Render things to screen
-void Tutorial12::Render()
+void Tutorial12::UpdateShadowTexture()
 {
-	GLApplication::Render();
-	
-	TextureHandler::RenderAllTextures();
+	// Final pass: bind back-buffer and clear colour and depth
+	glBindFramebuffer(GL_FRAMEBUFFER, m_shadowID);
+	glViewport(0, 0, 4096, 4096);
+	glClear(GL_DEPTH_BUFFER_BIT);
 
-	for (uint i = 0; i < m_treeSpawns.size(); i++)
-	{
-		m_palmTree->Render(m_treeSpawns[i]);
-	}
+	glUseProgram(*m_genShadowProg);
+	glUniformMatrix4fv(m_glightMatUniLoc, 1, GL_FALSE, &m_lightMatrix[0][0]);
 
 	glUseProgram(*m_enviroProg);
 	glBindVertexArray(m_enviroVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_enviroVAO);
 	glDrawElements(GL_TRIANGLES, m_enviroIndexCount, GL_UNSIGNED_INT, 0);
+}
+
+// Render things to screen
+void Tutorial12::Render()
+{
+	GLApplication::Render();
+	TextureHandler::RenderAllTextures();
+
+	glUseProgram(*m_enviroProg);
+	glBindVertexArray(m_enviroVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_enviroVAO);
+	glDrawElements(GL_TRIANGLES, m_enviroIndexCount, GL_UNSIGNED_INT, 0);
+
+	//bind the light matrix
+	glm::mat4 textureSpaceOffset(
+		0.5f, 0.0f, 0.0f, 0.0f,
+		0.0f, 0.5f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.5f, 0.0f,
+		0.5f, 0.5f, 0.5f, 1.0f);
+
+	glm::mat4 lightMatrix = textureSpaceOffset * m_lightMatrix;
+
+	glUniformMatrix4fv(m_ulightMatUniLoc, 1, GL_FALSE, &lightMatrix[0][0]);
+	glUniform3fv(m_lightDirUniLoc, 1, &m_lightDirection[0]);
+	glUniform1i(m_shadowMapUniLoc, 0);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_FBODepth);
+
+	for (uint i = 0; i < m_treeSpawns.size(); i++)
+	{
+		m_palmTree->Render(m_treeSpawns[i]);
+	}
 
 	glUseProgram(*m_pMainProgramID);
 	glBindVertexArray(m_VAO);

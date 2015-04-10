@@ -113,7 +113,8 @@ uint ShaderHandler::CreateShader(c_charp a_shaderDir, c_uint a_type)
 	return shaderID;
 }
 
-const void ShaderHandler::SetUpUniformData(const glm::mat4& a_camProjMat,
+const void ShaderHandler::SetUpCameraUniforms(
+	const glm::mat4& a_camProjMat,
 	const glm::mat4& a_camViewMat,
 	const glm::mat4& a_camWorldMat,
 	const glm::vec4& a_camEyePos,
@@ -138,6 +139,31 @@ const void ShaderHandler::SetUpUniformData(const glm::mat4& a_camProjMat,
 
 		loc = glGetUniformLocation(it->second, "time");
 		glUniform1f(loc, a_elapsedTime);
+	}
+}
+
+const void ShaderHandler::SetUpLightingUniforms(
+	const glm::vec4& a_ambientLight,
+	const glm::vec4& a_diffuseLight,
+	const glm::vec4& a_specularLight,
+	const glm::mat4& a_shadowMat)
+{
+	//unsigned int uiError;
+	for (auto it = m_programMap.begin(); it != m_programMap.end(); ++it)
+	{
+		glUseProgram(it->second);
+
+		GLint loc = glGetUniformLocation(it->second, "AmbientLight");
+		glUniform4fv(loc, 1, &a_ambientLight[0]);
+
+		loc = glGetUniformLocation(it->second, "DiffuseLight");
+		glUniform4fv(loc, 1, &a_diffuseLight[0]);
+
+		loc = glGetUniformLocation(it->second, "SpecularLight");
+		glUniform4fv(loc, 1, &a_specularLight[0]);
+
+		loc = glGetUniformLocation(it->second, "ShadowMatrix");
+		glUniformMatrix4fv(loc, 1, false, &a_shadowMat[0][0]);
 	}
 }
 

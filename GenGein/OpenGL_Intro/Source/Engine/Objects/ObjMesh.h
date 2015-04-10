@@ -75,8 +75,6 @@ private:
 	// Loads and explores the .mtl file format
 	void loadMaterials(c_string a_matPath);
 
-	// Returns the mesh object (FIX!!)
-	inline ObjMesh& GetMesh() const { return ObjMesh(); }
 	// Returns the list of material pointers
 	inline const std::vector<Material*>& GetMaterials() { return m_materials; }
 	// Clean up unused data in initialisation process

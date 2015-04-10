@@ -17,6 +17,6 @@ void main() {
 		vShadowCoord.z - shadowBias) {
 		d = 0;
 	}
-
+	
 	pixelColour = vec4(d, d, d, 1);
 }
