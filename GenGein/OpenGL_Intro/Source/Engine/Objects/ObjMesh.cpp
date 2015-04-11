@@ -515,13 +515,13 @@ void ObjMesh::loadMaterials(c_string a_matPath)
 			else if (buffer.find("illum ") == 0)
 				m_currentMaterial->illum = parseFloat(buffer, "illum ");
 			else if (buffer.find("map_Ka") == 0)
-				TextureHandler::LoadTexture(m_programID, "ambientMap", m_folderDirectory + parseString(buffer, "map_Ka "));
+				TextureHandler::LoadTexture(m_programID, "ambientMap", m_folderDirectory + "/" + parseString(buffer, "map_Ka "));
 			else if (buffer.find("map_Kd") == 0)
-				TextureHandler::LoadTexture(m_programID, "diffuseMap", m_folderDirectory + parseString(buffer, "map_Ka "));
+				TextureHandler::LoadTexture(m_programID, "diffuseMap", m_folderDirectory + "/" + parseString(buffer, "map_Kd "));
 			else if (buffer.find("map_Ks") == 0)
-				TextureHandler::LoadTexture(m_programID, "specularMap", m_folderDirectory + parseString(buffer, "map_Ka "));
+				TextureHandler::LoadTexture(m_programID, "specularMap", m_folderDirectory + "/" + parseString(buffer, "map_Ks "));
 			else if (buffer.find("map_Ns") == 0)
-				TextureHandler::LoadTexture(m_programID, "normalMap", m_folderDirectory + parseString(buffer, "map_Ka "));
+				TextureHandler::LoadTexture(m_programID, "normalMap", m_folderDirectory + "/" + parseString(buffer, "map_Ns "));
 		}
 
 		if (m_currentMaterial != NULL)

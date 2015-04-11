@@ -61,10 +61,11 @@ private:
 	uint m_enviroIndexCount, m_enviroVAO;
 
 	ObjMesh* m_palmTree;
-	FBXModel* m_tree;
+	ObjMesh* m_pineTree;
 	std::vector<glm::mat4> m_treeSpawns;
 
 	//Environment variables
+	int m_range;
 	float m_amplitude;
 	float m_seeder;
 

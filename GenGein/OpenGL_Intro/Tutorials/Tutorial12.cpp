@@ -141,7 +141,7 @@ void Tutorial12::CreatePerlinPlane(c_uint a_dim)
 void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 {
 	// Create a center-point based on input
-	float scale = ((a_dim + a_dim) / 2) / 50.0f;
+	float scale = ((a_dim + a_dim) / 2) / 40.0f;
 	float center = (a_dim*scale) * 0.5f;
 
 	// Populate verts with row + cols input
@@ -170,19 +170,17 @@ void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 			}
 
 			// Save off possible tree data for tree positions
-			vec3 scale = vec3(1);
-			float angle = 0;
-			vec3 direction = vec3(1);
+			//vec3 scale = vec3(m_scale);
+			float angle = rand() % 360;
+			vec3 direction = vec3(0,1,0);
 			
-			int range = 10;
 			uint treeSeed = r * a_dim + c;
-			treeSeed += -range / 2 + (rand() % range);
+			treeSeed += -m_range / 2 + (rand() % m_range);
 			if (treeSeed == (r * a_dim + c) && m_enviroVerts[r * a_dim + c].position.y > 3)
 			{
 				m_treeSpawns.push_back(
-					glm::scale(scale) *
-					glm::rotate(angle, direction) *
-					glm::translate(vec3(m_enviroVerts[r * a_dim + c].position)));
+					glm::translate(vec3(m_enviroVerts[r * a_dim + c].position)) *
+					glm::rotate(angle, direction));
 			}
 		}
 	}
@@ -262,6 +260,7 @@ void Tutorial12::StartUp()
 {
 	GLApplication::StartUp();
 
+	m_range = 100;
 	m_amplitude = 100;
 	m_seeder = 12;
 
@@ -302,11 +301,14 @@ void Tutorial12::StartUp()
 	TextureHandler::LoadTexture(m_enviroProg, "SandMap", "Data/Textures/sand_tile.jpg");
 	TextureHandler::LoadTexture(m_enviroProg, "GrassMap", "Data/Textures/grass_tiled.tga");
 
+	m_pineTree = new ObjMesh(vec3(0));
 	m_palmTree = new ObjMesh(vec3(0));
-	m_palmTree->LoadObject("Data/Objects/Cow", "testCow");
+	m_palmTree->LoadObject("Data/Objects/PalmTree02", "Palma 001");
+	m_pineTree->LoadObject("Data/Objects/lowpolytree02", "low poly tree");
 
-	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Environment", "Seed", TwType::TW_TYPE_FLOAT, (void*)&m_seeder);
-	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Environment", "Amplitude", TwType::TW_TYPE_FLOAT, (void*)&m_amplitude);
+	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Environment", "Seed"		, TwType::TW_TYPE_FLOAT, (void*)&m_seeder);
+	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Environment", "Amplitude"	, TwType::TW_TYPE_FLOAT, (void*)&m_amplitude);
+	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Environment", "Population", TwType::TW_TYPE_INT16, (void*)&m_range);
 }
 
 // Destroy things
@@ -369,10 +371,15 @@ void Tutorial12::Render()
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_FBODepth);
-
+	
+	vec3 pineScale = vec3(0.03, 0.02, 0.03);
+	vec3 palmScale = vec3(0.1, 0.05, 0.1);
 	for (uint i = 0; i < m_treeSpawns.size(); i++)
 	{
-		m_palmTree->Render(m_treeSpawns[i]);
+		if (m_treeSpawns[i][3].y > 13)
+			m_pineTree->Render(m_treeSpawns[i] * glm::scale(pineScale /*+ ( 0.02f * (rand() % 10)) */));
+		else
+			m_palmTree->Render(m_treeSpawns[i] * glm::scale(palmScale));
 	}
 
 	glUseProgram(*m_pMainProgramID);
