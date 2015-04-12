@@ -3,9 +3,9 @@
 #include <glm\glm.hpp>
 #include <glm\ext.hpp>
 #include <stb\stb_image.h>
+#include <FBXFile.h>
 
 #include "TextureHandler.h"
-
 
 //Shortening
 typedef std::map<c_charp, sTexture> textureMap;
@@ -66,6 +66,33 @@ sTexture TextureHandler::LoadTexture(c_uint* a_prog, c_charp a_name, c_str a_dir
 	texture.textureUniLoc = glGetUniformLocation(*a_prog, a_name);
 	m_textureMap[a_name] = texture;
 	
+	return texture;
+}
+
+// Add a texture based on desired name and directory
+sTexture TextureHandler::LoadFBXTexture(c_uint a_prog, const FBXTexture* a_data)
+{
+	if (DoesTextureExist(a_data->name.c_str())) return m_textureMap[a_data->name.c_str()];
+
+	sTexture texture = sTexture();
+	texture.ID = a_data->handle;
+
+	glGenTextures(1, &texture.ID);
+	glBindTexture(GL_TEXTURE_2D, texture.ID);
+	glTexImage2D(GL_TEXTURE_2D, 0, a_data->format,
+		a_data->width, a_data->handle, 0, a_data->format, GL_UNSIGNED_BYTE, a_data->data);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	stbi_image_free(a_data->data);
+
+	printf("SUCCESS: %s Texture Loaded.\n", a_data->name.c_str());
+	
+	texture.programID = &a_prog;
+	texture.textureUniLoc = glGetUniformLocation(a_prog, a_data->name.c_str());
+	m_textureMap[a_data->name.c_str()] = texture;
+
 	return texture;
 }
 
@@ -187,44 +214,6 @@ void TextureHandler::UnloadTexture(c_charp a_name)
 	glDeleteTextures(1, &uiTextureID);
 
 	m_textureMap.erase(a_name);
-}
-
-void TextureHandler::UpdatePerlin(c_charp a_name, c_uint a_dim, const float& a_seed)
-{
-	sTexture& perlin = m_textureMap[a_name];
-
-	glDeleteTextures(1, &perlin.ID);
-
-	float *perlin_data = new float[a_dim * a_dim];
-	float scale = (1.0f / a_dim) * 3;
-	int octaves = 6;
-	for (uint x = 0; x < a_dim; ++x)
-	{
-		for (uint y = 0; y < a_dim; ++y)
-		{
-			float amplitude = 1.f;
-			float persistence = 0.3f;
-			perlin_data[y * a_dim + x] = 0.0f;
-			for (int o = 0; o < octaves; ++o)
-			{
-				float freq = powf(2, (float)o);
-				float perlin_sample =
-					glm::perlin((glm::vec2((float)x, (float)y) + a_seed) * scale * freq) * 0.5f + 0.5f;
-				perlin_data[y * a_dim + x] += perlin_sample * amplitude;
-				amplitude *= persistence;
-			}
-		}
-	}
-
-	glGenTextures(1, &perlin.ID);
-	glBindTexture(GL_TEXTURE_2D, perlin.ID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, a_dim, a_dim, 0, GL_RED, GL_FLOAT, perlin_data);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	perlin.textureUniLoc = glGetUniformLocation(*perlin.programID, a_name);
 }
 
 // Rendering the textures

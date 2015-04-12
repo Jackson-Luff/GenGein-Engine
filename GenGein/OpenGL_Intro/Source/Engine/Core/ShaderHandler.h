@@ -36,7 +36,8 @@ public:
 	static uint LoadShaderProgram( c_charp a_shaderName,
 		c_charp a_vertexShader, c_charp a_pixelShader,
 		c_charp a_geometryShader = nullptr, c_charp a_tessCntrlShader = nullptr,
-		c_charp a_tessEvalShader = nullptr);
+		c_charp a_tessEvalShader = nullptr,
+		bool checkForExists = true);
 	
 	// Initialise Shader Content
 	static uint CreateShader(c_charp a_shaderDir, c_uint a_type);

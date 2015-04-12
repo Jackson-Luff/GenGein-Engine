@@ -29,9 +29,10 @@ uint& ShaderHandler::GetShader(c_charp a_shaderName)
 uint ShaderHandler::LoadShaderProgram(c_charp a_shaderName,
 	c_charp a_vertexShader, c_charp a_pixelShader,
 	c_charp a_geometryShader, c_charp a_tessCntrlShader,
-	c_charp a_tessEvalShader )
+	c_charp a_tessEvalShader, bool checkForExists)
 {
-	//if (DoesShaderExist(a_shaderName)) return m_programMap[a_shaderName];
+	if (DoesShaderExist(a_shaderName) && checkForExists)
+		return m_programMap[a_shaderName];
 
 	c_uint vertShader = 
 		CreateShader(a_vertexShader, GL_VERTEX_SHADER);
@@ -173,15 +174,17 @@ const void ShaderHandler::ReloadAllPrograms()
 	{
 		if (it.first == "SkyBox") continue;
 
-		glDeleteProgram(it.second);
+		c_charp name = it.first;
 		DirectoryData dirData = m_directoryMap[it.second];
-		
-		LoadShaderProgram(it.first,
+		glDeleteProgram(it.second);
+
+		LoadShaderProgram(name,
 			dirData.vertDir,
 			dirData.pixeDir,
 			dirData.geomDir,
 			dirData.tesCDir,
-			dirData.tesEDir);
+			dirData.tesEDir,
+			false);
 	}
 }
 

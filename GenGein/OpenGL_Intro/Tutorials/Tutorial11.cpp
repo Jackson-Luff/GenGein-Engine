@@ -108,12 +108,12 @@ void Tutorial11::StartUp()
 	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Point Z", TW_TYPE_FLOAT, (void*)&m_pPointLight->GetPosition().z);
 	*/
 	m_pBunny = new FBXModel(vec3(0));
-	m_pBunny->LoadFBX(*m_useShadowProg,
+	m_pBunny->LoadFBX(m_useShadowProg,
 		"Data/Models/stanford/bunny.fbx",
 		FBXFile::UNITS_CENTIMETER);
 
 	m_pPlane = new FBXModel(vec3(0));
-	m_pPlane->LoadFBX(*m_useShadowProg,
+	m_pPlane->LoadFBX(m_useShadowProg,
 		"Data/Models/plane.fbx",
 		FBXFile::UNITS_CENTIMETER);
 }

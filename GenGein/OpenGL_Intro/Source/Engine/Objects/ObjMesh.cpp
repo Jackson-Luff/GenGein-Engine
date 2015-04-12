@@ -95,10 +95,7 @@ void ObjMesh::LoadObject( c_charp a_folderDir, c_charp a_fileDir, c_charp a_text
 
 // Deconstructor
 ObjMesh::~ObjMesh()
-{
-	m_materials.clear();
-	delete m_currentMaterial;
-}
+{}
 
 void ObjMesh::ApplyDataToVertNIndexBuffers()
 {

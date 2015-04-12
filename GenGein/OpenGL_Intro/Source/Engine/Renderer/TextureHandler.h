@@ -8,6 +8,8 @@ typedef const unsigned int	c_uint;
 typedef const char*			c_charp;
 typedef const std::string c_str;
 
+struct FBXTexture;
+
 struct sTexture
 {
 	uint ID;
@@ -24,6 +26,7 @@ public:
 	
 	// Add a material based on desired name and directory
 	static sTexture LoadTexture(c_uint* a_prog, c_charp a_name, c_str a_dir);
+	static sTexture LoadFBXTexture(c_uint a_prog, const FBXTexture* a_data);
 	static sTexture LoadPerlin(c_uint* a_prog, c_charp a_name, c_uint a_dim);
 	static sTexture LoadCubeMap(c_uint* a_prog, c_charp a_name, std::vector<c_str> a_faces);
 	// Get the texture by name
@@ -33,8 +36,6 @@ public:
 	// Rendering the textures
 	static void RenderAllTextures();
 	static void RenderAllCubeMaps();
-
-	static void UpdatePerlin(c_charp a_name, c_uint a_dim, const float& a_seed);
 private:
 	// Check if texture exists
 	static bool DoesTextureExist(c_charp a_name);

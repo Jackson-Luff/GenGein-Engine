@@ -60,6 +60,6 @@ void main()
 	float d = max( 0, dot( normalize( TBN * N), lightVector ));
 
 	// ============ POLISH ==============
-	pixelColour = vec4(vNormal,1);//texture(diffuseMap, vCoords);
+	pixelColour = texture(diffuseMap, vCoords);
 	//pixelColour.rgb *= d;
 }

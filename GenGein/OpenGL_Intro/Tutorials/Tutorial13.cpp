@@ -29,14 +29,8 @@ void Tutorial13::StartUp()
 	InitialiseFlyCamera(5.0f, 20.0f, 0.5f,
 		glm::vec3(0, 0.5, 0), glm::vec3(-1, 0, -1));
 
-	ShaderHandler::LoadShaderProgram("PBL",
-		"Data/Shaders/Geometry/PBLShader.vert",
-		"Data/Shaders/Geometry/PBLShader.frag");
-	m_pMainProgramID = &ShaderHandler::GetShader("PBL");
-
 	m_model = new FBXModel(vec3(0));
-	m_model->LoadFBX(*m_pMainProgramID, 
-		"Data/Models/soulspear/soulspear.fbx", FBXFile::UNITS_CENTIMETER);	
+	m_model->LoadFBX("Data/Models/soulspear/soulspear.fbx", FBXFile::UNITS_CENTIMETER);	
 }
 
 // Destroy things

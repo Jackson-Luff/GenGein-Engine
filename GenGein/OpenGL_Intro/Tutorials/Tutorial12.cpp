@@ -5,6 +5,7 @@
 #include "Engine\GUI\AntTweak.h"
 #include "Engine\Renderer\TextureHandler.h"
 #include "Engine\Objects\ObjMesh.h"
+#include "Engine\Objects\FBXModel.h"
 #include "Cameras\BaseCamera.h"
 
 #include "Tutorial12.h"
@@ -146,9 +147,6 @@ void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 
 	// Populate verts with row + cols input
 	VertexData* m_enviroVerts = new VertexData[a_dim * a_dim];
-	
-	float pscale = (1.0f / a_dim) * 3;
-	int octaves = 6;
 
 	for (GLuint r = 0; r < a_dim; ++r)
 	{
@@ -158,34 +156,23 @@ void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 			m_enviroVerts[r * a_dim + c].uv = glm::vec2((float)r / a_dim, (float)c / a_dim);
 
 			// Perlin data
+			float pscale = (1.0f / a_dim) * 3;
 			float persistence = 0.3f;
 			float ampli = m_amplitude;
+			int octaves = 6;
+
 			for (int o = 0; o < octaves; ++o)	
 			{
 				float freq = powf(2, (float)o);
-				float perlin_sample = glm::perlin((glm::vec2((float)c, (float)r) + m_seeder) * pscale * freq) * 0.5f + 0.5f;
+				float perlin_sample = glm::perlin((glm::vec2((float)r, (float)c) + m_seeder) * pscale * freq) + 0.5f;
 
-				m_enviroVerts[r * a_dim + c].position.y += -m_amplitude/10 + (perlin_sample * ampli);
+				m_enviroVerts[r * a_dim + c].position.y += -m_amplitude/10 + (perlin_sample * ampli * 2);
 				ampli *= persistence;
-			}
-
-			// Save off possible tree data for tree positions
-			//vec3 scale = vec3(m_scale);
-			float angle = rand() % 360;
-			vec3 direction = vec3(0,1,0);
-			
-			uint treeSeed = r * a_dim + c;
-			treeSeed += -m_range / 2 + (rand() % m_range);
-			if (treeSeed == (r * a_dim + c) && m_enviroVerts[r * a_dim + c].position.y > 3)
-			{
-				m_treeSpawns.push_back(
-					glm::translate(vec3(m_enviroVerts[r * a_dim + c].position)) *
-					glm::rotate(angle, direction));
 			}
 		}
 	}
 
-	// Calculating normals
+	// Calculating normals and spawns
 	for (GLuint row = 0; row < a_dim; ++row)
 	{
 		for (GLuint col = 0; col < a_dim; ++col)
@@ -204,6 +191,18 @@ void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 
 			vec3 dir = glm::cross(vec3(m_enviroVerts[b].position - m_enviroVerts[a].position), vec3(m_enviroVerts[c].position - m_enviroVerts[a].position));
 			m_enviroVerts[a].normal = vec4(normalize(dir),0);
+
+			// Save off possible tree data for tree positions
+			uint treeSeed = row * a_dim + col;
+			treeSeed += -m_range / 2 + (rand() % m_range);
+			if (treeSeed == (row * a_dim + col) && m_enviroVerts[a].position.y > 3)
+			{
+				m_treeSpawns.push_back(
+					glm::translate(vec3(m_enviroVerts[a].position)) *
+					glm::rotate(dot(vec3(m_enviroVerts[a].normal), vec3(0,1,0)), vec3(m_enviroVerts[a].normal)));
+
+				m_indexTypeToSpawn.push_back(rand() % 9);
+			}
 		}
 	}
 
@@ -253,6 +252,7 @@ void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 	glBindVertexArray(0);
 	// Remove pointers (memsave)
 	delete[] indexData;
+
 }
 
 // Initialise Member Variables
@@ -261,13 +261,13 @@ void Tutorial12::StartUp()
 	GLApplication::StartUp();
 
 	m_range = 100;
-	m_amplitude = 100;
+	m_amplitude = 16;
 	m_seeder = 12;
 
 	//Initialise camera
 	InitialiseFlyCamera(5.0f, 20.0f, 0.5f,
 		glm::vec3(218, 146, 167), glm::vec3(0, 0, 0));
-	
+
 	ShaderHandler::LoadShaderProgram("WaterMap",
 		"Data/Shaders/ProGenReGen.vert",
 		"Data/Shaders/ProGenReGen.frag");
@@ -300,12 +300,26 @@ void Tutorial12::StartUp()
 	//TextureHandler::LoadPerlin(m_enviroProg, "heightMap", 128);
 	TextureHandler::LoadTexture(m_enviroProg, "SandMap", "Data/Textures/sand_tile.jpg");
 	TextureHandler::LoadTexture(m_enviroProg, "GrassMap", "Data/Textures/grass_tiled.tga");
+	TextureHandler::LoadTexture(m_enviroProg, "StoneMap", "Data/Textures/dirt_tiled.tga");
 
-	m_pineTree = new ObjMesh(vec3(0));
-	m_palmTree = new ObjMesh(vec3(0));
-	m_palmTree->LoadObject("Data/Objects/PalmTree02", "Palma 001");
-	m_pineTree->LoadObject("Data/Objects/lowpolytree02", "low poly tree");
+	m_trees = std::vector< FBXModel >();
 
+	for (int i = 1; i < 4; i++)
+	{
+		for (int j = 1; j < 4; j++)
+		{
+			FBXModel tree = FBXModel(vec3(0));
+			std::string directory = std::string("Data/Models/Ryan/tree");
+			directory += std::to_string(i);
+			directory += "_0";
+			directory += std::to_string(j);
+			directory += ".fbx";
+			tree.LoadFBX(directory, FBXFile::UNITS_CENTIMETER);
+
+			m_trees.push_back(tree);
+		}
+	}
+	
 	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Environment", "Seed"		, TwType::TW_TYPE_FLOAT, (void*)&m_seeder);
 	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Environment", "Amplitude"	, TwType::TW_TYPE_FLOAT, (void*)&m_amplitude);
 	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Environment", "Population", TwType::TW_TYPE_INT16, (void*)&m_range);
@@ -314,7 +328,6 @@ void Tutorial12::StartUp()
 // Destroy things
 void Tutorial12::ShutDown()
 {
-
 }
 
 // Update loop
@@ -355,35 +368,21 @@ void Tutorial12::Render()
 	glBindVertexArray(m_enviroVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_enviroVAO);
 	glDrawElements(GL_TRIANGLES, m_enviroIndexCount, GL_UNSIGNED_INT, 0);
-
-	//bind the light matrix
-	glm::mat4 textureSpaceOffset(
-		0.5f, 0.0f, 0.0f, 0.0f,
-		0.0f, 0.5f, 0.0f, 0.0f,
-		0.0f, 0.0f, 0.5f, 0.0f,
-		0.5f, 0.5f, 0.5f, 1.0f);
-
-	glm::mat4 lightMatrix = textureSpaceOffset * m_lightMatrix;
-
-	glUniformMatrix4fv(m_ulightMatUniLoc, 1, GL_FALSE, &lightMatrix[0][0]);
-	glUniform3fv(m_lightDirUniLoc, 1, &m_lightDirection[0]);
-	glUniform1i(m_shadowMapUniLoc, 0);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_FBODepth);
 	
-	vec3 pineScale = vec3(0.03, 0.02, 0.03);
-	vec3 palmScale = vec3(0.1, 0.05, 0.1);
-	for (uint i = 0; i < m_treeSpawns.size(); i++)
-	{
-		if (m_treeSpawns[i][3].y > 13)
-			m_pineTree->Render(m_treeSpawns[i] * glm::scale(pineScale /*+ ( 0.02f * (rand() % 10)) */));
-		else
-			m_palmTree->Render(m_treeSpawns[i] * glm::scale(palmScale));
-	}
+	
 
 	glUseProgram(*m_pMainProgramID);
 	glBindVertexArray(m_VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VAO);
 	glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_INT, 0);
+
+	vec3 pineScale = vec3(0.025, 0.025, 0.025);
+	vec3 palmScale = vec3(0.3, 0.15, 0.3);
+	for (uint i = 0; i < m_treeSpawns.size(); i++)
+	{
+		if (m_treeSpawns[i][3].y > 13)
+			m_trees[m_indexTypeToSpawn[i]].Render(m_treeSpawns[i] * glm::scale(pineScale));
+		//else
+		//	m_trees[index+9].Render(m_treeSpawns[i] * glm::scale(palmScale));
+	}
 }

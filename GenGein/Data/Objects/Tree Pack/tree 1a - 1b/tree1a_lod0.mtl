@@ -1,0 +1,8 @@
+mtl default
+map_Kd bark1.tga
+
+mtl polySurface101
+map_Kd bark1_nmp.tga
+
+mtl polySurface1041
+map_Kd leafs1.tga

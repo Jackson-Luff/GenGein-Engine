@@ -5,8 +5,6 @@
 
 typedef unsigned int uint;
 
-class TextureLoader;
-
 class FBXModel : public BaseObject
 {
 public:
@@ -14,7 +12,15 @@ public:
 	FBXModel(vec3 a_position);
 	~FBXModel();
 
-	bool LoadFBX(uint a_prog, 
+	bool LoadFBX(
+		uint* a_prog,
+		std::string a_directory,
+		FBXFile::UNIT_SCALE a_scale = FBXFile::UNITS_METER,
+		bool a_loadTextures = true,
+		bool a_loadAnimations = true,
+		bool a_flipTextureY = true);
+
+	bool LoadFBX(
 		std::string a_directory,
 		FBXFile::UNIT_SCALE a_scale = FBXFile::UNITS_METER,
 		bool a_loadTextures = true,
@@ -37,7 +43,7 @@ public:
 private:
 	void CreateOpenGLBuffers();
 
-	int bonesUniform;
+	int bonesUniform, localMatUniform;
 	FBXMaterial* m_material;
 	std::vector<FBXVertex> m_vertices;
 	void* m_userData;

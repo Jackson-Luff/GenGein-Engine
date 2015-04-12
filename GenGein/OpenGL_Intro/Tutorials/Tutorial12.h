@@ -4,7 +4,6 @@
 
 typedef const unsigned int c_uint;
 
-class ObjMesh;
 class FBXModel;
 
 ////
@@ -60,8 +59,12 @@ private:
 	uint* m_enviroProg;
 	uint m_enviroIndexCount, m_enviroVAO;
 
-	ObjMesh* m_palmTree;
-	ObjMesh* m_pineTree;
+	std::vector<FBXModel> m_trees;
+
+	// Tree1 = large tree
+	// Tree2 = small tree
+	// Tree3 = medium tree
+	std::vector<int> m_indexTypeToSpawn;
 	std::vector<glm::mat4> m_treeSpawns;
 
 	//Environment variables

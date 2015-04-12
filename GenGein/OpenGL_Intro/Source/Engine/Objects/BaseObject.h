@@ -24,14 +24,14 @@ public:
 	// Getter / Setter of Rotation
 	inline void SetRotation( const float a_angleInDegrees, const vec3& a_appOfRot)
 	{
-		m_localTransform = glm::rotate(m_localTransform, a_angleInDegrees, a_appOfRot);
+		m_localTransform *= glm::rotate(m_localTransform, a_angleInDegrees, a_appOfRot);
 	}
 
 	// Getter / Setter of Scale
 	inline void const SetScale(float a_scaleValue) 
 	{
 		vec3 scale = vec3(a_scaleValue);
-		m_localTransform = glm::scale(m_localTransform, scale);
+		m_localTransform *= glm::scale(m_localTransform, scale);
 	}
 
 protected:
@@ -57,7 +57,7 @@ protected:
 	uint m_indexCount;
 
 	uint m_VAO, m_VBO, m_IBO;
-	uint m_programID;
+	uint* m_programID;
 
 	mat4 m_localTransform;
 	mat4 m_globalTransform;

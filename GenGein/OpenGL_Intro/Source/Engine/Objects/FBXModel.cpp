@@ -1,6 +1,8 @@
 #include <string>
 #include <gl_core_4_4.h>
 #include <glm\glm.hpp>
+#include "Engine\Renderer\TextureHandler.h"
+#include "Engine\Core\ShaderHandler.h"
 #include <FBXFile.h>
 
 #include "FBXModel.h"
@@ -11,19 +13,23 @@ FBXModel::FBXModel()
 
 FBXModel::FBXModel(vec3 a_position) 
 	: BaseObject(a_position)
-{}
+{
+}
 
 FBXModel::~FBXModel()
 {
 }
 
-bool FBXModel::LoadFBX(uint a_prog,
+bool FBXModel::LoadFBX(
+	uint* a_prog,
 	std::string a_directory,
 	FBXFile::UNIT_SCALE a_scale,
 	bool a_loadTextures,
 	bool a_loadAnimations,
 	bool a_flipTextureY)
 {
+	m_programID = a_prog;
+
 	m_pFbx = new FBXFile();
 
 	if (!m_pFbx->load(a_directory.c_str(), a_scale, a_loadTextures, a_loadAnimations, a_flipTextureY))
@@ -33,7 +39,35 @@ bool FBXModel::LoadFBX(uint a_prog,
 	}
 	m_pFbx->initialiseOpenGLTextures();
 	CreateOpenGLBuffers();
-	bonesUniform = glGetUniformLocation(a_prog, "bones");
+
+	bonesUniform = glGetUniformLocation(*m_programID, "bones");
+	return true;
+}
+
+bool FBXModel::LoadFBX(
+	std::string a_directory,
+	FBXFile::UNIT_SCALE a_scale,
+	bool a_loadTextures,
+	bool a_loadAnimations,
+	bool a_flipTextureY)
+{
+	ShaderHandler::LoadShaderProgram("FBXProgram",
+		"Data/Shaders/Geometry/FbxShader.vert",
+		"Data/Shaders/Geometry/FbxShader.frag");
+	m_programID = &ShaderHandler::GetShader("FBXProgram");
+
+	m_pFbx = new FBXFile();
+
+	if (!m_pFbx->load(a_directory.c_str(), a_scale, a_loadTextures, a_loadAnimations, a_flipTextureY))
+	{
+		printf("%s is an incorrect file directory\n", a_directory.c_str());
+		return false;
+	}
+
+	m_pFbx->initialiseOpenGLTextures();
+	CreateOpenGLBuffers();
+
+	bonesUniform = glGetUniformLocation(*m_programID, "bones");
 	return true;
 }
 
@@ -134,6 +168,8 @@ void FBXModel::Update(const double a_elapsedTime)
 
 void FBXModel::Render(const glm::mat4& a_SRT)
 {
+	glUseProgram(*m_programID);
+
 	m_localTransform = a_SRT;
 
 	if (m_pFbx->getSkeletonCount() > 0)
@@ -149,18 +185,18 @@ void FBXModel::Render(const glm::mat4& a_SRT)
 	for (unsigned int i = 0; i < m_pFbx->getMeshCount(); ++i)
 	{
 		FBXMeshNode* mesh = m_pFbx->getMeshByIndex(i);
+		uint* glData = (uint*)mesh->m_userData;
 
 		for (uint j = 0; j < FBXMaterial::TextureTypes_Count; j++)
 		{
 			if (mesh->m_material->textures[j] == nullptr)
 				continue;
-			
+
 			glActiveTexture(GL_TEXTURE0 + j);
 			glBindTexture(GL_TEXTURE_2D, mesh->m_material->textures[j]->handle);
 		}
 
-		uint* glData = (uint*)mesh->m_userData;
-		int locMatUniLoc = glGetUniformLocation(glData[0], "LocalMatrix");
+		int locMatUniLoc = glGetUniformLocation(*m_programID, "LocalMatrix");
 		glUniformMatrix4fv(locMatUniLoc, 1, GL_FALSE, &m_localTransform[0][0]);
 
 		glBindVertexArray(glData[0]);
