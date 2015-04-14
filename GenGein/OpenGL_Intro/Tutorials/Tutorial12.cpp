@@ -329,18 +329,19 @@ void Tutorial12::StartUp()
 	CreateEnviroGrid(128);
 
 	TextureHandler::LoadPerlin(m_enviroProg, "heightMap", 128);
+	//TextureHandler::LoadTexture(m_enviroProg, "Shit", "Data/Textures/Environment/grass_diff.png");
 	TextureHandler::LoadTexture(m_enviroProg, "SandMap", "Data/Textures/sand_tile.jpg");
 	TextureHandler::LoadTexture(m_enviroProg, "GrassMap", "Data/Textures/grass_tiled.tga");
 	TextureHandler::LoadTexture(m_enviroProg, "StoneMap", "Data/Textures/dirt_tiled.tga");
 
 	m_particleEmitter = new GPUParticleEmitter();
 	m_particleEmitter->Initialise(
-		100000,
-		1.0f, 5.0f,
-		1.0f, 1.1f,
-		1.0f, 1.1f,
-		vec4(1, 0, 0, 1),
-		vec4(1, 1, 0, 1));
+		1000000,
+		1.0f, 28.0f,
+		1.0f, 4.1f,
+		0.01f, 0.7f,
+		vec4(0, 0, 1, 1),
+		vec4(0.5, 0, 1, 1));
 
 	m_sunModel = new FBXModel();
 	m_sunModel->LoadFBX(m_sunPlaneProg,
@@ -350,6 +351,7 @@ void Tutorial12::StartUp()
 
 	m_camWeapModel = new FBXModel();
 	m_camWeapModel->LoadFBX(
+		m_camWeapProg,
 		"Data/Models/GUNs/GUNFBX.fbx",
 		FBXFile::UNITS_CENTIMETER);
 	m_camWeapMatrix = glm::mat4(1);
@@ -398,11 +400,10 @@ void Tutorial12::UpdateShadowTexture()
 void Tutorial12::Render()
 {
 	GLApplication::Render();
-	TextureHandler::RenderAllTextures();
 
 	m_camWeapMatrix = glm::translate(vec3(2,-1,-3)) *
 		glm::rotate(90.0f, vec3(1,-1, 1)) *
-		glm::scale(vec3(0.05));
+		glm::scale(vec3(0.05f));
 
 	m_camWeapModel->SetLocalTransform(m_pBaseCamera->GetWorldTransform() * m_camWeapMatrix);
 	m_camWeapModel->Render();
@@ -415,11 +416,13 @@ void Tutorial12::Render()
 		(float)glfwGetMouseButton(m_pWindow, GLFW_MOUSE_BUTTON_1));
 
 
-	m_sunPosition = vec3(0.0f, 500.0f * sin(GetElapsedTime()), 500.0f * cos(GetElapsedTime()));
+	m_sunPosition = vec3(0.0f, 500.0f * sin(GetElapsedTime()*0.05f), 500.0f * cos(GetElapsedTime()*0.05f));
 	if (glfwGetKey(m_pWindow, GLFW_KEY_T)) { m_sunPosition = vec3(0.0f, 500.0f, 500.0f);}
 	
 	m_sunModel->SetPosition(m_sunPosition);
 	m_sunModel->Render();
+
+	TextureHandler::RenderAllTextures();
 
 	glUseProgram(*m_enviroProg);
 	glBindVertexArray(m_enviroVAO);

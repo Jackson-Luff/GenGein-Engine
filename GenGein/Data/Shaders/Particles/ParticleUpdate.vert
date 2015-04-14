@@ -36,10 +36,7 @@ void main()
 	uint seed = uint(time * 1000.0) + uint(gl_VertexID);
 	float dt = deltaTime;
 	
-	vec3 newVel = Velocity * (1 + (Lifetime/Lifespan));
-	newVel.x *= (rand(seed++, Lifetime/Lifespan) -1);
-	newVel.y *= (rand(seed++, Lifetime/Lifespan) -1);
-	newVel.z *= (rand(seed++, Lifetime/Lifespan) -1);
+	vec3 newVel = Velocity * 1.2;
 	
 	vPosition = Position + (Velocity * dt);
 	vVelocity = newVel;
@@ -53,7 +50,9 @@ void main()
 		if(vLifetime > vLifespan)
 		{			
 			//Initialise velocity
-			vVelocity = -World[2].xyz;
+			vVelocity.x = (1/rand(seed++,2) -1) + -World[2].x;
+			vVelocity.y = (1/rand(seed++,2) -1) + -World[2].y;
+			vVelocity.z = (1/rand(seed++,2) -1) + -World[2].z;
 			vVelocity = normalize(vVelocity);
 			vPosition = emitterPosition;
 			vLifetime = 0;

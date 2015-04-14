@@ -10,8 +10,7 @@ in vec4 vWeight;
 in vec2 vCoords;
 
 // Lighting Attributes
-uniform vec3 eyePos;
-uniform vec3 lightPos = vec3( 0.0, 1.0, 0.0);
+uniform vec3 SunPos;
 uniform vec3 ambientLight = vec3(0.25, 0.25, 0.25);
 uniform float time;
 
@@ -37,5 +36,9 @@ out vec4 pixelColour;
 
 void main()
 {
-	pixelColour = vec3(vNormal.xyz).rrrr;
+	// Diffused Light Calc's
+	vec3 lightVector = normalize(SunPos - vPosition.xyz);
+	float brightness = dot(lightVector, normalize(vNormal) );
+
+	pixelColour = texture(diffuseMap, vCoords) * brightness;
 }

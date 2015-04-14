@@ -113,8 +113,6 @@ void GLApplication::StartUp()
 void GLApplication::DebugControls()
 {
 
-	
-
 	if (glfwGetKey(m_pWindow, GLFW_KEY_GRAVE_ACCENT))
 	{
 		glEnable(GL_CULL_FACE);
@@ -149,7 +147,7 @@ void GLApplication::Render()
 
 	ApplyCameraUniformSetup();
 	glDepthFunc(GL_LEQUAL);
-	m_pSkyBox->Render();
+	m_pSkyBox->Render(m_sunPosition.y);
 	glDepthFunc(GL_LESS);
 	DebugControls();
 

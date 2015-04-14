@@ -157,7 +157,7 @@ void main()
 		
 	finalColour = darkBlue;
 	
-	if(SunPos.y > -5)
+	if(SunPos.y > 3)
 	{
 		//perlin data
 		vec2 p = (vPosition.xz);

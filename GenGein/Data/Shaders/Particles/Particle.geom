@@ -22,11 +22,26 @@ uniform vec4 colourEnd;
 uniform mat4 Projection;
 uniform mat4 View;
 uniform mat4 World;
+uniform float time;
+
+const float INVERSE_MAX_UINT = 1.0f / 4294967295.0f;
+
+float rand(uint seed, float range)
+{
+	uint i = (seed ^ 12345391u) * 2654435769u;
+	i ^= (i << 6u) ^ (i >> 26u);
+	i *= 2654435769u;
+	i += (i << 5u) ^ (i >> 12u);
+	return float(range * i) * INVERSE_MAX_UINT;
+}
 
 void main()
 {
 	// Interp colour
-	vColour = mix( colourStart, colourEnd, vLifetime[0] / vLifespan[0] );
+	uint seed = uint(time * 1000.0 + (length(vPosition[0])/3));
+	vec4 randColour = vec4( rand(seed++, 1), rand(seed++, 1), rand(seed++, 1), 1);
+	
+	vColour = mix( colourStart + randColour, colourEnd - randColour, vLifetime[0] / vLifespan[0] );
 	
 	// Calculate the size and create the corners of a quad
 	float halfSize = mix(sizeStart, sizeEnd, vLifetime[0] / vLifespan[0] ) * 0.5f;

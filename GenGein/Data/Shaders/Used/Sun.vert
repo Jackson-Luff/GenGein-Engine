@@ -42,7 +42,7 @@ void main()
 	vec3 zAxis = normalize( World[3].xyz - vertPosition.xyz );
 	vec3 xAxis = cross( World[1].xyz, zAxis );
 	vec3 yAxis = cross( zAxis, xAxis );
-	mat4 billboard = mat4(vec4(1), vec4(1), vec4(1), vec4(0,500,0,0));
+	mat3 billboard = mat3(xAxis, yAxis, zAxis);
 	
-	gl_Position = Projection * View * LocalMatrix * vertPosition;
+	gl_Position = Projection * View * LocalMatrix * (mat4(billboard) * vertPosition);
 }

@@ -20,14 +20,22 @@ void SkyBox::Create(c_str a_folderDir)
 	m_programID = &ShaderHandler::GetShader("SkyBox");
 
 	std::vector<c_str> faces;
-	faces.push_back(a_folderDir + "right"  + ".png");
-	faces.push_back(a_folderDir + "left"   + ".png");
-	faces.push_back(a_folderDir + "top"    + ".png");
-	faces.push_back(a_folderDir + "bottom" + ".png");
-	faces.push_back(a_folderDir + "back"   + ".png");
-	faces.push_back(a_folderDir + "front"  + ".png");
-	m_skyTexture = TextureHandler::LoadCubeMap(m_programID, "skybox", faces);
+	faces.push_back(std::string("Data/Shaders/Used/Faces/Sky/") + "right" + ".png");
+	faces.push_back(std::string("Data/Shaders/Used/Faces/Sky/") + "left" + ".png");
+	faces.push_back(std::string("Data/Shaders/Used/Faces/Sky/") + "top" + ".png");
+	faces.push_back(std::string("Data/Shaders/Used/Faces/Sky/") + "bottom" + ".png");
+	faces.push_back(std::string("Data/Shaders/Used/Faces/Sky/") + "back" + ".png");
+	faces.push_back(std::string("Data/Shaders/Used/Faces/Sky/") + "front" + ".png");
+	m_dayTexture = TextureHandler::LoadCubeMap(m_programID, "skybox", faces);
 	m_VAO = LoadCubeVertices();
+	faces.clear();
+	faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "right" + ".png");
+	faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "left" + ".png");
+	faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "top" + ".png");
+	faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "bottom" + ".png");
+	faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "back" + ".png");
+	faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "front" + ".png");
+	m_nightTexture = TextureHandler::LoadCubeMap(m_programID, "skybox", faces);
 
 	printf("SUCCESS: SkyBox Load Successful.\n\n");
 }
@@ -94,12 +102,18 @@ uint SkyBox::LoadCubeVertices()
 	return vao;
 }
 
-void SkyBox::Render()
+void SkyBox::Render(float a_condition)
 {
 	glDepthMask(GL_FALSE);
 	glUseProgram(*m_programID);
 	glBindVertexArray(m_VAO);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, m_skyTexture.ID);
+
+	//glActiveTexture(GL_TEXTURE0 + 1); // use second texture image unit
+	if (a_condition >= 0)
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_dayTexture.ID);
+	else if (a_condition < 0)
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_nightTexture.ID);
+
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
 	

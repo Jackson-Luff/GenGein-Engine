@@ -15,12 +15,13 @@ public:
 	~SkyBox();
 
 	void Create(c_str a_folderDir);
-	void Render();
+	void Render(float a_condition);
 
 private:
 	
 	uint LoadCubeVertices(); 
 	uint* m_programID;
 	uint m_VAO;
-	sTexture m_skyTexture;
+	sTexture m_dayTexture;
+	sTexture m_nightTexture;
 };
