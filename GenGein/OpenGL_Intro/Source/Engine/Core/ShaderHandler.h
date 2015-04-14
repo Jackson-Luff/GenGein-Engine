@@ -46,7 +46,7 @@ public:
 		const glm::mat4& a_ProjMat,
 		const glm::mat4& a_ViewMat,
 		const glm::mat4& a_WorldMat,
-		const glm::vec4& a_EyeMat,
+		const glm::vec3& a_SunPos,
 		const float& a_elapsedTime);
 
 	static const void SetUpLightingUniforms(

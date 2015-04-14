@@ -103,7 +103,8 @@ protected:
 	AntTweak* m_pAntTweakGUI;
 	// SkyBox viewer
 	SkyBox* m_pSkyBox;
-
+	// Sun Position
+	glm::vec3 m_sunPosition;
 private:
 	// Initialise internal app variables and functionalities
 	void InitialiseAppElements();

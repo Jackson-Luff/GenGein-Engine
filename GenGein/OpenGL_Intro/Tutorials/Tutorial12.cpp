@@ -2,6 +2,7 @@
 #include <gl_core_4_4.h>
 #include <glm\ext.hpp>
 #include "Engine\Core\ShaderHandler.h"
+#include "Engine\Particles\GPUParticleEmitter.h"
 #include "Engine\GUI\AntTweak.h"
 #include "Engine\Renderer\TextureHandler.h"
 #include "Engine\Objects\ObjMesh.h"
@@ -59,17 +60,17 @@ void Tutorial12::SetUpShadowRender()
 
 void Tutorial12::CalcLightingMatrix()
 {
-	m_lightDirection = glm::normalize(glm::vec3(-35, 339, 118));
-
-	glm::mat4 lightProjection = glm::ortho<float>(
-		-100, 100, -100, 100, -100, 100);
-
-	glm::mat4 lightView = glm::lookAt(m_lightDirection,
-		glm::vec3(0), glm::vec3(0, 1, 0));
-
-	m_lightMatrix = lightProjection * lightView;
-
-	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Debug", "Sun Dir", TW_TYPE_DIR3F, (void*)&m_lightDirection[0]);
+//	m_lightDirection = glm::normalize(glm::vec3(-35, 339, 118));
+//
+//	glm::mat4 lightProjection = glm::ortho<float>(
+//		-100, 100, -100, 100, -100, 100);
+//
+//	glm::mat4 lightView = glm::lookAt(m_lightDirection,
+//		glm::vec3(0), glm::vec3(0, 1, 0));
+//
+//	m_lightMatrix = lightProjection * lightView;
+//
+//	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Debug", "Sun Dir", TW_TYPE_DIR3F, (void*)&m_lightDirection[0]);
 }
 
 void Tutorial12::CreatePerlinPlane(c_uint a_dim)
@@ -161,12 +162,12 @@ void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 			float ampli = m_amplitude;
 			int octaves = 6;
 
-			for (int o = 0; o < octaves; ++o)	
+			for (int o = 0; o < octaves; ++o)
 			{
 				float freq = powf(2, (float)o);
 				float perlin_sample = glm::perlin((glm::vec2((float)r, (float)c) + m_seeder) * pscale * freq) + 0.5f;
 
-				m_enviroVerts[r * a_dim + c].position.y += -m_amplitude/10 + (perlin_sample * ampli * 2);
+				m_enviroVerts[r * a_dim + c].position.y += -m_amplitude / 10 + (perlin_sample * ampli * 2);
 				ampli *= persistence;
 			}
 		}
@@ -252,7 +253,26 @@ void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 	glBindVertexArray(0);
 	// Remove pointers (memsave)
 	delete[] indexData;
+}
 
+// Loads in the tree's that are randomly sampled 
+void LoadTrees(std::vector< FBXModel>& a_trees)
+{
+	for (int i = 1; i < 4; i++)
+	{
+		for (int j = 1; j < 4; j++)
+		{
+			FBXModel tree = FBXModel();
+			std::string directory = std::string("Data/Models/Ryan/tree");
+			directory += std::to_string(i);
+			directory += "_0";
+			directory += std::to_string(j);
+			directory += ".fbx";
+			tree.LoadFBX(directory, FBXFile::UNITS_CENTIMETER);
+
+			a_trees.push_back(tree);
+		}
+	}
 }
 
 // Initialise Member Variables
@@ -269,15 +289,26 @@ void Tutorial12::StartUp()
 		glm::vec3(218, 146, 167), glm::vec3(0, 0, 0));
 
 	ShaderHandler::LoadShaderProgram("WaterMap",
-		"Data/Shaders/ProGenReGen.vert",
-		"Data/Shaders/ProGenReGen.frag");
-	m_pMainProgramID = &ShaderHandler::GetShader("WaterMap");
+		"Data/Shaders/Used/Water.vert",
+		"Data/Shaders/Used/Water.frag");
+	m_waterProg = &ShaderHandler::GetShader("WaterMap");
 	
 	ShaderHandler::LoadShaderProgram("EnviroMap",
-		"Data/Shaders/Test/Enviro.vert",
-		"Data/Shaders/Test/Enviro.frag");
+		"Data/Shaders/Used/Enviro.vert",
+		"Data/Shaders/Used/Enviro.frag");
 	m_enviroProg = &ShaderHandler::GetShader("EnviroMap");
 
+	ShaderHandler::LoadShaderProgram("CamWeap",
+		"Data/Shaders/Used/CamWeap.vert",
+		"Data/Shaders/Used/CamWeap.frag");
+	m_camWeapProg = &ShaderHandler::GetShader("CamWeap");
+
+	ShaderHandler::LoadShaderProgram("SunPlane",
+		"Data/Shaders/Used/Sun.vert",
+		"Data/Shaders/Used/Sun.frag");
+	m_sunPlaneProg = &ShaderHandler::GetShader("SunPlane");
+
+	
 	ShaderHandler::LoadShaderProgram("GenShadow",
 		"Data/Shaders/GenShadow.vert",
 		"Data/Shaders/GenShadow.frag");
@@ -297,28 +328,33 @@ void Tutorial12::StartUp()
 	// ENVIRO PLANE
 	CreateEnviroGrid(128);
 
-	//TextureHandler::LoadPerlin(m_enviroProg, "heightMap", 128);
+	TextureHandler::LoadPerlin(m_enviroProg, "heightMap", 128);
 	TextureHandler::LoadTexture(m_enviroProg, "SandMap", "Data/Textures/sand_tile.jpg");
 	TextureHandler::LoadTexture(m_enviroProg, "GrassMap", "Data/Textures/grass_tiled.tga");
 	TextureHandler::LoadTexture(m_enviroProg, "StoneMap", "Data/Textures/dirt_tiled.tga");
 
-	m_trees = std::vector< FBXModel >();
+	m_particleEmitter = new GPUParticleEmitter();
+	m_particleEmitter->Initialise(
+		100000,
+		1.0f, 5.0f,
+		1.0f, 1.1f,
+		1.0f, 1.1f,
+		vec4(1, 0, 0, 1),
+		vec4(1, 1, 0, 1));
 
-	for (int i = 1; i < 4; i++)
-	{
-		for (int j = 1; j < 4; j++)
-		{
-			FBXModel tree = FBXModel(vec3(0));
-			std::string directory = std::string("Data/Models/Ryan/tree");
-			directory += std::to_string(i);
-			directory += "_0";
-			directory += std::to_string(j);
-			directory += ".fbx";
-			tree.LoadFBX(directory, FBXFile::UNITS_CENTIMETER);
+	m_sunModel = new FBXModel();
+	m_sunModel->LoadFBX(m_sunPlaneProg,
+		"Data/Models/plane.fbx",
+		FBXFile::UNITS_CENTIMETER);
+	m_sunModel->SetPosition(vec3(0, 300, 0));
 
-			m_trees.push_back(tree);
-		}
-	}
+	m_camWeapModel = new FBXModel();
+	m_camWeapModel->LoadFBX(
+		"Data/Models/GUNs/GUNFBX.fbx",
+		FBXFile::UNITS_CENTIMETER);
+	m_camWeapMatrix = glm::mat4(1);
+
+	LoadTrees(m_treeModels);
 	
 	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Environment", "Seed"		, TwType::TW_TYPE_FLOAT, (void*)&m_seeder);
 	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Environment", "Amplitude"	, TwType::TW_TYPE_FLOAT, (void*)&m_amplitude);
@@ -349,8 +385,8 @@ void Tutorial12::UpdateShadowTexture()
 	glViewport(0, 0, 4096, 4096);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	glUseProgram(*m_genShadowProg);
-	glUniformMatrix4fv(m_glightMatUniLoc, 1, GL_FALSE, &m_lightMatrix[0][0]);
+	/*glUseProgram(*m_genShadowProg);
+	glUniformMatrix4fv(m_glightMatUniLoc, 1, GL_FALSE, &m_lightMatrix[0][0]);*/
 
 	glUseProgram(*m_enviroProg);
 	glBindVertexArray(m_enviroVAO);
@@ -364,25 +400,49 @@ void Tutorial12::Render()
 	GLApplication::Render();
 	TextureHandler::RenderAllTextures();
 
+	m_camWeapMatrix = glm::translate(vec3(2,-1,-3)) *
+		glm::rotate(90.0f, vec3(1,-1, 1)) *
+		glm::scale(vec3(0.05));
+
+	m_camWeapModel->SetLocalTransform(m_pBaseCamera->GetWorldTransform() * m_camWeapMatrix);
+	m_camWeapModel->Render();
+
+	m_particleEmitter->SetPosition(vec3( (m_pBaseCamera->GetWorldTransform() * glm::translate(vec3(9, -7,-30))[3] ) ) );
+	m_particleEmitter->Render(
+		(float)GetDeltaTime(),
+		(float)GetElapsedTime(),
+		(m_pBaseCamera->GetWorldTransform()),
+		(float)glfwGetMouseButton(m_pWindow, GLFW_MOUSE_BUTTON_1));
+
+
+	m_sunPosition = vec3(0.0f, 500.0f * sin(GetElapsedTime()), 500.0f * cos(GetElapsedTime()));
+	if (glfwGetKey(m_pWindow, GLFW_KEY_T)) { m_sunPosition = vec3(0.0f, 500.0f, 500.0f);}
+	
+	m_sunModel->SetPosition(m_sunPosition);
+	m_sunModel->Render();
+
 	glUseProgram(*m_enviroProg);
 	glBindVertexArray(m_enviroVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_enviroVAO);
 	glDrawElements(GL_TRIANGLES, m_enviroIndexCount, GL_UNSIGNED_INT, 0);
 	
+	glEnable(GL_BLEND);
 	
-
-	glUseProgram(*m_pMainProgramID);
+	glUseProgram(*m_waterProg);
 	glBindVertexArray(m_VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VAO);
 	glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_INT, 0);
 
-	vec3 pineScale = vec3(0.025, 0.025, 0.025);
-	vec3 palmScale = vec3(0.3, 0.15, 0.3);
+	vec3 treeScale = vec3(0.025, 0.025, 0.025);
 	for (uint i = 0; i < m_treeSpawns.size(); i++)
 	{
 		if (m_treeSpawns[i][3].y > 13)
-			m_trees[m_indexTypeToSpawn[i]].Render(m_treeSpawns[i] * glm::scale(pineScale));
+		{
+			m_treeModels[m_indexTypeToSpawn[i]].SetLocalTransform(m_treeSpawns[i] * glm::scale(treeScale));
+			m_treeModels[m_indexTypeToSpawn[i]].Render();
+		}
 		//else
 		//	m_trees[index+9].Render(m_treeSpawns[i] * glm::scale(palmScale));
 	}
+	glDisable(GL_BLEND);
 }

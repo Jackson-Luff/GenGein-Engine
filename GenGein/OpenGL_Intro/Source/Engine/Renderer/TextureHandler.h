@@ -35,7 +35,6 @@ public:
 	static void UnloadTexture(c_charp a_name);
 	// Rendering the textures
 	static void RenderAllTextures();
-	static void RenderAllCubeMaps();
 private:
 	// Check if texture exists
 	static bool DoesTextureExist(c_charp a_name);

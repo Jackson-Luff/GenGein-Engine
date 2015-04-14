@@ -10,7 +10,7 @@ out vec3 vVelocity;
 out float vLifetime;
 out float vLifespan;
 
-uniform vec3 SpherePos;
+uniform mat4 World;
 uniform vec3 emitterPosition;
 uniform float time;
 uniform float deltaTime;
@@ -18,6 +18,7 @@ uniform float lifeMin;
 uniform float lifeMax;
 uniform float veloMin;
 uniform float veloMax;
+uniform float isKeyDown;
 
 const float INVERSE_MAX_UINT = 1.0f / 4294967295.0f;
 
@@ -30,57 +31,38 @@ float rand(uint seed, float range)
 	return float(range * i) * INVERSE_MAX_UINT;
 }
 
-float waterLevel = -2.5;
-
-vec3 newVel;
-
 void main()
 {
+	uint seed = uint(time * 1000.0) + uint(gl_VertexID);
+	float dt = deltaTime;
 	
-	float dt = deltaTime + deltaTime;
-	newVel = Velocity;
-		
-	float a = Lifetime, b = Lifespan, c = 0.5, d = 0.1;
-	newVel.x = (a-b)*sin(time) + b * sin(time * ((a/b)-1));
-	newVel.y = (a-b)*sin(time) + b * cos(time * ((a/b)-1));
-	newVel.z = (a-b)*cos(time) - b * cos(time * ((a/b)-1));
-
-	vec3 FirstTarget = vec3(sin(time), 0, cos(time));
-	vec3 SecondTarget = vec3(cos(time),0, sin(time));
-	vec3 dir;
-
-	if((int(time) % 2) == 0)
-		dir = normalize(FirstTarget - Position);
-	else 
-		dir = normalize(SecondTarget - Position);
-		
-	newVel += dir;
-	newVel.x += sin(dir.x) / 3.1415695 ;
-	newVel.z += cos(dir.z) / 3.1415695 ;
-
+	vec3 newVel = Velocity * (1 + (Lifetime/Lifespan));
+	newVel.x *= (rand(seed++, Lifetime/Lifespan) -1);
+	newVel.y *= (rand(seed++, Lifetime/Lifespan) -1);
+	newVel.z *= (rand(seed++, Lifetime/Lifespan) -1);
+	
 	vPosition = Position + (Velocity * dt);
 	vVelocity = newVel;
 	vLifetime = Lifetime + dt;
 	vLifespan = Lifespan;
-	
-	float sphereRadius = 1;
-	float particleRadius = 0.05;
-	float dist = length(Position);
 
-	/* vPosition.x += dir.x * newVel.x; */
-
-	// emit a new particle as soon as it dies
-	if(vLifetime > vLifespan)
+	// emit a new particle if key is down
+	if(isKeyDown == 1.0)
 	{
-		uint seed = uint(time * 1000.0) + uint(gl_VertexID);
-		//Initialise velocities
-		vVelocity.x = rand(seed++, 2) - 1 + (0.2 * cos(time));
-		vVelocity.y = rand(seed++, 2) - 1 * time;
-		vVelocity.z = rand(seed++, 2) - 1 + (0.2 * sin(time));
-		vVelocity = normalize(vVelocity);
-		vPosition = emitterPosition;
-		vLifetime = 0;
-		vLifespan = rand(seed++, lifeMax - lifeMin) + lifeMin;
+		// if it's dead spawn a new one!
+		if(vLifetime > vLifespan)
+		{			
+			//Initialise velocity
+			vVelocity = -World[2].xyz;
+			vVelocity = normalize(vVelocity);
+			vPosition = emitterPosition;
+			vLifetime = 0;
+			vLifespan = rand(seed++, lifeMax - lifeMin) + lifeMin;
+		}
+	}
+	else if(vLifetime > vLifespan)
+	{
+		vPosition = vec3(10000,10000,10000);
 	}
 }
 

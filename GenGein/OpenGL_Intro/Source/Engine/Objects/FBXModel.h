@@ -9,7 +9,6 @@ class FBXModel : public BaseObject
 {
 public:
 	FBXModel();
-	FBXModel(vec3 a_position);
 	~FBXModel();
 
 	bool LoadFBX(
@@ -39,11 +38,11 @@ public:
 	void CleanupOpenGLBuffers();
 
 	void Update(const double a_dt);
-	void Render(const glm::mat4& a_SRT);
+	void Render();
 private:
 	void CreateOpenGLBuffers();
 
-	int bonesUniform, localMatUniform;
+	int m_bonesUniform;
 	FBXMaterial* m_material;
 	std::vector<FBXVertex> m_vertices;
 	void* m_userData;

@@ -19,13 +19,6 @@ m_materials(0),
 m_vertexMap()
 {}
 
-//  Constructor
-ObjMesh::ObjMesh(vec3 a_position) 
-	: BaseObject(a_position)
-{
-	ObjMesh();
-}
-
 // Constructor with folder and file directory
 void ObjMesh::LoadObject( c_charp a_folderDir, c_charp a_fileName )
 {
@@ -46,8 +39,9 @@ void ObjMesh::LoadObject( c_charp a_folderDir, c_charp a_fileName )
 	loadObjects(m_folderDirectory + "/" + a_fileName + ".obj");
 
 	CalcTangentNBiNormals();
-
 	ApplyDataToVertNIndexBuffers();
+
+	m_localMatUniLoc = glGetUniformLocation(*m_programID, "LocalMatrix");
 
 	CleanUp();
 }
@@ -99,8 +93,6 @@ ObjMesh::~ObjMesh()
 
 void ObjMesh::ApplyDataToVertNIndexBuffers()
 {
-	m_localUniMat = glGetUniformLocation(*m_programID, "LocalMatrix");
-
 	glGenVertexArrays(1, &m_VAO);
 	glBindVertexArray( m_VAO );
 	
@@ -175,13 +167,11 @@ void ObjMesh::CalcTangentNBiNormals()
 }
 
 // Draw mesh and send Rendererto shader
-void ObjMesh::Render(const mat4& a_SRT)
+void ObjMesh::Render()
 {
 	glUseProgram(*m_programID);
-	
-	//Apply scale, rotation and translation
-	m_localTransform = a_SRT;
-	glUniformMatrix4fv(m_localUniMat, 1, GL_FALSE, &m_localTransform[0][0]);
+
+	glUniformMatrix4fv(m_localMatUniLoc, 1, GL_FALSE, &m_localTransform[0][0]);
 
 	//Rebind VAO
 	glBindVertexArray(m_VAO);

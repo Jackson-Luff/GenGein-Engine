@@ -29,7 +29,7 @@ void Tutorial13::StartUp()
 	InitialiseFlyCamera(5.0f, 20.0f, 0.5f,
 		glm::vec3(0, 0.5, 0), glm::vec3(-1, 0, -1));
 
-	m_model = new FBXModel(vec3(0));
+	m_model = new FBXModel();
 	m_model->LoadFBX("Data/Models/soulspear/soulspear.fbx", FBXFile::UNITS_CENTIMETER);	
 }
 
@@ -50,5 +50,5 @@ void Tutorial13::Render()
 {
 	GLApplication::Render();
 	glUseProgram(*m_pMainProgramID);
-	m_model->Render(mat4(1));
+	m_model->Render();
 }

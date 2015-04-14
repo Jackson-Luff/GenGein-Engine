@@ -22,5 +22,5 @@ private:
 	uint LoadCubeVertices(); 
 	uint* m_programID;
 	uint m_VAO;
-	sTexture m_cubeMapTexture;
+	sTexture m_skyTexture;
 };

@@ -4,6 +4,7 @@
 
 typedef const unsigned int c_uint;
 
+class GPUParticleEmitter;
 class FBXModel;
 
 ////
@@ -57,9 +58,16 @@ private:
 
 	// Enviro program
 	uint* m_enviroProg;
+	uint* m_waterProg;
+	uint* m_camWeapProg;
+	uint* m_sunPlaneProg;
 	uint m_enviroIndexCount, m_enviroVAO;
 
-	std::vector<FBXModel> m_trees;
+	GPUParticleEmitter* m_particleEmitter;
+	FBXModel* m_sunModel;
+	FBXModel* m_camWeapModel;
+	std::vector<FBXModel> m_treeModels;
+	glm::mat4 m_camWeapMatrix;
 
 	// Tree1 = large tree
 	// Tree2 = small tree
@@ -72,6 +80,7 @@ private:
 	float m_amplitude;
 	float m_seeder;
 
+	// Shadow stuff - if i shadow
 	uint* m_genShadowProg;
 	uint m_lightDirUniLoc;
 	uint m_shadowMapUniLoc;
@@ -79,8 +88,4 @@ private:
 	uint m_glightMatUniLoc;
 
 	uint m_shadowID, m_FBODepth;
-	glm::vec3 m_lightDirection;
-	glm::mat4 m_lightMatrix;
-
-
 };

@@ -107,12 +107,12 @@ void Tutorial11::StartUp()
 	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Point Y", TW_TYPE_FLOAT, (void*)&m_pPointLight->GetPosition().y);
 	m_pAntTweakGUI->AddVarRW("Main Tweaker", "Point Z", TW_TYPE_FLOAT, (void*)&m_pPointLight->GetPosition().z);
 	*/
-	m_pBunny = new FBXModel(vec3(0));
+	m_pBunny = new FBXModel();
 	m_pBunny->LoadFBX(m_useShadowProg,
 		"Data/Models/stanford/bunny.fbx",
 		FBXFile::UNITS_CENTIMETER);
 
-	m_pPlane = new FBXModel(vec3(0));
+	m_pPlane = new FBXModel();
 	m_pPlane->LoadFBX(m_useShadowProg,
 		"Data/Models/plane.fbx",
 		FBXFile::UNITS_CENTIMETER);
@@ -139,7 +139,7 @@ void Tutorial11::UpdateShadowTexture()
 	glUseProgram(*m_genShadowProg);
 	glUniformMatrix4fv(m_glightMatUniLoc, 1, GL_FALSE, &m_lightMatrix[0][0]);
 	
-	m_pBunny->Render(mat4(1));
+	m_pBunny->Render();
 }
 
 void Tutorial11::RenderStuff()
@@ -166,8 +166,8 @@ void Tutorial11::RenderStuff()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_FBODepth);
 
-	m_pBunny->Render(mat4(1));
-	m_pPlane->Render(mat4(1));
+	m_pBunny->Render();
+	m_pPlane->Render();
 }
 
 // Draws the stuff to screen

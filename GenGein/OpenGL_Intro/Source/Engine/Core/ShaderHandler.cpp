@@ -118,7 +118,7 @@ const void ShaderHandler::SetUpCameraUniforms(
 	const glm::mat4& a_camProjMat,
 	const glm::mat4& a_camViewMat,
 	const glm::mat4& a_camWorldMat,
-	const glm::vec4& a_camEyePos,
+	const glm::vec3& a_sunPos,
 	const float& a_elapsedTime)
 {
 	//unsigned int uiError;
@@ -135,8 +135,8 @@ const void ShaderHandler::SetUpCameraUniforms(
 		loc = glGetUniformLocation(it->second, "World");
 		glUniformMatrix4fv(loc, 1, false, &a_camWorldMat[0][0]);
 
-		loc = glGetUniformLocation(it->second, "EyePos");
-		glUniform4fv(loc, 1, &a_camEyePos[0]);
+		loc = glGetUniformLocation(it->second, "SunPos");
+		glUniform3fv(loc, 1, &a_sunPos[0]);
 
 		loc = glGetUniformLocation(it->second, "time");
 		glUniform1f(loc, a_elapsedTime);
@@ -172,8 +172,6 @@ const void ShaderHandler::ReloadAllPrograms()
 {
 	for (auto it : m_programMap)
 	{
-		if (it.first == "SkyBox") continue;
-
 		c_charp name = it.first;
 		DirectoryData dirData = m_directoryMap[it.second];
 		glDeleteProgram(it.second);

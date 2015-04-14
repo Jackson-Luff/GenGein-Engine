@@ -25,7 +25,6 @@ class ObjMesh : public BaseObject
 public:
 	// Constructors
 	ObjMesh();
-	ObjMesh(vec3 a_position);
 	// Deconstructor
 	~ObjMesh();
 	
@@ -34,7 +33,7 @@ public:
 	void LoadObject( c_charp a_folderDir, c_charp a_fileDir, c_charp a_textureName);
 	
 	// Draw the mesh to screen
-	void Render(const mat4& a_SRT);
+	void Render();
 
 	// Getter for localMatrix
 private:
@@ -92,8 +91,4 @@ private:
 	std::vector< Material* > m_materials;
 	// Map the indices based on key input e.g '5/1/1'
 	std::map<std::string, unsigned int> m_vertexMap;
-	// Holds id for shader program
-	uint* m_programID;
-	// Holds uniform id for localMat
-	int m_localUniMat;
 };

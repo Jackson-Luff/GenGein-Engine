@@ -107,11 +107,13 @@ void GLApplication::StartUp()
 	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug", "DeltaTime", TW_TYPE_DOUBLE, (void*)&m_deltaTime);
 
 	m_pSkyBox = new SkyBox();
-	m_pSkyBox->Create("Data/SkyBox/Faces/Sky/");
+	m_pSkyBox->Create("Data/Shaders/Used/Faces/Space/");
 }
 
 void GLApplication::DebugControls()
 {
+
+	
 
 	if (glfwGetKey(m_pWindow, GLFW_KEY_GRAVE_ACCENT))
 	{
@@ -158,6 +160,7 @@ void GLApplication::Render()
 
 void GLApplication::InitialiseAppElements()
 {
+	m_sunPosition = vec3(0, 300, 0);
 	ApplyCameraUniformSetup();
 
 	// Add a read only FPS output variable to the GUI tweaker specified
@@ -176,7 +179,7 @@ void GLApplication::ApplyCameraUniformSetup()
 		m_pBaseCamera->GetProjection(),
 		m_pBaseCamera->GetView(),
 		m_pBaseCamera->GetWorldTransform(),
-		m_pBaseCamera->GetPosition(),
+		m_sunPosition,
 		(float)GetElapsedTime());
 }
 

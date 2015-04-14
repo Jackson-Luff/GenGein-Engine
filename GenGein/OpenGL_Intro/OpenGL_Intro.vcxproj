@@ -109,6 +109,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\stb-master;$(SolutionDir)Dependencies\gl_core;$(SolutionDir)Dependencies\gizmos;$(SolutionDir)Dependencies\AntTweak\include;$(SolutionDir)Dependencies\FBXLoader\include;$(ProjectDir)\Source\;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

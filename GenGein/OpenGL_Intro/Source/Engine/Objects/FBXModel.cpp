@@ -11,11 +11,6 @@ FBXModel::FBXModel()
 	: BaseObject()
 {}
 
-FBXModel::FBXModel(vec3 a_position) 
-	: BaseObject(a_position)
-{
-}
-
 FBXModel::~FBXModel()
 {
 }
@@ -40,7 +35,9 @@ bool FBXModel::LoadFBX(
 	m_pFbx->initialiseOpenGLTextures();
 	CreateOpenGLBuffers();
 
-	bonesUniform = glGetUniformLocation(*m_programID, "bones");
+	m_localMatUniLoc = glGetUniformLocation(*m_programID, "LocalMatrix");
+	m_bonesUniform = glGetUniformLocation(*m_programID, "bones");
+
 	return true;
 }
 
@@ -52,8 +49,8 @@ bool FBXModel::LoadFBX(
 	bool a_flipTextureY)
 {
 	ShaderHandler::LoadShaderProgram("FBXProgram",
-		"Data/Shaders/Geometry/FbxShader.vert",
-		"Data/Shaders/Geometry/FbxShader.frag");
+		"Data/Shaders/Used/FbxShader.vert",
+		"Data/Shaders/Used/FbxShader.frag");
 	m_programID = &ShaderHandler::GetShader("FBXProgram");
 
 	m_pFbx = new FBXFile();
@@ -67,7 +64,8 @@ bool FBXModel::LoadFBX(
 	m_pFbx->initialiseOpenGLTextures();
 	CreateOpenGLBuffers();
 
-	bonesUniform = glGetUniformLocation(*m_programID, "bones");
+	m_localMatUniLoc = glGetUniformLocation(*m_programID, "LocalMatrix");
+	m_bonesUniform = glGetUniformLocation(*m_programID, "bones");
 	return true;
 }
 
@@ -166,18 +164,16 @@ void FBXModel::Update(const double a_elapsedTime)
 	}
 }
 
-void FBXModel::Render(const glm::mat4& a_SRT)
+void FBXModel::Render()
 {
 	glUseProgram(*m_programID);
-
-	m_localTransform = a_SRT;
 
 	if (m_pFbx->getSkeletonCount() > 0)
 	{
 		FBXSkeleton* skeleton = m_pFbx->getSkeletonByIndex(0);
 		skeleton->updateBones();
 
-		glUniformMatrix4fv(bonesUniform, skeleton->m_boneCount,
+		glUniformMatrix4fv(m_bonesUniform, skeleton->m_boneCount,
 			GL_FALSE, (float*)skeleton->m_bones);
 	}
 
@@ -196,11 +192,10 @@ void FBXModel::Render(const glm::mat4& a_SRT)
 			glBindTexture(GL_TEXTURE_2D, mesh->m_material->textures[j]->handle);
 		}
 
-		int locMatUniLoc = glGetUniformLocation(*m_programID, "LocalMatrix");
-		glUniformMatrix4fv(locMatUniLoc, 1, GL_FALSE, &m_localTransform[0][0]);
+		glUniformMatrix4fv(m_localMatUniLoc, 1, GL_FALSE, &m_localTransform[0][0]);
 
 		glBindVertexArray(glData[0]);
-		glDrawElements(GL_TRIANGLES, (uint)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
 
 		// delete mesh;
 		// delete glData;
