@@ -174,9 +174,9 @@ void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 	}
 
 	// Calculating normals and spawns
-	for (uint r = 0; r < a_dim; ++r)
+	for (GLuint r = 0; r < a_dim; ++r)
 	{
-		for (uint c = 0; c < a_dim; ++c)
+		for (GLuint c = 0; c < a_dim; ++c)
 		{
 			vec3 a = m_enviroVerts[r * a_dim + c].position.xyz;
 			vec3 b;
@@ -186,6 +186,18 @@ void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 				b = m_enviroVerts[(r + 1) * a_dim + c].position.xyz;
 				d = m_enviroVerts[(r + 1) * a_dim + (c + 1)].position.xyz;
 				m_enviroVerts[r * a_dim + c].normal = vec4(glm::normalize(glm::cross(b - a, d - a)), 1);
+			}
+
+			// Save off possible tree data for tree positions
+			uint treeSeed = r * a_dim + c;
+			treeSeed += -m_range / 2 + (rand() % m_range);
+			if (treeSeed == (r * a_dim + c) && a.y > 3)
+			{
+				m_treeSpawns.push_back(
+					glm::translate(vec3(a)) *
+					glm::rotate(dot(vec3(m_enviroVerts[r * a_dim + c].normal), vec3(0, 1, 0)), vec3(m_enviroVerts[r * a_dim + c].normal)));
+
+				m_indexTypeToSpawn.push_back(rand() % 9);
 			}
 		}
 	}
