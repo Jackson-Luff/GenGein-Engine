@@ -114,7 +114,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw\lib12;$(SolutionDir)Dependencies\AntTweak\lib;$(SolutionDir)Dependencies\FBXLoader\lib;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw\lib13;$(SolutionDir)Dependencies\AntTweak\lib;$(SolutionDir)Dependencies\FBXLoader\lib;</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;FBXLoader_d.lib;AntTweakBar.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Profile>true</Profile>
     </Link>

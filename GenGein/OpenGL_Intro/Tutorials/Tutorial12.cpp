@@ -436,7 +436,7 @@ void Tutorial12::Render()
 	glBindBuffer(GL_ARRAY_BUFFER, m_VAO);
 	glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_INT, 0);
 
-	vec3 treeScale = vec3(0.025, 0.025, 0.025);
+	vec3 treeScale = vec3(0.025f);
 	for (uint i = 0; i < m_treeSpawns.size(); i++)
 	{
 		if (m_treeSpawns[i][3].y > 13)
