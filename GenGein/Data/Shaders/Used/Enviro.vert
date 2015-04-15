@@ -18,13 +18,10 @@ uniform sampler2D heightMap;
 
 void main()
 {
-	vec4 Position = vertPosition;
-	//Position.y += -100/2 + (texture(heightMap, vertCoords).r * 100);
-	gl_Position = Projection * View * Position;
+	gl_Position = Projection * View * vertPosition;
 
-	vPosition = Position;
+	vPosition = vertPosition;
 	vNormals = vertNormals;
-	vShadowCoords = LightMatrix * vertPosition;
 	vCoords = vertCoords;
 	
 }

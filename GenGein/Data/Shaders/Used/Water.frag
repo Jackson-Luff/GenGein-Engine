@@ -4,6 +4,7 @@ in vec4 vPosition;
 in vec2 vCoords;
 
 uniform mat4 World;
+uniform vec3 AmbientLight;
 uniform vec3 SunPos;
 uniform float time;
 
@@ -147,17 +148,17 @@ void main()
 	// Diffused Light Calc's
 		vec3 vNormal = vec3(0,1,0);
 		vec3 lightVector = normalize(SunPos - vPosition.xyz);
-		float brightness = dot(lightVector, normalize(vNormal) );
+		float brightness = max(0,dot(lightVector, normalize(vNormal) ));
 	// Specular Light Calc's
 		vec3 reflectedLightVec = reflect(-lightVector, vNormal);
 		vec3 eyeVector = normalize(World[3].xyz - vPosition.xyz);
-		float specularity = dot(reflectedLightVec, eyeVector);
-		specularity = pow(specularity, dist);
+		float specularity = max(0,dot(reflectedLightVec, eyeVector));
+		specularity = pow(specularity, 32);
 		
 		
 	finalColour = darkBlue;
 	
-	if(SunPos.y > 3)
+	if(SunPos.y > 0)
 	{
 		//perlin data
 		vec2 p = (vPosition.xz);
@@ -170,7 +171,7 @@ void main()
 		finalColour.rgb += specularity;
 	}
 	else
-		finalColour.rgb *= vec3(0.1);
+		finalColour.rgb *= AmbientLight;
 	
 	finalColour.a = 0.75;
 		

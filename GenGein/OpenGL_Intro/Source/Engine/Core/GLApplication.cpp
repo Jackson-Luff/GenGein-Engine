@@ -102,8 +102,6 @@ void GLApplication::StartUp()
 	// Initialise GUI and create a tweaker
 	m_pAntTweakGUI->Initialise(m_pWindow, m_width, m_height);
 	m_pAntTweakGUI->AddTweaker( "Main Tweaker" );
-
-	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug", "Back Colour", TW_TYPE_COLOR32, (void*)&m_backColour);
 	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug", "DeltaTime", TW_TYPE_DOUBLE, (void*)&m_deltaTime);
 
 	m_pSkyBox = new SkyBox();
@@ -176,22 +174,19 @@ void GLApplication::ApplyCameraUniformSetup()
 	ShaderHandler::SetUpCameraUniforms(
 		m_pBaseCamera->GetProjection(),
 		m_pBaseCamera->GetView(),
-		m_pBaseCamera->GetWorldTransform(),
-		m_sunPosition,
-		(float)GetElapsedTime());
+		m_pBaseCamera->GetWorldTransform());
 }
 
 void GLApplication::ApplyLightingSetup(
-	const vec4& a_ambient,
-	const vec4& a_diffuse,
-	const vec4& a_specular,
-	const mat4& a_shadowMatrix)
+	const vec3& a_ambient,
+	const vec3& m_sunPosition,
+	const float& a_strtLightingHeight)
 {
 	ShaderHandler::SetUpLightingUniforms(
 		a_ambient,
-		a_diffuse,
-		a_specular,
-		a_shadowMatrix);
+		m_sunPosition,
+		a_strtLightingHeight,
+		GetElapsedTime());
 }
 
 void GLApplication::InitialiseFlyCamera(c_float a_minSpeed,

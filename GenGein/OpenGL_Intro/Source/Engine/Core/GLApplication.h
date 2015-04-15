@@ -82,10 +82,9 @@ protected:
 
 	// Set-up basic camera data
 	void ApplyLightingSetup(
-		const glm::vec4& a_ambient,
-		const glm::vec4& a_diffuse = glm::vec4(1),
-		const glm::vec4& a_specular = glm::vec4(1),
-		const glm::mat4& a_shadowMatrix = glm::mat4(1));
+		const glm::vec3& a_ambient,
+		const glm::vec3& m_sunPosition,
+		const float& a_strtLightingHeight);
 
 	// Initialises BaseCamera
 	void InitialiseFlyCamera(c_float a_minSpeed,

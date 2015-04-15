@@ -17,24 +17,18 @@
     <ClCompile Include="Source\Engine\Renderer\FBO_RenderScreen.cpp" />
     <ClCompile Include="Source\Engine\Renderer\FBOMesh.cpp" />
     <ClCompile Include="Source\Engine\Renderer\SkyBox.cpp" />
-    <ClCompile Include="Source\Engine\InputManager.cpp" />
     <ClCompile Include="Source\Engine\Particles\GPUParticleEmitter.cpp" />
     <ClCompile Include="Source\Engine\Particles\CPUParticleEmitter.cpp" />
     <ClCompile Include="Source\Engine\Objects\FBXModel.cpp" />
     <ClCompile Include="Source\Engine\GUI\AntTweak.cpp" />
-    <ClCompile Include="Source\Engine\Lighting.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Cameras\BaseCamera.cpp" />
     <ClCompile Include="Source\Cameras\FlyCamera.cpp" />
     <ClCompile Include="Source\Engine\Core\GLApplication.cpp" />
     <ClCompile Include="Source\Engine\Objects\ObjMesh.cpp" />
     <ClCompile Include="Source\Engine\Core\ShaderHandler.cpp" />
-    <ClCompile Include="Tutorials\Tutorial13.cpp" />
-    <ClCompile Include="Tutorials\Tutorial12.cpp" />
-    <ClCompile Include="Tutorials\Tutorial10.cpp" />
+    <ClCompile Include="Source\Final\ProGenEnvironment.cpp" />
     <ClCompile Include="Source\Engine\Renderer\TextureHandler.cpp" />
-    <ClCompile Include="Tutorials\Tutorial09.cpp" />
-    <ClCompile Include="Tutorials\Tutorial11.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Objects\BaseObject.h" />
@@ -42,25 +36,19 @@
     <ClInclude Include="Source\Engine\Renderer\FBOMesh.h" />
     <ClInclude Include="Source\Engine\Renderer\SkyBox.h" />
     <ClInclude Include="Source\Engine\Culling.h" />
-    <ClInclude Include="Source\Engine\InputManager.h" />
     <ClInclude Include="Source\Engine\Particles\GPUParticleEmitter.h" />
     <ClInclude Include="Source\Engine\Particles\CPUParticleEmitter.h" />
     <ClInclude Include="Source\Engine\Objects\FBXModel.h" />
     <ClInclude Include="Source\Engine\GUI\AntTweak.h" />
     <ClInclude Include="Source\Engine\Objects\FBXAnimation.h" />
-    <ClInclude Include="Source\Engine\Lighting.h" />
     <ClInclude Include="Source\Cameras\BaseCamera.h" />
     <ClInclude Include="Source\Cameras\FlyCamera.h" />
     <ClInclude Include="Source\Engine\Core\GLApplication.h" />
     <ClInclude Include="Source\Engine\Objects\ObjMesh.h" />
     <ClInclude Include="Source\Engine\Core\ShaderHandler.h" />
     <ClInclude Include="Source\Engine\Particles\ParticleTypes.h" />
-    <ClInclude Include="Tutorials\Tutorial13.h" />
-    <ClInclude Include="Tutorials\Tutorial12.h" />
-    <ClInclude Include="Tutorials\Tutorial10.h" />
+    <ClInclude Include="Source\Final\ProGenEnvironment.h" />
     <ClInclude Include="Source\Engine\Renderer\TextureHandler.h" />
-    <ClInclude Include="Tutorials\Tutorial09.h" />
-    <ClInclude Include="Tutorials\Tutorial11.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{68C8DABB-A9CA-41A7-BE9B-BE809F13DF60}</ProjectGuid>

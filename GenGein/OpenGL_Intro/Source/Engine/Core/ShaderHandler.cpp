@@ -117,9 +117,7 @@ uint ShaderHandler::CreateShader(c_charp a_shaderDir, c_uint a_type)
 const void ShaderHandler::SetUpCameraUniforms(
 	const glm::mat4& a_camProjMat,
 	const glm::mat4& a_camViewMat,
-	const glm::mat4& a_camWorldMat,
-	const glm::vec3& a_sunPos,
-	const float& a_elapsedTime)
+	const glm::mat4& a_camWorldMat)
 {
 	//unsigned int uiError;
 	for (auto it = m_programMap.begin(); it != m_programMap.end(); ++it)
@@ -134,20 +132,14 @@ const void ShaderHandler::SetUpCameraUniforms(
 
 		loc = glGetUniformLocation(it->second, "World");
 		glUniformMatrix4fv(loc, 1, false, &a_camWorldMat[0][0]);
-
-		loc = glGetUniformLocation(it->second, "SunPos");
-		glUniform3fv(loc, 1, &a_sunPos[0]);
-
-		loc = glGetUniformLocation(it->second, "time");
-		glUniform1f(loc, a_elapsedTime);
 	}
 }
 
 const void ShaderHandler::SetUpLightingUniforms(
-	const glm::vec4& a_ambientLight,
-	const glm::vec4& a_diffuseLight,
-	const glm::vec4& a_specularLight,
-	const glm::mat4& a_shadowMat)
+	const glm::vec3& a_ambientLight,
+	const glm::vec3& a_SunPos,
+	const float& a_strtLightingHeight,
+	const float& a_elapsedTime)
 {
 	//unsigned int uiError;
 	for (auto it = m_programMap.begin(); it != m_programMap.end(); ++it)
@@ -155,16 +147,16 @@ const void ShaderHandler::SetUpLightingUniforms(
 		glUseProgram(it->second);
 
 		GLint loc = glGetUniformLocation(it->second, "AmbientLight");
-		glUniform4fv(loc, 1, &a_ambientLight[0]);
+		glUniform3fv(loc, 1, &a_ambientLight[0]);
 
-		loc = glGetUniformLocation(it->second, "DiffuseLight");
-		glUniform4fv(loc, 1, &a_diffuseLight[0]);
+		loc = glGetUniformLocation(it->second, "SunPos");
+		glUniform3fv(loc, 1, &a_SunPos[0]);
+		
+		loc = glGetUniformLocation(it->second, "LightingHeight");
+		glUniform1f(loc, a_strtLightingHeight);
 
-		loc = glGetUniformLocation(it->second, "SpecularLight");
-		glUniform4fv(loc, 1, &a_specularLight[0]);
-
-		loc = glGetUniformLocation(it->second, "ShadowMatrix");
-		glUniformMatrix4fv(loc, 1, false, &a_shadowMat[0][0]);
+		loc = glGetUniformLocation(it->second, "time");
+		glUniform1f(loc, a_elapsedTime);
 	}
 }
 
