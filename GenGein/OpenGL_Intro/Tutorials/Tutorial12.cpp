@@ -174,35 +174,18 @@ void Tutorial12::CreateEnviroGrid(c_uint a_dim)
 	}
 
 	// Calculating normals and spawns
-	for (GLuint row = 0; row < a_dim; ++row)
+	for (uint r = 0; r < a_dim; ++r)
 	{
-		for (GLuint col = 0; col < a_dim; ++col)
+		for (uint c = 0; c < a_dim; ++c)
 		{
-			int nextRowInc = 1, nextColInc = 1;
-
-			if (row == a_dim - 1) nextRowInc = -1;
-			else nextRowInc = 1;
-			if (col == a_dim - 1) nextColInc = -1;
-			else nextColInc = 1;
-
-			//current | across | across + above
-			uint a = col*a_dim + row;
-			uint b = a + (a_dim * nextColInc);
-			uint c = a + nextColInc;
-
-			vec3 dir = glm::cross(vec3(m_enviroVerts[b].position - m_enviroVerts[a].position), vec3(m_enviroVerts[c].position - m_enviroVerts[a].position));
-			m_enviroVerts[a].normal = vec4(normalize(dir),0);
-
-			// Save off possible tree data for tree positions
-			uint treeSeed = row * a_dim + col;
-			treeSeed += -m_range / 2 + (rand() % m_range);
-			if (treeSeed == (row * a_dim + col) && m_enviroVerts[a].position.y > 3)
+			vec3 a = m_enviroVerts[r * a_dim + c].position.xyz;
+			vec3 b;
+			vec3 d;
+			if (r != a_dim - 1 && c != a_dim - 1)
 			{
-				m_treeSpawns.push_back(
-					glm::translate(vec3(m_enviroVerts[a].position)) *
-					glm::rotate(dot(vec3(m_enviroVerts[a].normal), vec3(0,1,0)), vec3(m_enviroVerts[a].normal)));
-
-				m_indexTypeToSpawn.push_back(rand() % 9);
+				b = m_enviroVerts[(r + 1) * a_dim + c].position.xyz;
+				d = m_enviroVerts[(r + 1) * a_dim + (c + 1)].position.xyz;
+				m_enviroVerts[r * a_dim + c].normal = vec4(glm::normalize(glm::cross(b - a, d - a)), 1);
 			}
 		}
 	}
