@@ -170,7 +170,7 @@ void ObjMesh::Render()
 {
 	glUseProgram(*m_programID);
 
-	glUniformMatrix4fv(m_localMatUniLoc, 1, GL_FALSE, &m_localTransform[0][0]);
+	glUniformMatrix4fv(m_localMatUniLoc, 1, GL_FALSE, &m_localTrans[0][0]);
 
 	//Rebind VAO
 	glBindVertexArray(m_VAO);

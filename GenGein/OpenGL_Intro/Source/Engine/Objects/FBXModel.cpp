@@ -204,7 +204,7 @@ void FBXModel::Render()
 		FBXMeshNode* mesh = m_pFbx->getMeshByIndex(i);
 		uint* glData = (uint*)mesh->m_userData;
 
-		glUniformMatrix4fv(m_localMatUniLoc, 1, GL_FALSE, &m_localTransform[0][0]);
+		glUniformMatrix4fv(m_localMatUniLoc, 1, GL_FALSE, &m_localTrans[0][0]);
 
 		glBindVertexArray(glData[0]);
 		glDrawElements(GL_TRIANGLES, mesh->m_indices.size(), GL_UNSIGNED_INT, 0);

@@ -29,7 +29,7 @@ public:
 class Node
 {
 public:
-	Node() : parent(nullptr), localTransform(1) {}
+	Node() : parent(nullptr), localTrans(1) {}
 	virtual ~Node() { for (auto child : children) delete child; }
 
 	void addChild(Node* child){
@@ -37,7 +37,7 @@ public:
 	}
 
 	virtual void Update() {
-		updateWorldTransform();
+		updateWorldTrans();
 
 		for (auto child : children)
 			child->Update();
@@ -45,16 +45,16 @@ public:
 		updateWorldBounds();
 	}
 
-	void updateWorldTransform() {
+	void updateWorldTrans() {
 		if (parent == nullptr)
-			worldTransform = worldTransform;
+			worldTrans = worldTrans;
 		else
-			worldTransform = parent->worldTransform *
-			localTransform;
+			worldTrans = parent->worldTrans *
+			localTrans;
 	}
 
 	void updateWorldBounds() {
-		worldBounds.centre = worldTransform * localBounds.centre;
+		worldBounds.centre = worldTrans * localBounds.centre;
 		worldBounds.radius = localBounds.radius;
 
 		for (auto child : children)
@@ -68,8 +68,8 @@ protected:
 	BoundingSphere	localBounds;
 	BoundingSphere	worldBounds;
 
-	glm::mat4		localTransform;
-	glm::mat4		worldTransform;
+	glm::mat4		localTrans;
+	glm::mat4		worldTrans;
 
 	std::vector<Node*> children;
 };

@@ -6,7 +6,7 @@
 #include "Engine\GUI\AntTweak.h"
 #include "Engine\Renderer\TextureHandler.h"
 #include "Engine\Objects\FBXModel.h"
-#include "Cameras\BaseCamera.h"
+#include "Engine\Cameras\BaseCamera.h"
 
 #include "ProGenEnvironment.h"
 

@@ -8,9 +8,8 @@
 #include "Engine\Core\ShaderHandler.h"
 #include "Engine\GUI\AntTweak.h"
 #include "Engine\Renderer\SkyBox.h"
-
-#include "Cameras\BaseCamera.h"
-#include "Cameras\FlyCamera.h"
+#include "Engine\Cameras\BaseCamera.h"
+#include "Engine\Cameras\FlyCamera.h"
 
 #include "GLApplication.h"
 

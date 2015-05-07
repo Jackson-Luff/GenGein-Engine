@@ -19,21 +19,21 @@ public:
 	~BaseObject();
 
 	// Getter / Setter of Position
-	glm::vec4 const GetPosition() { return m_localTransform[3]; }
-	void const SetPosition(vec3 newPos) { m_localTransform[3] = vec4(newPos,1); }
+	glm::vec4 const GetPosition() { return m_localTrans[3]; }
+	void const SetPosition(vec3 newPos) { m_localTrans[3] = vec4(newPos,1); }
 
 	// Getter / Setter of Rotation
 	inline void SetRotation( const float a_angleInDegrees, const vec3& a_appOfRot)
-		{ m_localTransform *= glm::rotate(a_angleInDegrees, a_appOfRot); }
+		{ m_localTrans *= glm::rotate(a_angleInDegrees, a_appOfRot); }
 	
 	// Getter / Setter of Scale
 	inline const void SetScale(float a_scaleValue)
-		{m_localTransform *= glm::scale(vec3(a_scaleValue));}
+		{m_localTrans *= glm::scale(vec3(a_scaleValue));}
 
 	// Getter / Setter of LocalTransform
-	inline glm::mat4 GetLocalTransform() const { return m_localTransform; }
+	inline glm::mat4 GetLocalTransform() const { return m_localTrans; }
 	inline const void SetLocalTransform(const glm::mat4 a_locTrans)
-	{ m_localTransform = a_locTrans; }
+	{ m_localTrans = a_locTrans; }
 
 	inline const void SetLocalTransform(
 		const glm::vec3& a_pos,
@@ -41,7 +41,7 @@ public:
 		const glm::vec3& a_rot,
 		const glm::vec3& a_scale)
 	{ 
-		m_localTransform = glm::translate(a_pos) * 
+		m_localTrans = glm::translate(a_pos) * 
 			glm::rotate(a_angle, a_rot) * glm::scale(a_scale);
 	}
 
@@ -73,7 +73,7 @@ protected:
 	uint* m_programID;
 
 	int m_localMatUniLoc;
-	mat4 m_localTransform;
+	mat4 m_localTrans;
 
 	std::vector< FBXVertex > m_FBX_verts;
 	std::vector< OBJVertex > m_OBJ_verts;

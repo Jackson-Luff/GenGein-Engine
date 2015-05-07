@@ -6,7 +6,7 @@
 
 #include "Engine\GUI\AntTweak.h"
 #include "Engine\Core\ShaderHandler.h"
-#include "Cameras\BaseCamera.h"
+#include "Engine\Cameras\BaseCamera.h"
 #include "ConFourTut.h"
 
 ConFourTut::ConFourTut() {}
@@ -57,8 +57,8 @@ void ConFourTut::Update(const double a_dt)
 					// get the mouse position within the game grid
 					double x = 0, y = 0;
 					glfwGetCursorPos(m_pWindow, &x, &y);
-					m_pickPosition = m_camera->pickAgainstPlane(
-						(float)x, (float)y, glm::vec4(0, 1, 0, 0));w
+					m_pickPosition = m_pBaseCamera->PickAgainstPlane(
+						(float)x, (float)y, glm::vec4(0, 1, 0, 0));
 					// determine which column was chosen
 					int column = (int)((m_pickPosition.z +
 						ConnectFour::COLUMNS) / 2);

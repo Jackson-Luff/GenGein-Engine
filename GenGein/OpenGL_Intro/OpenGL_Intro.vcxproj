@@ -13,8 +13,8 @@
   <ItemGroup>
     <ClCompile Include="..\Dependencies\gizmos\AIE\Gizmos.cpp" />
     <ClCompile Include="..\Dependencies\gl_core\gl_core_4_4.cpp" />
-    <ClCompile Include="Source\Cameras\BaseCamera.cpp" />
-    <ClCompile Include="Source\Cameras\FlyCamera.cpp" />
+    <ClCompile Include="Source\Engine\Cameras\BaseCamera.cpp" />
+    <ClCompile Include="Source\Engine\Cameras\FlyCamera.cpp" />
     <ClCompile Include="Source\Engine\AI\ConnectFour.cpp" />
     <ClCompile Include="Source\Engine\Core\GLApplication.cpp" />
     <ClCompile Include="Source\Engine\Core\ShaderHandler.cpp" />
@@ -37,8 +37,8 @@
     <ClCompile Include="Source\Tutorials\Tessellation.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Cameras\BaseCamera.h" />
-    <ClInclude Include="Source\Cameras\FlyCamera.h" />
+    <ClInclude Include="Source\Engine\Cameras\BaseCamera.h" />
+    <ClInclude Include="Source\Engine\Cameras\FlyCamera.h" />
     <ClInclude Include="Source\Engine\AI\AIBase.h" />
     <ClInclude Include="Source\Engine\AI\ConnectFour.h" />
     <ClInclude Include="Source\Engine\Core\GLApplication.h" />

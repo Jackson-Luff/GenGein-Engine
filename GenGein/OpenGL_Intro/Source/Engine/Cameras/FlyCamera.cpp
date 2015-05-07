@@ -42,9 +42,9 @@ void FlyCamera::Update( c_double a_dt )
 void FlyCamera::HandleKeyboardInput( c_double a_dt )
 {
 	//Get the cameras forward/up/right
-	glm::vec4 vRight = m_worldTransform[0];
-	glm::vec4 vUp	 = m_worldTransform[1];
-	glm::vec4 vFrwrd = m_worldTransform[2];
+	glm::vec4 vRight = m_worldTrans[0];
+	glm::vec4 vUp	 = m_worldTrans[1];
+	glm::vec4 vFrwrd = m_worldTrans[2];
 
 	glm::vec4 moveDir(0.0f);
 
@@ -134,17 +134,17 @@ void FlyCamera::CalculateRotation( c_double a_dt, c_double a_dx, c_double a_dy )
 		SetWorldTransform( GetWorldTransform() * glm::mat4(xRot * yRot) );
 
 	// Create a side vector and then from that an up vector 
-	glm::vec3 m_sideVector = glm::cross( glm::vec3(0,1,0), glm::vec3(m_worldTransform[2]) );
-	glm::vec3 m_upVector   = glm::cross(     m_sideVector, glm::vec3(m_worldTransform[2]) );
+	glm::vec3 m_sideVector = glm::cross( glm::vec3(0,1,0), glm::vec3(m_worldTrans[2]) );
+	glm::vec3 m_upVector   = glm::cross(     m_sideVector, glm::vec3(m_worldTrans[2]) );
 
 	// Normalise the two
 	m_sideVector = glm::normalize(m_sideVector);
 	m_upVector   = glm::normalize(  m_upVector);
 
 	// Apply to the world Transform 
-	m_worldTransform[0] = glm::vec4(m_sideVector, 0);
-	m_worldTransform[1] = glm::vec4(  -m_upVector, 0);
-	m_worldTransform[2] = glm::normalize(m_worldTransform[2]);
+	m_worldTrans[0] = glm::vec4(m_sideVector, 0);
+	m_worldTrans[1] = glm::vec4(  -m_upVector, 0);
+	m_worldTrans[2] = glm::normalize(m_worldTrans[2]);
 	// Apply View Transform 
-	m_viewTransform = glm::inverse( GetWorldTransform() );
+	m_viewTrans = glm::inverse( GetWorldTransform() );
 }

@@ -23,8 +23,8 @@
     <ClCompile Include="Source\Engine\Renderer\SkyBox.cpp" />
     <ClCompile Include="Source\Engine\Renderer\TextureHandler.cpp" />
     <ClCompile Include="Source\Engine\TransGrid.cpp" />
-    <ClCompile Include="Source\Cameras\BaseCamera.cpp" />
-    <ClCompile Include="Source\Cameras\FlyCamera.cpp" />
+    <ClCompile Include="Source\Engine\Cameras\BaseCamera.cpp" />
+    <ClCompile Include="Source\Engine\Cameras\FlyCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Tutorial\CacheCohrence.h" />
@@ -51,7 +51,7 @@
     <ClInclude Include="Source\Engine\Renderer\TextureHandler.h" />
     <ClInclude Include="Source\Engine\Culling.h" />
     <ClInclude Include="Source\Engine\TransGrid.h" />
-    <ClInclude Include="Source\Cameras\BaseCamera.h" />
-    <ClInclude Include="Source\Cameras\FlyCamera.h" />
+    <ClInclude Include="Source\Engine\Cameras\BaseCamera.h" />
+    <ClInclude Include="Source\Engine\Cameras\FlyCamera.h" />
   </ItemGroup>
 </Project>

@@ -8,9 +8,9 @@ int main(int argc, char* argv[])
 {
 	srand((unsigned int)time(NULL));
 	
-	ReflectAndRip* RnR = new ReflectAndRip(1200, 628, "Reflections And Ripples");
-	RnR->Run();
-	delete RnR;
+	//ReflectAndRip* RnR = new ReflectAndRip(1200, 628, "Reflections And Ripples");
+	//RnR->Run();
+	//delete RnR;
 
 	//Tessellation* tess = new Tessellation(1200, 628, "Tessellation");
 	//tess->Run();
