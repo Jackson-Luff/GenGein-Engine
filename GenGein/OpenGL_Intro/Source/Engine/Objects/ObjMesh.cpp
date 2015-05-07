@@ -20,7 +20,7 @@ m_vertexMap()
 {}
 
 // Constructor with folder and file directory
-void ObjMesh::LoadObject( c_charp a_folderDir, c_charp a_fileName )
+void ObjMesh::LoadObject( c_pChar a_folderDir, c_pChar a_fileName )
 {
 	// Initialise bool's
 	m_hasUV = false;
@@ -47,11 +47,11 @@ void ObjMesh::LoadObject( c_charp a_folderDir, c_charp a_fileName )
 }
 
 // Same Constructor but accepts custom texture name
-void ObjMesh::LoadObject( c_charp a_folderDir, c_charp a_fileDir, c_charp a_textureName)
+void ObjMesh::LoadObject( c_pChar a_folderDir, c_pChar a_fileDir, c_pChar a_textureName)
 {
 	/*
-	c_charp folderDir;
-	c_charp fileName;
+	c_pChar folderDir;
+	c_pChar fileName;
 	bool fileNameBuff = true;
 
 	for (uint i = strlen(a_fileDir) - 1; i <= 0; --i)
@@ -71,7 +71,6 @@ void ObjMesh::LoadObject( c_charp a_folderDir, c_charp a_fileDir, c_charp a_text
 	ShaderHandler::LoadShaderProgram("ObjShader",
 		"Data/Shaders/Geometry/ObjShader.vert",
 		"Data/Shaders/Geometry/ObjShader.frag");
-	m_programID = &ShaderHandler::GetShader("ObjShader");
 
 	// Apply the material based upon the input directory
 	m_folderDirectory = a_folderDir;
@@ -84,7 +83,7 @@ void ObjMesh::LoadObject( c_charp a_folderDir, c_charp a_fileDir, c_charp a_text
 
 	CleanUp();
 
-	TextureHandler::LoadTexture(m_programID, "diffuseMap", a_textureName);
+	TextureHandler::LoadTexture("ObjShader", "diffuseMap", a_textureName);
 }
 
 // Deconstructor
@@ -502,13 +501,13 @@ void ObjMesh::loadMaterials(c_string a_matPath)
 			else if (buffer.find("illum ") == 0)
 				m_currentMaterial->illum = parseFloat(buffer, "illum ");
 			else if (buffer.find("map_Ka") == 0)
-				TextureHandler::LoadTexture(m_programID, "ambientMap", m_folderDirectory + "/" + parseString(buffer, "map_Ka "));
+				TextureHandler::LoadTexture("ObjShader", "ambientMap", m_folderDirectory + "/" + parseString(buffer, "map_Ka "));
 			else if (buffer.find("map_Kd") == 0)
-				TextureHandler::LoadTexture(m_programID, "diffuseMap", m_folderDirectory + "/" + parseString(buffer, "map_Kd "));
+				TextureHandler::LoadTexture("ObjShader", "diffuseMap", m_folderDirectory + "/" + parseString(buffer, "map_Kd "));
 			else if (buffer.find("map_Ks") == 0)
-				TextureHandler::LoadTexture(m_programID, "specularMap", m_folderDirectory + "/" + parseString(buffer, "map_Ks "));
+				TextureHandler::LoadTexture("ObjShader", "specularMap", m_folderDirectory + "/" + parseString(buffer, "map_Ks "));
 			else if (buffer.find("map_Ns") == 0)
-				TextureHandler::LoadTexture(m_programID, "normalMap", m_folderDirectory + "/" + parseString(buffer, "map_Ns "));
+				TextureHandler::LoadTexture("ObjShader", "normalMap", m_folderDirectory + "/" + parseString(buffer, "map_Ns "));
 		}
 
 		if (m_currentMaterial != NULL)

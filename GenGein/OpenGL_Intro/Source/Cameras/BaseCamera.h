@@ -55,6 +55,12 @@ public:
 	inline c_mat4& GetProjection()	 const { return m_projectionTransform; }
 	inline c_mat4& GetView()		 const { return m_viewTransform; }
 	inline c_mat4& GetProjectionView() const { return m_projectionViewTransform; }
+
+	// Setters to retrieve the projection, view and projectionView transforms
+	inline void SetProjection(c_mat4 a_newProj) { m_projectionTransform = a_newProj; }
+	inline void SetView(c_mat4& a_newView)		{ m_viewTransform = a_newView; }
+	inline void SetProjectionView(c_mat4& a_newProjView) { m_projectionViewTransform = a_newProjView; }
+
 protected:
 	// Update projection view (per frame)
 	void UpdateProjectionViewTransform();

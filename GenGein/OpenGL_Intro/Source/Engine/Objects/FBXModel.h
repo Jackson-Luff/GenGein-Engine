@@ -12,7 +12,7 @@ public:
 	~FBXModel();
 
 	bool LoadFBX(
-		uint* a_prog,
+		const char* a_shaderName,
 		std::string a_directory,
 		FBXFile::UNIT_SCALE a_scale = FBXFile::UNITS_METER,
 		bool a_loadTextures = true,

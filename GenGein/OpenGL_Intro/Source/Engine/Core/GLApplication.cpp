@@ -18,7 +18,7 @@ using glm::vec3;
 using glm::vec4;
 using glm::mat4;
 
-void error_callback(c_int a_error, c_charp a_description)
+void error_callback(c_int a_error, c_pChar a_description)
 {
 	// Prints the error to console.
 	printf("%i  %s", a_error, a_description);
@@ -31,7 +31,7 @@ m_height(0),
 m_title(0)
 {}
 
-GLApplication::GLApplication(c_int a_width, c_int a_height, c_charp a_title)
+GLApplication::GLApplication(c_int a_width, c_int a_height, c_pChar a_title)
 {
 	// Apply window width, height and title.
 	m_width = a_width;
@@ -105,7 +105,7 @@ void GLApplication::StartUp()
 	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug", "DeltaTime", TW_TYPE_DOUBLE, (void*)&m_deltaTime);
 
 	m_pSkyBox = new SkyBox();
-	m_pSkyBox->Create("Data/Shaders/Used/Faces/Space/");
+	m_pSkyBox->Create("Data/Shaders/Used/Faces/Sky/");
 }
 
 void GLApplication::DebugControls()
@@ -138,20 +138,24 @@ void GLApplication::CalculateTiming()
 	m_FPS = 1.0f / m_deltaTime;
 }
 
+void GLApplication::RenderSkyBox()
+{
+	glDepthFunc(GL_LEQUAL);
+	glUseProgram(ShaderHandler::GetShader("SkyBox"));
+	m_pSkyBox->Render(m_sunPosition.y);
+	glDepthFunc(GL_LESS);
+}
+
 void GLApplication::Render()
 {
 	// Clear colour and depth buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	ApplyCameraUniformSetup();
-	glDepthFunc(GL_LEQUAL);
-	m_pSkyBox->Render(m_sunPosition.y);
-	glDepthFunc(GL_LESS);
+	
 	DebugControls();
 
 	CalculateTiming();
-
-	glClearColor(m_backColour.x, m_backColour.y, m_backColour.z, m_backColour.w);
 }
 
 void GLApplication::InitialiseAppElements()
@@ -186,7 +190,7 @@ void GLApplication::ApplyLightingSetup(
 		a_ambient,
 		m_sunPosition,
 		a_strtLightingHeight,
-		GetElapsedTime());
+		(float)GetElapsedTime());
 }
 
 void GLApplication::InitialiseFlyCamera(c_float a_minSpeed,

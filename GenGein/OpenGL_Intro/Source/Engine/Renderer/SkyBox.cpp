@@ -6,7 +6,6 @@
 #include "Skybox.h"
 
 SkyBox::SkyBox()
-	: m_programID(0)
 {}
 
 SkyBox::~SkyBox()
@@ -17,16 +16,15 @@ void SkyBox::Create(c_str a_folderDir)
 	ShaderHandler::LoadShaderProgram("SkyBox",
 		"Data/Shaders/Used/SkyBox.vert",
 		"Data/Shaders/Used/SkyBox.frag");
-	m_programID = &ShaderHandler::GetShader("SkyBox");
 
 	std::vector<c_str> faces;
-	faces.push_back(std::string("Data/Shaders/Used/Faces/Sky/") + "right" + ".png");
-	faces.push_back(std::string("Data/Shaders/Used/Faces/Sky/") + "left" + ".png");
-	faces.push_back(std::string("Data/Shaders/Used/Faces/Sky/") + "top" + ".png");
-	faces.push_back(std::string("Data/Shaders/Used/Faces/Sky/") + "bottom" + ".png");
-	faces.push_back(std::string("Data/Shaders/Used/Faces/Sky/") + "back" + ".png");
-	faces.push_back(std::string("Data/Shaders/Used/Faces/Sky/") + "front" + ".png");
-	m_dayTexture = TextureHandler::LoadCubeMap(m_programID, "skybox", faces);
+	faces.push_back(std::string(a_folderDir) + "right" + ".png");
+	faces.push_back(std::string(a_folderDir) + "left" + ".png");
+	faces.push_back(std::string(a_folderDir) + "top" + ".png");
+	faces.push_back(std::string(a_folderDir) + "bottom" + ".png");
+	faces.push_back(std::string(a_folderDir) + "back" + ".png");
+	faces.push_back(std::string(a_folderDir) + "front" + ".png");
+	m_dayTexture = TextureHandler::LoadCubeMap("SkyBox", "skybox", faces);
 	m_VAO = LoadCubeVertices();
 	faces.clear();
 	faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "right" + ".png");
@@ -35,7 +33,7 @@ void SkyBox::Create(c_str a_folderDir)
 	faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "bottom" + ".png");
 	faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "back" + ".png");
 	faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "front" + ".png");
-	m_nightTexture = TextureHandler::LoadCubeMap(m_programID, "skybox", faces);
+	m_nightTexture = TextureHandler::LoadCubeMap("SkyBox", "skybox", faces);
 
 	printf("SUCCESS: SkyBox Load Successful.\n\n");
 }
@@ -105,7 +103,7 @@ uint SkyBox::LoadCubeVertices()
 void SkyBox::Render(float a_condition)
 {
 	glDepthMask(GL_FALSE);
-	glUseProgram(*m_programID);
+	glUseProgram(ShaderHandler::GetShader("SkyBox"));
 	glBindVertexArray(m_VAO);
 
 	//glActiveTexture(GL_TEXTURE0 + 1); // use second texture image unit

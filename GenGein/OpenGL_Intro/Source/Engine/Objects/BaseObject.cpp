@@ -11,3 +11,8 @@ BaseObject::BaseObject()
 
 BaseObject::~BaseObject()
 {}
+
+void ApplyOpenGLData()
+{
+
+}

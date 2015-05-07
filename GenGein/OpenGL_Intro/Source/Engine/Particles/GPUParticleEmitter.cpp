@@ -25,8 +25,6 @@ GPUParticleEmitter::~GPUParticleEmitter()
 	glDeleteVertexArrays(2, m_vao);
 	glDeleteBuffers(2, m_vbo);
 
-	// Delete shaders
-	glDeleteProgram(*m_drawShader);
 	glDeleteProgram(m_updateShader);
 }
 
@@ -178,8 +176,9 @@ void GPUParticleEmitter::CreateUpdateShader()
 void GPUParticleEmitter::Render(
 	const float& a_dt,
 	const float& a_incrTime,
+	const float& a_isKeyDown,
 	const glm::mat4& a_camWorldTrans,
-	const float& a_isKeyDown)
+	const glm::vec3& a_SunPos)
 {	 
 	// Update the particles using transform feedback
 	glUseProgram(m_updateShader);
@@ -187,15 +186,22 @@ void GPUParticleEmitter::Render(
 	// Bind time info
 	int loc = glGetUniformLocation(m_updateShader, "time");
 	glUniform1f(loc, a_incrTime);
+
 	loc = glGetUniformLocation(m_updateShader, "deltaTime");
 	glUniform1f(loc, a_dt);
+
 	loc = glGetUniformLocation(m_updateShader, "emitterPosition");
 	glUniform3fv(loc, 1, &m_position[0]);
+
 	loc = glGetUniformLocation(m_updateShader, "isKeyDown");
 	glUniform1f(loc, a_isKeyDown);
+
 	loc = glGetUniformLocation(m_updateShader, "World");	
 	glUniformMatrix4fv(loc, 1, GL_FALSE, &a_camWorldTrans[0][0]);
 
+	loc = glGetUniformLocation(m_updateShader, "SunPos");
+	glUniform3fv(loc, 1, &a_SunPos[0]);
+	
 	// Disable rasterisation
 	glEnable(GL_RASTERIZER_DISCARD);
 

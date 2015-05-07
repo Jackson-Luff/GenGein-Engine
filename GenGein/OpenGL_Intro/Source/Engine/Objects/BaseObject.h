@@ -45,6 +45,8 @@ public:
 			glm::rotate(a_angle, a_rot) * glm::scale(a_scale);
 	}
 
+	void ApplyOpenGLData();
+
 protected:
 	// Vertex holds the layout info for the VBO
 	struct OBJVertex

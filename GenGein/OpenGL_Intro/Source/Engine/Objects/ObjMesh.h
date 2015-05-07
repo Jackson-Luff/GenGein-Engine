@@ -5,7 +5,7 @@
 class ObjMesh;
 
 typedef unsigned int uint;
-typedef const char* c_charp;
+typedef const char* c_pChar;
 typedef const std::string c_string;
 
 ////
@@ -29,8 +29,8 @@ public:
 	~ObjMesh();
 	
 	// Load up the obj
-	void LoadObject( c_charp a_folderDir, c_charp a_fileDir);
-	void LoadObject( c_charp a_folderDir, c_charp a_fileDir, c_charp a_textureName);
+	void LoadObject( c_pChar a_folderDir, c_pChar a_fileDir);
+	void LoadObject( c_pChar a_folderDir, c_pChar a_fileDir, c_pChar a_textureName);
 	
 	// Draw the mesh to screen
 	void Render();

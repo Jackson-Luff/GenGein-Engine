@@ -1,43 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Source\Cameras\BaseCamera.cpp" />
-    <ClCompile Include="Source\Cameras\FlyCamera.cpp" />
     <ClCompile Include="..\Dependencies\gl_core\gl_core_4_4.cpp" />
     <ClCompile Include="..\Dependencies\gizmos\AIE\Gizmos.cpp" />
-    <ClCompile Include="Source\Engine\GUI\AntTweak.cpp" />
+    <ClCompile Include="Source\Tutorials\ConnectFour\ConFourTut.cpp" />
+    <ClCompile Include="Source\Tutorials\CacheCohrence.cpp" />
+    <ClCompile Include="Source\Tutorials\ReflectionTest.cpp" />
+    <ClCompile Include="Source\Tutorials\Tessellation.cpp" />
+    <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\MoreTesting\ReflectAndRip.cpp" />
+    <ClCompile Include="Source\Final\ProGenEnvironment.cpp" />
+    <ClCompile Include="Source\Engine\AI\ConnectFour.cpp" />
     <ClCompile Include="Source\Engine\Core\GLApplication.cpp" />
-    <ClCompile Include="Source\Engine\Particles\CPUParticleEmitter.cpp" />
-    <ClCompile Include="Source\Engine\Particles\GPUParticleEmitter.cpp" />
     <ClCompile Include="Source\Engine\Core\ShaderHandler.cpp" />
-    <ClCompile Include="Source\Engine\Renderer\FBO_RenderScreen.cpp" />
-    <ClCompile Include="Source\Engine\Renderer\FBOMesh.cpp" />
-    <ClCompile Include="Source\Engine\Renderer\SkyBox.cpp" />
+    <ClCompile Include="Source\Engine\GUI\AntTweak.cpp" />
     <ClCompile Include="Source\Engine\Objects\BaseObject.cpp" />
     <ClCompile Include="Source\Engine\Objects\FBXModel.cpp" />
-    <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Engine\Objects\ObjMesh.cpp" />
+    <ClCompile Include="Source\Engine\Particles\CPUParticleEmitter.cpp" />
+    <ClCompile Include="Source\Engine\Particles\GPUParticleEmitter.cpp" />
+    <ClCompile Include="Source\Engine\Renderer\FBO_RenderScreen.cpp" />
+    <ClCompile Include="Source\Engine\Renderer\SkyBox.cpp" />
     <ClCompile Include="Source\Engine\Renderer\TextureHandler.cpp" />
-    <ClCompile Include="Source\Final\ProGenEnvironment.cpp" />
+    <ClCompile Include="Source\Engine\TransGrid.cpp" />
+    <ClCompile Include="Source\Cameras\BaseCamera.cpp" />
+    <ClCompile Include="Source\Cameras\FlyCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Cameras\BaseCamera.h" />
-    <ClInclude Include="Source\Cameras\FlyCamera.h" />
-    <ClInclude Include="Source\Engine\GUI\AntTweak.h" />
+    <ClInclude Include="Source\Tutorial\CacheCohrence.h" />
+    <ClInclude Include="Source\Tutorials\Tessellation.h" />
+    <ClInclude Include="Source\Tutorials\ConnectFour\ConFourTut.h" />
+    <ClInclude Include="Source\Tutorials\CacheCohrence.h" />
+    <ClInclude Include="Source\Tutorials\ReflectionTest.h" />
+    <ClInclude Include="Source\MoreTesting\ReflectAndRip.h" />
+    <ClInclude Include="Source\Final\ProGenEnvironment.h" />
+    <ClInclude Include="Source\Engine\AI\AIBase.h" />
+    <ClInclude Include="Source\Engine\AI\ConnectFour.h" />
     <ClInclude Include="Source\Engine\Core\GLApplication.h" />
-    <ClInclude Include="Source\Engine\Particles\ParticleTypes.h" />
-    <ClInclude Include="Source\Engine\Particles\CPUParticleEmitter.h" />
-    <ClInclude Include="Source\Engine\Particles\GPUParticleEmitter.h" />
-    <ClInclude Include="Source\Engine\Culling.h" />
     <ClInclude Include="Source\Engine\Core\ShaderHandler.h" />
-    <ClInclude Include="Source\Engine\Renderer\FBO_RenderScreen.h" />
-    <ClInclude Include="Source\Engine\Renderer\FBOMesh.h" />
-    <ClInclude Include="Source\Engine\Renderer\SkyBox.h" />
+    <ClInclude Include="Source\Engine\GUI\AntTweak.h" />
     <ClInclude Include="Source\Engine\Objects\BaseObject.h" />
-    <ClInclude Include="Source\Engine\Objects\ObjMesh.h" />
     <ClInclude Include="Source\Engine\Objects\FBXAnimation.h" />
     <ClInclude Include="Source\Engine\Objects\FBXModel.h" />
+    <ClInclude Include="Source\Engine\Objects\ObjMesh.h" />
+    <ClInclude Include="Source\Engine\Particles\CPUParticleEmitter.h" />
+    <ClInclude Include="Source\Engine\Particles\GPUParticleEmitter.h" />
+    <ClInclude Include="Source\Engine\Particles\ParticleTypes.h" />
+    <ClInclude Include="Source\Engine\Renderer\FBO_RenderScreen.h" />
+    <ClInclude Include="Source\Engine\Renderer\SkyBox.h" />
     <ClInclude Include="Source\Engine\Renderer\TextureHandler.h" />
-    <ClInclude Include="Source\Final\ProGenEnvironment.h" />
+    <ClInclude Include="Source\Engine\Culling.h" />
+    <ClInclude Include="Source\Engine\TransGrid.h" />
+    <ClInclude Include="Source\Cameras\BaseCamera.h" />
+    <ClInclude Include="Source\Cameras\FlyCamera.h" />
   </ItemGroup>
 </Project>

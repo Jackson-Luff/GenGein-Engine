@@ -4,41 +4,36 @@
 #include <glm\ext.hpp>
 #include <stb\stb_image.h>
 #include <FBXFile.h>
+#include "Engine\Core\ShaderHandler.h"
 
 #include "TextureHandler.h"
 
 //Shortening
-typedef std::map<c_charp, sTexture> textureMap;
+typedef std::map<c_pChar, sTexture> textureMap;
 textureMap TextureHandler::m_textureMap = textureMap();
 
 TextureHandler::~TextureHandler()
 {
-	auto it = m_textureMap.begin();
-	while (it != m_textureMap.end())
-	{
-		glDeleteTextures(1, &(it->second).ID);
-		++it;
-	}
 }
 
 // Add a texture based on desired name and directory
-sTexture TextureHandler::LoadTexture(c_uint* a_prog, c_charp a_name, c_str a_dir)
+sTexture TextureHandler::LoadTexture(c_pChar a_prog, c_pChar a_name, c_str a_dir)
 {
 	if (DoesTextureExist(a_name)) return m_textureMap[a_name];
 
 	sTexture texture = sTexture();
 
-	int imgWidth=0, imgHeight=0, imgFormat=0;
-	unsigned char* data = stbi_load( a_dir.c_str(), 
+	int imgWidth = 0, imgHeight = 0, imgFormat = 0;
+	unsigned char* data = stbi_load(a_dir.c_str(),
 		&imgWidth, &imgHeight, &imgFormat, STBI_default);
 
 	if (data == NULL)
 	{
 		printf("Unable to find texture: %s thus Default assigned.\n", a_name);
-		c_charp src = "Data/Objects/default.png";
+		c_pChar src = "Data/Objects/default.png";
 
 		data = stbi_load(src, &imgWidth,
-				&imgHeight, &imgFormat, STBI_default);
+			&imgHeight, &imgFormat, STBI_default);
 	}
 
 	if (imgFormat == 1)
@@ -62,42 +57,15 @@ sTexture TextureHandler::LoadTexture(c_uint* a_prog, c_charp a_name, c_str a_dir
 
 	printf("SUCCESS: %s Texture Loaded.\n", a_name);
 
-	texture.programID = a_prog;
-	texture.textureUniLoc = glGetUniformLocation(*a_prog, a_name);
+	texture.programID = &ShaderHandler::GetShader(a_prog);
+	texture.textureUniLoc = glGetUniformLocation(*texture.programID, a_name);
 	m_textureMap[a_name] = texture;
-	
-	return texture;
-}
-
-// Add a texture based on desired name and directory
-sTexture TextureHandler::LoadFBXTexture(c_uint a_prog, const FBXTexture* a_data)
-{
-	if (DoesTextureExist(a_data->name.c_str())) return m_textureMap[a_data->name.c_str()];
-
-	sTexture texture = sTexture();
-	texture.ID = a_data->handle;
-
-	glGenTextures(1, &texture.ID);
-	glBindTexture(GL_TEXTURE_2D, texture.ID);
-	glTexImage2D(GL_TEXTURE_2D, 0, a_data->format,
-		a_data->width, a_data->handle, 0, a_data->format, GL_UNSIGNED_BYTE, a_data->data);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-	stbi_image_free(a_data->data);
-
-	printf("SUCCESS: %s Texture Loaded.\n", a_data->name.c_str());
-	
-	texture.programID = &a_prog;
-	texture.textureUniLoc = glGetUniformLocation(a_prog, a_data->name.c_str());
-	m_textureMap[a_data->name.c_str()] = texture;
 
 	return texture;
 }
 
 // Add a texture based on desired name and directory
-sTexture TextureHandler::LoadPerlin(c_uint* a_prog, c_charp a_name, c_uint a_dim)
+sTexture TextureHandler::LoadPerlin(c_pChar a_prog, c_pChar a_name, c_uint a_dim)
 {
 	if (DoesTextureExist(a_name)) return m_textureMap[a_name];
 
@@ -132,8 +100,8 @@ sTexture TextureHandler::LoadPerlin(c_uint* a_prog, c_charp a_name, c_uint a_dim
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	perlin.textureUniLoc = glGetUniformLocation(*a_prog, a_name);
-	perlin.programID = a_prog;
+	perlin.programID = &ShaderHandler::GetShader(a_prog);
+	perlin.textureUniLoc = glGetUniformLocation(*perlin.programID, a_name);
 
 	m_textureMap[a_name] = perlin;
 
@@ -143,7 +111,7 @@ sTexture TextureHandler::LoadPerlin(c_uint* a_prog, c_charp a_name, c_uint a_dim
 }
 
 // Add a cube map desired by name and dir
-sTexture TextureHandler::LoadCubeMap(c_uint* a_prog, c_charp a_name, std::vector<c_str> a_faces)
+sTexture TextureHandler::LoadCubeMap(c_pChar a_prog, c_pChar a_name, std::vector<c_str> a_faces)
 {
 	sTexture cubeMapTexture;
 	glGenTextures(1, &cubeMapTexture.ID);
@@ -160,7 +128,7 @@ sTexture TextureHandler::LoadCubeMap(c_uint* a_prog, c_charp a_name, std::vector
 		if (data == NULL)
 		{
 			printf("Unable to find texture: %s thus Default assigned.\n", a_name);
-			c_charp src = "Data/Objects/default.png";
+			c_pChar src = "Data/Objects/default.png";
 
 			data = stbi_load(src, &width, &height, &format, STBI_default);
 		}
@@ -185,35 +153,144 @@ sTexture TextureHandler::LoadCubeMap(c_uint* a_prog, c_charp a_name, std::vector
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-	cubeMapTexture.programID = a_prog;
-	cubeMapTexture.textureUniLoc = glGetUniformLocation(*a_prog, a_name);
-
-	//m_cubeMap[a_name] = cubeMapTexture;
+	cubeMapTexture.programID = &ShaderHandler::GetShader(a_prog);
+	cubeMapTexture.textureUniLoc = glGetUniformLocation(*cubeMapTexture.programID, a_name);
+	m_textureMap[a_name] = cubeMapTexture;
 
 	return cubeMapTexture;
 }
 
+void TextureHandler::LoadFBXTexture(c_pChar a_prog, const FBXMaterial* a_mat)
+{
+	//TODO: Make this a FBXMaterial** to point to the address of the matieral.
+
+	const char* types[] = {
+		"diffuseMap",
+		"ambientMap",
+		"glowMap",
+		"specularMap",
+		"glossMap",
+		"emissiveMap",
+		"normalMap",
+		"alphaMap",
+		"displacementMap",
+		"decalMap"
+	};
+
+	for (int i = 0; i < FBXMaterial::TextureTypes_Count; i++)
+	{
+		if (a_mat->textures[i] == nullptr)
+			continue;
+
+		if (DoesTextureExist(a_mat->textures[i]->path.c_str())) return;
+
+		sTexture texture = sTexture();
+
+		/*
+		if (imgFormat == 1)
+		imgFormat = GL_RED;
+		if (imgFormat == 2)
+		imgFormat = GL_RG;
+		if (imgFormat == 3)
+		imgFormat = GL_RGB;
+		if (imgFormat == 4)
+		imgFormat = GL_RGBA;
+
+		glGenTextures(1, &texture.ID);
+		glBindTexture(GL_TEXTURE_2D, texture.ID);
+		glTexImage2D(GL_TEXTURE_2D, 0, imgFormat,
+		imgWidth, imgHeight, 0, imgFormat, GL_UNSIGNED_BYTE, data);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		stbi_image_free(data);
+
+		printf("SUCCESS: %s Texture Loaded.\n", a_name);*/
+
+		texture.ID = a_mat->textures[i]->handle;
+		texture.programID = &ShaderHandler::GetShader(a_prog);
+		texture.textureUniLoc = glGetUniformLocation(*texture.programID, types[i]);
+		m_textureMap[a_mat->textures[i]->path.c_str()] = texture;
+	}
+}
+
+uint TextureHandler::LoadFrameBuffer(c_pChar a_prog, c_pChar a_name, int a_width, int a_height)
+{
+	sTexture FBO;
+	uint m_fbo, m_fboDepth;
+
+	// Setup and bind a framebuffer
+	glGenFramebuffers(1, &m_fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+
+	glGenTextures(1, &FBO.ID);
+	glBindTexture(GL_TEXTURE_2D, FBO.ID);
+
+	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, a_width, a_height);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, FBO.ID, 0);
+
+	glGenRenderbuffers(1, &m_fboDepth);
+	glBindRenderbuffer(GL_RENDERBUFFER, m_fboDepth);
+
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24,
+		a_width, a_height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+		GL_RENDERBUFFER, m_fboDepth);
+
+	GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0 };
+	glDrawBuffers(1, drawBuffers);
+
+	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (status != GL_FRAMEBUFFER_COMPLETE)
+	{
+		printf("Framebuffer Error!\n");
+		return 0;
+	}
+
+	// unbind the FBO so that we can render to the back buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	FBO.programID = &ShaderHandler::GetShader(a_prog);
+	FBO.textureUniLoc = glGetUniformLocation(*FBO.programID, a_name);
+
+	m_textureMap[a_name] = FBO;
+
+	return m_fbo;
+}
+
 // Get the texture by name
-sTexture TextureHandler::GetTexture(c_charp a_name)
+sTexture TextureHandler::GetTexture(c_pChar a_name)
 {
 	if (DoesTextureExist(a_name))
 		return m_textureMap.at(a_name);
-	
+
 	printf("No texture exists for that name.");
 	return sTexture();
 }
 
 // Remove a material by name
-void TextureHandler::UnloadTexture(c_charp a_name)
+void TextureHandler::UnloadTexture(c_pChar a_name)
 {
 	// Doesn't exist check
 	if (!DoesTextureExist(a_name)) return;
-
-	uint uiTextureID = m_textureMap[a_name].ID;
-
-	glDeleteTextures(1, &uiTextureID);
+	
+	glDeleteTextures(1, &m_textureMap[a_name].ID);
 
 	m_textureMap.erase(a_name);
+}
+
+void TextureHandler::UnloadAllTextures()
+{
+	for (auto it : m_textureMap)
+	{
+		glDeleteTextures(1, &(it.second).ID);
+	}
+
+	m_textureMap.clear();
 }
 
 // Rendering the textures
@@ -224,7 +301,7 @@ void TextureHandler::RenderAllTextures()
 	{
 		if (it.second.textureUniLoc <= -1)
 			continue;
-	
+
 		//Set Texture Slot
 		glUseProgram(*it.second.programID);
 		glUniform1i(it.second.textureUniLoc, i);
@@ -234,29 +311,8 @@ void TextureHandler::RenderAllTextures()
 	}
 }
 
-// Rendering the textures
-/*void TextureHandler::RenderAllCubeMaps()
-{
-	int i = 0;
-	for (auto it : m_cubeMap)
-	{
-		if (it.second.textureUniLoc <= -1)
-			continue;
-
-		glDepthMask(GL_FALSE); 
-
-		glUseProgram(it.second.programID);
-		glBindVertexArray(it.second.VAO)
-		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(GL_TEXTURE_2D, it.second.ID);
-		
-		glDepthMask(GL_TRUE);
-		i++;
-	}
-}*/
-
 // Check if texture exists
-bool TextureHandler::DoesTextureExist(c_charp a_name)
+bool TextureHandler::DoesTextureExist(c_pChar a_name)
 {
 	if (m_textureMap.find(a_name) == m_textureMap.end())
 		return false;

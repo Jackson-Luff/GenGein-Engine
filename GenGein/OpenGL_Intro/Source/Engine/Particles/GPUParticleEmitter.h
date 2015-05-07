@@ -19,10 +19,11 @@ public:
 		const float a_startSize, const float a_endSize,
 		const glm::vec4& a_startColour, const glm::vec4& a_endColour);
 
-	void Render(const float& a_dt, 
+	void Render(const float& a_dt,
 		const float& a_incrTime,
+		const float& a_isKeyDown,
 		const glm::mat4& a_camWorldTrans,
-		const float& a_isKeyDown);
+		const glm::vec3& a_SunPos);
 
 	// Get / Set Positon
 	inline glm::vec3& GetPosition() { return m_position; }

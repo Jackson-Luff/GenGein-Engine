@@ -5,7 +5,7 @@
 #include <glm\glm.hpp>
 
 typedef unsigned int uint;
-typedef const char* c_charp;
+typedef const char* c_pChar;
 
 class AntTweak
 {
@@ -15,13 +15,13 @@ public:
 
 	void Initialise( GLFWwindow* a_prog, const uint a_scrnWidth, const uint a_scrnHeight );
 
-	void AddTweaker( c_charp a_tweakName );
-	void RemoveTweaker( c_charp a_tweakName );
+	void AddTweaker( c_pChar a_tweakName );
+	void RemoveTweaker( c_pChar a_tweakName );
 
-	void AddVarRW(c_charp a_tweakName, c_charp a_groupName, c_charp a_varName, TwType a_type, void* a_addressOfData);
-	void AddVarRO(c_charp a_tweakName, c_charp a_groupName, c_charp a_varName, TwType a_type, void* a_addressOfData);
-	void RemoveVar( c_charp a_tweakName, c_charp a_varName );
-	void RemoveAllVars( c_charp a_tweakName );
+	void AddVarRW(c_pChar a_tweakName, c_pChar a_groupName, c_pChar a_varName, TwType a_type, void* a_addressOfData);
+	void AddVarRO(c_pChar a_tweakName, c_pChar a_groupName, c_pChar a_varName, TwType a_type, void* a_addressOfData);
+	void RemoveVar( c_pChar a_tweakName, c_pChar a_varName );
+	void RemoveAllVars( c_pChar a_tweakName );
 
 	void Draw();
 

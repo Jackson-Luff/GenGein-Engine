@@ -5,7 +5,7 @@
 
 #include "ShaderHandler.h"
 
-typedef std::map<c_charp, uint> shaderMap;
+typedef std::map<c_pChar, uint> shaderMap;
 typedef std::map<uint, ShaderHandler::DirectoryData> directoryMap;
 shaderMap ShaderHandler::m_programMap = shaderMap();
 directoryMap ShaderHandler::m_directoryMap = directoryMap();
@@ -13,12 +13,10 @@ directoryMap ShaderHandler::m_directoryMap = directoryMap();
 // Deconstructor
 ShaderHandler::~ShaderHandler()
 {
-	// null program
-	glUseProgram(0);
 }
 
 //Returns shader based on naming
-uint& ShaderHandler::GetShader(c_charp a_shaderName)
+uint& ShaderHandler::GetShader(c_pChar a_shaderName)
 {
 	if (DoesShaderExist(a_shaderName)) return m_programMap[a_shaderName];
 
@@ -26,10 +24,10 @@ uint& ShaderHandler::GetShader(c_charp a_shaderName)
 }
 
 // Create the program with shader file directories
-uint ShaderHandler::LoadShaderProgram(c_charp a_shaderName,
-	c_charp a_vertexShader, c_charp a_pixelShader,
-	c_charp a_geometryShader, c_charp a_tessCntrlShader,
-	c_charp a_tessEvalShader, bool checkForExists)
+uint ShaderHandler::LoadShaderProgram(c_pChar a_shaderName,
+	c_pChar a_vertexShader, c_pChar a_pixelShader,
+	c_pChar a_geometryShader, c_pChar a_tessCntrlShader,
+	c_pChar a_tessEvalShader, bool checkForExists)
 {
 	if (DoesShaderExist(a_shaderName) && checkForExists)
 		return m_programMap[a_shaderName];
@@ -44,10 +42,7 @@ uint ShaderHandler::LoadShaderProgram(c_charp a_shaderName,
 		CreateShader(a_tessCntrlShader, GL_TESS_CONTROL_SHADER);
 	c_uint tessEShader = 
 		CreateShader(a_tessEvalShader, GL_TESS_EVALUATION_SHADER);
-
-	if (vertShader >= 100 || fragShader >= 100)
-		return -1;
-
+	
 	uint progID;
 	// Apply shaders to program
 	progID = glCreateProgram();
@@ -57,13 +52,6 @@ uint ShaderHandler::LoadShaderProgram(c_charp a_shaderName,
 	glAttachShader(progID, tessCShader);
 	glAttachShader(progID, tessEShader);
 	glLinkProgram(progID);
-	/*
-	glBindAttribLocation(a_program, 0, "vertPosition");
-	glBindAttribLocation(a_program, 1, "vertColour");
-	glBindAttribLocation(a_program, 2, "vertNormal");
-	glBindAttribLocation(a_program, 3, "vertTangent");
-	glBindAttribLocation(a_program, 4, "vertBiNormal");
-	glBindAttribLocation(a_program, 5, "vertTextCoords");*/
 
 	// Check success of program for stable use
 	if (!CheckProgramStatus(progID))
@@ -93,16 +81,16 @@ uint ShaderHandler::LoadShaderProgram(c_charp a_shaderName,
 }
 
 // Initialises the content via valid shader directory
-uint ShaderHandler::CreateShader(c_charp a_shaderDir, c_uint a_type)
+uint ShaderHandler::CreateShader(c_pChar a_shaderDir, c_uint a_type)
 {
-	c_charp src = ReadShaderCode(a_shaderDir);
+	c_pChar src = ReadShaderCode(a_shaderDir);
 
 	if (a_shaderDir == NULL || src == NULL)
 		return -1;
 
 	uint shaderID = glCreateShader(a_type);
 
-	glShaderSource(shaderID, 1, (c_charp*)&src, 0);
+	glShaderSource(shaderID, 1, (c_pChar*)&src, 0);
 	glCompileShader(shaderID);
 
 	if (!CheckShaderStatus(shaderID)) {
@@ -164,7 +152,7 @@ const void ShaderHandler::ReloadAllPrograms()
 {
 	for (auto it : m_programMap)
 	{
-		c_charp name = it.first;
+		c_pChar name = it.first;
 		DirectoryData dirData = m_directoryMap[it.second];
 		glDeleteProgram(it.second);
 
@@ -178,8 +166,20 @@ const void ShaderHandler::ReloadAllPrograms()
 	}
 }
 
+const void ShaderHandler::UnloadAllPrograms()
+{
+	for (auto prog : m_programMap)
+	{
+		glDeleteProgram(prog.second);
+	}
+
+	m_programMap.clear();
+
+	glUseProgram(0);
+}
+
 // Loops through the map to define if a shader already exists
-const bool ShaderHandler::DoesShaderExist(c_charp& a_fileName)
+const bool ShaderHandler::DoesShaderExist(c_pChar& a_fileName)
 {
 	if (m_programMap.find(a_fileName) == m_programMap.end())
 		return false;
@@ -240,7 +240,7 @@ const bool ShaderHandler::CheckShaderStatus(c_uint &a_shader)
 }
 
 // Readers in the shader from a file source
-c_charp ShaderHandler::ReadShaderCode(c_charp a_filePath)
+c_pChar ShaderHandler::ReadShaderCode(c_pChar a_filePath)
 {
 	if (!a_filePath)
 		return NULL;

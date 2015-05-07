@@ -10,7 +10,7 @@ class SkyBox;
 
 typedef const int c_int;
 typedef unsigned int uint;
-typedef const char* c_charp;
+typedef const char* c_pChar;
 typedef const float c_float;
 ////
 // Author: Jackson Luff
@@ -27,7 +27,7 @@ class GLApplication
 public:
 	// Constructor
 	GLApplication();
-	GLApplication(c_int a_width, c_int a_height, c_charp a_title);
+	GLApplication(c_int a_width, c_int a_height, c_pChar a_title);
 	// Deconstructor
 	~GLApplication();
 
@@ -61,6 +61,8 @@ public:
 	virtual void Render() = 0;
 	// Run the application
 	void Run();
+	// Render SkyBox
+	void RenderSkyBox();
 
 protected:
 	// REMOVE:Temp hotkeys for debugging
@@ -114,7 +116,7 @@ private:
 	// Size of window
 	int m_width, m_height;
 	// Title of window
-	c_charp m_title;
+	c_pChar m_title;
 	// Background colour
 	glm::vec4 m_backColour;
 };

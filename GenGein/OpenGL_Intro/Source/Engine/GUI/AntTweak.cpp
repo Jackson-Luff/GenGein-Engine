@@ -28,16 +28,17 @@ void AntTweak::Initialise( GLFWwindow* a_window, const uint a_scrnWidth, const u
 	glfwSetScrollCallback(a_window, TweakBarFunc::OnMouseScroll);
 	glfwSetKeyCallback(a_window, TweakBarFunc::OnKey);
 	glfwSetCharCallback(a_window, TweakBarFunc::OnChar);
-	glfwSetWindowSizeCallback(a_window, TweakBarFunc::OnWindowResize);};
+	glfwSetWindowSizeCallback(a_window, TweakBarFunc::OnWindowResize);
+};
 
-void AntTweak::AddTweaker( c_charp a_name )
+void AntTweak::AddTweaker( c_pChar a_name )
 {
 	// NOTE: MAY POINT TO THE ADDRESS AND BREAK
 	std::string description = "group= Tweaker";
 	TwBar* bar = TwNewBar(a_name);
 }
 
-void AntTweak::AddVarRO( c_charp a_Tweakname, c_charp a_groupName, c_charp a_varName, TwType a_type, void* a_addressOfData)
+void AntTweak::AddVarRO( c_pChar a_Tweakname, c_pChar a_groupName, c_pChar a_varName, TwType a_type, void* a_addressOfData)
 {
 	// Get the first word of the variable name
 	// for the description
@@ -47,7 +48,7 @@ void AntTweak::AddVarRO( c_charp a_Tweakname, c_charp a_groupName, c_charp a_var
 		a_type, a_addressOfData, description.c_str());
 }
 
-void AntTweak::AddVarRW( c_charp a_Tweakname, c_charp a_groupName, c_charp a_varName, TwType a_type, void* a_addressOfData)
+void AntTweak::AddVarRW( c_pChar a_Tweakname, c_pChar a_groupName, c_pChar a_varName, TwType a_type, void* a_addressOfData)
 {
 	// Get the first word of the variable name
 	// for the description
@@ -57,12 +58,12 @@ void AntTweak::AddVarRW( c_charp a_Tweakname, c_charp a_groupName, c_charp a_var
 		a_type, a_addressOfData, description.c_str());
 }
 
-void AntTweak::RemoveVar( c_charp a_TweakName, c_charp a_varName )
+void AntTweak::RemoveVar( c_pChar a_TweakName, c_pChar a_varName )
 {
 	TwRemoveVar(TwGetBarByName(a_TweakName), a_varName);
 }
 
-void AntTweak::RemoveAllVars( c_charp a_TweakName )
+void AntTweak::RemoveAllVars( c_pChar a_TweakName )
 {
 	TwRemoveAllVars( TwGetBarByName(a_TweakName) );
 }

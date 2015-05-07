@@ -7,23 +7,24 @@
 
 #include "FBXModel.h"
 
-FBXModel::FBXModel() 
-	: BaseObject()
+FBXModel::FBXModel()
+: BaseObject()
 {}
 
 FBXModel::~FBXModel()
 {
+	CleanupOpenGLBuffers();
 }
 
 bool FBXModel::LoadFBX(
-	uint* a_prog,
+	const char* a_shaderName,
 	std::string a_directory,
 	FBXFile::UNIT_SCALE a_scale,
 	bool a_loadTextures,
 	bool a_loadAnimations,
 	bool a_flipTextureY)
 {
-	m_programID = a_prog;
+	m_programID = &ShaderHandler::GetShader(a_shaderName);
 
 	m_pFbx = new FBXFile();
 
@@ -34,6 +35,15 @@ bool FBXModel::LoadFBX(
 	}
 	m_pFbx->initialiseOpenGLTextures();
 	CreateOpenGLBuffers();
+
+	for (unsigned int i = 0; i < m_pFbx->getMeshCount(); ++i)
+	{
+		FBXMeshNode* mesh = m_pFbx->getMeshByIndex(i);
+		uint* glData = (uint*)mesh->m_userData;
+
+		// call TextureLoad here
+		TextureHandler::LoadFBXTexture(a_shaderName, mesh->m_material);
+	}
 
 	m_localMatUniLoc = glGetUniformLocation(*m_programID, "LocalMatrix");
 	m_bonesUniform = glGetUniformLocation(*m_programID, "bones");
@@ -63,6 +73,17 @@ bool FBXModel::LoadFBX(
 
 	m_pFbx->initialiseOpenGLTextures();
 	CreateOpenGLBuffers();
+
+	// bind our vertex array object and draw the mesh
+	for (unsigned int i = 0; i < m_pFbx->getMeshCount(); ++i)
+	{
+		FBXMeshNode* mesh = m_pFbx->getMeshByIndex(i);
+		uint* glData = (uint*)mesh->m_userData;
+
+		// Extracts textures from material and references data from
+		// Already stored data
+		TextureHandler::LoadFBXTexture("FBXProgram", mesh->m_material);
+	}
 
 	m_localMatUniLoc = glGetUniformLocation(*m_programID, "LocalMatrix");
 	m_bonesUniform = glGetUniformLocation(*m_programID, "bones");
@@ -182,15 +203,6 @@ void FBXModel::Render()
 	{
 		FBXMeshNode* mesh = m_pFbx->getMeshByIndex(i);
 		uint* glData = (uint*)mesh->m_userData;
-
-		for (uint j = 0; j < FBXMaterial::TextureTypes_Count; j++)
-		{
-			if (mesh->m_material->textures[j] == nullptr)
-				continue;
-
-			glActiveTexture(GL_TEXTURE0 + j);
-			glBindTexture(GL_TEXTURE_2D, mesh->m_material->textures[j]->handle);
-		}
 
 		glUniformMatrix4fv(m_localMatUniLoc, 1, GL_FALSE, &m_localTransform[0][0]);
 

@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <glm\glm.hpp>
+#include "Engine\Renderer\TextureHandler.h"
 
 typedef const int c_int;
 typedef unsigned int uint;
@@ -20,7 +21,6 @@ public:
 private:
 	
 	uint LoadCubeVertices(); 
-	uint* m_programID;
 	uint m_VAO;
 	sTexture m_dayTexture;
 	sTexture m_nightTexture;
