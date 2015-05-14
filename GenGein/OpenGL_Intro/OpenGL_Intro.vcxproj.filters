@@ -3,15 +3,8 @@
   <ItemGroup>
     <ClCompile Include="..\Dependencies\gl_core\gl_core_4_4.cpp" />
     <ClCompile Include="..\Dependencies\gizmos\AIE\Gizmos.cpp" />
-    <ClCompile Include="Source\Tutorials\ConnectFour\ConFourTut.cpp" />
-    <ClCompile Include="Source\Tutorials\CacheCohrence.cpp" />
-    <ClCompile Include="Source\Tutorials\ReflectionTest.cpp" />
-    <ClCompile Include="Source\Tutorials\Tessellation.cpp" />
     <ClCompile Include="Source\main.cpp" />
-    <ClCompile Include="Source\MoreTesting\ReflectAndRip.cpp" />
-    <ClCompile Include="Source\Final\ProGenEnvironment.cpp" />
     <ClCompile Include="Source\Engine\AI\ConnectFour.cpp" />
-    <ClCompile Include="Source\Engine\Core\GLApplication.cpp" />
     <ClCompile Include="Source\Engine\Core\ShaderHandler.cpp" />
     <ClCompile Include="Source\Engine\GUI\AntTweak.cpp" />
     <ClCompile Include="Source\Engine\Objects\BaseObject.cpp" />
@@ -25,18 +18,21 @@
     <ClCompile Include="Source\Engine\TransGrid.cpp" />
     <ClCompile Include="Source\Engine\Cameras\BaseCamera.cpp" />
     <ClCompile Include="Source\Engine\Cameras\FlyCamera.cpp" />
+    <ClCompile Include="Source\Tests\ProGenEnvironment.cpp" />
+    <ClCompile Include="Source\Tests\ReflectAndRip.cpp" />
+    <ClCompile Include="Source\Tests\CacheCohrence.cpp" />
+    <ClCompile Include="Source\Tests\ReflectionTest.cpp" />
+    <ClCompile Include="Source\Tests\Tessellation.cpp" />
+    <ClCompile Include="Source\Tests\ConnectFour\ConFourTut.cpp" />
+    <ClCompile Include="Source\Engine\Core\BaseApp.cpp" />
+    <ClCompile Include="Source\Checkers\Checkers.cpp" />
+    <ClCompile Include="Source\Checkers\Player.cpp" />
+    <ClCompile Include="Source\Checkers\BasePlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Tutorial\CacheCohrence.h" />
-    <ClInclude Include="Source\Tutorials\Tessellation.h" />
-    <ClInclude Include="Source\Tutorials\ConnectFour\ConFourTut.h" />
-    <ClInclude Include="Source\Tutorials\CacheCohrence.h" />
-    <ClInclude Include="Source\Tutorials\ReflectionTest.h" />
-    <ClInclude Include="Source\MoreTesting\ReflectAndRip.h" />
-    <ClInclude Include="Source\Final\ProGenEnvironment.h" />
     <ClInclude Include="Source\Engine\AI\AIBase.h" />
     <ClInclude Include="Source\Engine\AI\ConnectFour.h" />
-    <ClInclude Include="Source\Engine\Core\GLApplication.h" />
     <ClInclude Include="Source\Engine\Core\ShaderHandler.h" />
     <ClInclude Include="Source\Engine\GUI\AntTweak.h" />
     <ClInclude Include="Source\Engine\Objects\BaseObject.h" />
@@ -53,5 +49,16 @@
     <ClInclude Include="Source\Engine\TransGrid.h" />
     <ClInclude Include="Source\Engine\Cameras\BaseCamera.h" />
     <ClInclude Include="Source\Engine\Cameras\FlyCamera.h" />
+    <ClInclude Include="Source\Tests\ProGenEnvironment.h" />
+    <ClInclude Include="Source\Tests\ReflectAndRip.h" />
+    <ClInclude Include="Source\Tests\CacheCohrence.h" />
+    <ClInclude Include="Source\Tests\ReflectionTest.h" />
+    <ClInclude Include="Source\Tests\Tessellation.h" />
+    <ClInclude Include="Source\Tests\ConnectFour\ConFourTut.h" />
+    <ClInclude Include="Source\Engine\Core\BaseApp.h" />
+    <ClInclude Include="Source\Checkers\Checkers.h" />
+    <ClInclude Include="Source\Checkers\Player.h" />
+    <ClInclude Include="Source\Checkers\BasePlayer.h" />
+    <ClInclude Include="Source\Checkers\CheckersData.h" />
   </ItemGroup>
 </Project>

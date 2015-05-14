@@ -158,18 +158,6 @@ float pattern2( in vec2 p, out vec2 q, out vec2 r , in float time)
     return fbm( q + 4.0*r,l,g);
 }
 
-void CalcLighting(in float dist)
-{
-	// Diffused Light Calc's
-		vec3 lightVector = normalize(SunPos - vec3(vPosition));
-		float brightness = max(0,dot(lightVector, normalize(vNormal.xyz) ));
-	// Specular Light Calc's
-		vec3 reflectedLightVec = reflect(-lightVector, vNormal.xyz);
-		vec3 eyeVector = normalize(World[3].xyz - vPosition.xyz);
-		float specularity = max(0,dot(reflectedLightVec, eyeVector));
-		specularity = pow(specularity, dist);
-}
-
 void main()
 {
 	
@@ -177,32 +165,41 @@ void main()
 	
 	vec3 I = vec3(normalize(vPosition.xyz - World[3].xyz));
 	vec3 R = vec3(reflect(I, normalize(vNormal.xyz)));	
-	vec4 skyBoxColour = texture(skybox, R);
 	
-	CalcLighting(dist);
+	vec2 p = (vPosition.xz/10);
+	vec2 qq, rep;
+	float weighting = 1.0;
+	float perlin = pattern(p,qq,rep,time*0.25) * weighting;
+	vec3 offset = vec3(0.5 * (perlin));
+	vec4 greenyBlue = texture(skybox, R + (R * offset)) * vec4(0.284313, 0.409, 0.409, 1);
+	
+	// Diffused Light Calc's
+		vec3 lightVector = normalize(SunPos - vec3(vPosition));
+		float brightness = max(0,dot(lightVector, normalize(vNormal.xyz) ));
+	// Specular Light Calc's
+		vec3 reflectedLightVec = reflect(-lightVector, vNormal.xyz);
+		vec3 eyeVector = normalize(World[3].xyz - vPosition.xyz);
+		float specularity = max(0,dot(reflectedLightVec, eyeVector));
+		specularity = pow(specularity, 50 * normalize(length(SunPos - World[3].xyz)));
 		
 	vec4 finalColour = vec4(1);
 	
 	if(SunPos.y > 3)
 	{
 		//perlin data
-		vec2 p = (vPosition.xz/10);
-		vec2 qq, rep;
-		float weighting = 1.0;
-		float perlin = pattern(p,qq,rep,time*0.25) * weighting;
 		
-		vec3 offset = vec3(0.5 * (perlin));
-		vec4 warpColour	= texture(skybox, (offset * R));
 		
-		finalColour.rgb = ((skyBoxColour.rgb + warpColour.rgb) * perlin);
-		finalColour.rgb = finalColour.rgb + (1 - perlin) * skyBoxColour.rgb;
+		vec4 warpColour	= texture(skybox, (R));
+		
+		finalColour.rgb = ((greenyBlue.rgb + warpColour.rgb) * perlin);
+		finalColour.rgb = finalColour.rgb + (1 - perlin) * greenyBlue.rgb;
 		//finalColour.rgb *= brightness;
 		//finalColour.rgb += specularity;
 	}
 	else
 		finalColour.rgb *= vec3(0.1);
 	
-	//finalColour.a = 0.7;
+	finalColour.a = 0.7;
 		
 	gl_FragColor = finalColour;
 }

@@ -1,13 +1,17 @@
 #include <time.h>
 
-#include "MoreTesting\ReflectAndRip.h"
-#include "Tutorials\Tessellation.h"
-#include "Tutorials\ConnectFour\ConFourTut.h"
-
+#include "Tests\ReflectAndRip.h"
+#include "Tests\Tessellation.h"
+#include "Tests\ConnectFour\ConFourTut.h"
+#include "Checkers\Checkers.h"
 int main(int argc, char* argv[])
 {
 	srand((unsigned int)time(NULL));
 	
+	Checkers* checkers = new Checkers(1200, 628, "Checkers");
+	checkers->Run();
+	delete checkers;
+
 	//ReflectAndRip* RnR = new ReflectAndRip(1200, 628, "Reflections And Ripples");
 	//RnR->Run();
 	//delete RnR;
@@ -16,9 +20,9 @@ int main(int argc, char* argv[])
 	//tess->Run();
 	//delete tess;
 
-	ConFourTut* con = new ConFourTut(1200, 628, "Connect Four!");
-	con->Run();
-	delete con;
+	//ConFourTut* con = new ConFourTut(1200, 628, "Connect Four!");
+	//con->Run();
+	//delete con;
 	
 	return 0;
 }
