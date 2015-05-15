@@ -20,16 +20,19 @@ Checkers::Checkers(c_int a_width, c_int a_height, c_pChar a_title)
 Checkers::~Checkers()
 {}
 
-void Checkers::GenCheckerBoardData(const float a_boardSize, const float a_tileSize, const float a_tileCount)
+void Checkers::GenCheckerBoardData(const float a_boardSize, const float a_tileCount)
 {
-	m_tileSize = a_tileSize;
+	float tileSize = a_boardSize / a_tileCount;
+
 	m_tileCount = a_tileCount;
 
+	float halfSize = a_boardSize/2.0f;
+
 	//Verts
-	verts[0] = { glm::vec3(-a_boardSize, 0, a_boardSize), glm::vec2(0, 1) };
-	verts[1] = { glm::vec3(a_boardSize, 0, a_boardSize), glm::vec2(1, 1) };
-	verts[2] = { glm::vec3(a_boardSize, 0, -a_boardSize), glm::vec2(1, 0) };
-	verts[3] = { glm::vec3(-a_boardSize, 0, -a_boardSize), glm::vec2(0, 0) };
+	verts[0] = { glm::vec3(-halfSize, 0, halfSize), glm::vec2(0, 1) };
+	verts[1] = { glm::vec3(halfSize, 0, halfSize), glm::vec2(1, 1) };
+	verts[2] = { glm::vec3(halfSize, 0, -halfSize), glm::vec2(1, 0) };
+	verts[3] = { glm::vec3(-halfSize, 0, -halfSize), glm::vec2(0, 0) };
 
 	uint indices[] =
 	{
@@ -71,8 +74,10 @@ void Checkers::GenCheckerBoardData(const float a_boardSize, const float a_tileSi
 	{
 		for (int c = 0; c < a_tileCount; c++)
 		{
-			glm::vec3 pos = vec3(r * a_tileSize, 0, c * a_tileSize);
-			pos += a_tileSize/2;
+			glm::vec3 pos = vec3(r * tileSize, 0, c * tileSize);
+			pos.z -= halfSize;
+			pos.z += tileSize / 2.0f;
+			pos.x -= tileSize * 3.0f + tileSize / 2.0f;
 
 			if ((r+c) % 2 == 0)
 				m_possiblePositions.push_back(pos);
@@ -90,7 +95,7 @@ void Checkers::StartUp()
 
 	//Initialise camera
 	InitialiseFlyCamera(5.0f, 20.0f, 0.5f,
-		vec3(20), vec3(0));
+		vec3(-10, 9, 0), vec3(0));
 
 	Gizmos::create();
 
@@ -100,11 +105,15 @@ void Checkers::StartUp()
 	m_checkerProgID = &ShaderHandler::GetShader("CheckerBoard");
 
 
-	GenCheckerBoardData( 10.0f, 1, 8);
+	GenCheckerBoardData( 10.0f, 8.0f);
 
-	m_playerOne = new Player();
+	m_playerOne = new Player(CHECKERS_DATA::PLAYER_01);
 	m_playerOne->Initialise();
 	m_playerOne->ApplyPositions(m_tileSize, m_possiblePositions);
+
+	m_playerTwo = new Player(CHECKERS_DATA::PLAYER_02);
+	m_playerTwo->Initialise();
+	m_playerTwo->ApplyPositions(m_tileSize, m_possiblePositions);
 }
 
 // Destroy things
@@ -118,7 +127,23 @@ void Checkers::Update(const double a_dt)
 {
 	BaseApp::Update(a_dt);
 
-	m_playerOne->Update(a_dt);
+	double x, y;
+	glfwGetCursorPos(m_pWindow, &x, &y);
+
+	if (m_playerOne->m_hasMoved)
+	{
+		m_playerTwo->Update(a_dt,
+			m_pBaseCamera->PickAgainstPlane(
+			(float)x, (float)y, glm::vec4(0, 1, 0, 0)),
+			glfwGetMouseButton(m_pWindow, GLFW_MOUSE_BUTTON_1));
+	}
+	else
+	{
+		m_playerOne->Update(a_dt,
+			m_pBaseCamera->PickAgainstPlane(
+			(float)x, (float)y, glm::vec4(0, 1, 0, 0)),
+			glfwGetMouseButton(m_pWindow, GLFW_MOUSE_BUTTON_1));
+	}
 }
 
 // Render things to screen
@@ -133,6 +158,6 @@ void Checkers::Render()
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	m_playerOne->Draw(m_pBaseCamera->GetProjectionView());
-
+	m_playerTwo->Draw(m_pBaseCamera->GetProjectionView());
 	//m_boardBase->Render();
 }

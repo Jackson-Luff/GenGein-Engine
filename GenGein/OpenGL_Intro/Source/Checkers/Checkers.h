@@ -14,7 +14,7 @@ public:
 	Checkers(c_int a_width, c_int a_height, c_pChar a_title);
 	~Checkers();
 
-	void GenCheckerBoardData(const float a_boardSize, const float a_tileSize, const float a_tileCount);
+	void GenCheckerBoardData(const float a_boardSize, const float a_tileCount);
 
 	// Initialise things
 	virtual void StartUp();
@@ -37,4 +37,5 @@ private:
 	std::vector<glm::vec3> m_possiblePositions;
 
 	Player* m_playerOne;
+	Player* m_playerTwo; 
 };
