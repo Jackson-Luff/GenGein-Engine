@@ -38,7 +38,7 @@ float rand(uint seed, float range)
 void main()
 {
 	// Interp colour
-	uint seed = uint(time * 1000.0 + (length(vPosition[0])/3));	
+	
 	vColour = mix( colourStart, colourEnd, vLifetime[0] / vLifespan[0] );
 	
 	// Calculate the size and create the corners of a quad

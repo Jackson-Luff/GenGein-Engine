@@ -176,7 +176,6 @@ void GPUParticleEmitter::CreateUpdateShader()
 void GPUParticleEmitter::Render(
 	const float& a_dt,
 	const float& a_incrTime,
-	const float& a_isKeyDown,
 	const glm::mat4& a_camWorldTrans,
 	const glm::vec3& a_SunPos)
 {	 
@@ -192,9 +191,6 @@ void GPUParticleEmitter::Render(
 
 	loc = glGetUniformLocation(m_updateShader, "emitterPosition");
 	glUniform3fv(loc, 1, &m_position[0]);
-
-	loc = glGetUniformLocation(m_updateShader, "isKeyDown");
-	glUniform1f(loc, a_isKeyDown);
 
 	loc = glGetUniformLocation(m_updateShader, "World");	
 	glUniformMatrix4fv(loc, 1, GL_FALSE, &a_camWorldTrans[0][0]);
@@ -231,4 +227,12 @@ void GPUParticleEmitter::Render(
 
 	// Swap for the next frame
 	m_activeBuffer = otherBuffer;
+}
+
+void GPUParticleEmitter::SendVariousUniformData(bool c_down,
+	bool v_down, bool b_down, bool n_down,
+	bool m_down)
+{
+	int uniloc = glGetUniformLocation(m_updateShader, "C_down");
+
 }

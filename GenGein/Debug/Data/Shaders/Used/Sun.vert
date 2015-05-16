@@ -39,7 +39,10 @@ void main()
 	vWeight = vertWeight;
 	vCoords = vertCoords;
 	
-	vec4 pos = vertPosition;
+	vec3 zAxis = normalize( World[3].xyz - vertPosition.xyz );
+	vec3 xAxis = cross( World[1].xyz, zAxis );
+	vec3 yAxis = cross( zAxis, xAxis );
+	mat3 billboard = mat3(xAxis, yAxis, zAxis);
 	
-	gl_Position = Projection * View * LocalMatrix * pos;
+	gl_Position = Projection * View * LocalMatrix * (mat4(billboard) * vertPosition);
 }

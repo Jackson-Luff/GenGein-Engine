@@ -1,13 +1,15 @@
 #version 430
 
 in vec4 vPosition;
+in vec4 vNormal;
 in vec2 vCoords;
 
 uniform mat4 World;
-uniform vec3 AmbientLight;
 uniform vec3 SunPos;
 uniform float time;
-uniform sampler2D diffuse;
+
+uniform samplerCube skybox;
+uniform sampler2D reflectTexture;
 
 vec4 mod289(vec4 x)
 {
@@ -112,7 +114,7 @@ float fbm(vec2 P, float lacunarity, float gain)
 	float sum = 0.0;
 	float amp = 0.3;
 	vec2 pp = P;
-	const int octaves = 10;
+	const int octaves = 4;
 	int i;
 
 	for(i = 0; i < octaves; i+=1)
@@ -128,53 +130,75 @@ float pattern( in vec2 p, out vec2 q, out vec2 r , in float time)
 {
 	float l = 2.3;
     float g = 0.4;
-     
+    
     q.x = fbm( p + vec2(time,time),l,g);
     q.y = fbm( p + vec2(5.2*time,1.3*time),l,g);
      
-    r.x = fbm( p + 4.0*q + vec2(1.7,9.2),l,g );
+    r.x = fbm( p + 4.0*q + vec2(1.7,9.2),l,g);
     r.y = fbm( p + 4.0*q + vec2(8.3,2.8),l,g);
      
-    return fbm( p + 4.0*r,l,g);
+	 
+	// NOTE:: g pretty much controls the height/intensity of the 
+	// water - thus around environments that'd be great. 
+	//	- slow movement
+    return fbm( q + 4.0*r,l,g);
+}
+
+float pattern2( in vec2 p, out vec2 q, out vec2 r , in float time)
+{
+	float l = 1.3;
+    float g = 2.4;
+     
+    q.x = fbm( p + vec2(time,time),l,g);
+    q.y = fbm( p + vec2(5.2*time,8.3*time),l,g);
+    
+    r.x = cnoise( p + 4.0*q + vec2(1.7,9.2));
+    r.y = cnoise( p + 4.0*q + vec2(8.3,2.8));
+     
+    return fbm( q + 4.0*r,l,g);
 }
 
 void main()
 {
 	
 	float dist = length(World[3] - vPosition);
-	vec4 darkBlue = vec4(0,0,0.5,1);
-	vec4 aqua 	  = vec4(0,1,1,1);
-	vec4 finalColour;
-
+	
+	vec3 I = vec3(normalize(vPosition.xyz - World[3].xyz));
+	vec3 R = vec3(reflect(I, normalize(vNormal.xyz)));	
+	
+	vec2 p = (vPosition.xz/10);
+	vec2 qq, rep;
+	float weighting = 1.0;
+	float perlin = pattern(p,qq,rep,time*0.25) * weighting;
+	vec3 offset = vec3(0.5 * (perlin));
+	vec4 greenyBlue = texture(skybox, R + (R * offset)) * vec4(0.384313, 0.509, 0.509, 1);
+	
 	// Diffused Light Calc's
-		vec3 vNormal = vec3(0,1,0);
-		vec3 lightVector = normalize(SunPos - vPosition.xyz);
-		float brightness = max(0,dot(lightVector, normalize(vNormal) ));
+		vec3 lightVector = normalize(SunPos - vec3(vPosition));
+		float brightness = max(0,dot(lightVector, normalize(vNormal.xyz) ));
 	// Specular Light Calc's
-		vec3 reflectedLightVec = reflect(-lightVector, vNormal);
+		vec3 reflectedLightVec = reflect(-lightVector, vNormal.xyz);
 		vec3 eyeVector = normalize(World[3].xyz - vPosition.xyz);
 		float specularity = max(0,dot(reflectedLightVec, eyeVector));
-		specularity = pow(specularity, 32);
+		specularity = pow(specularity, 50 * normalize(length(SunPos - World[3].xyz)));
 		
-		
-	finalColour = darkBlue;
+	vec4 finalColour = vec4(1);
 	
-	if(SunPos.y > 0)
+	if(SunPos.y > 3)
 	{
 		//perlin data
-		vec2 p = (vPosition.xz);
-		vec2 qq, r;
-		float result = pattern(p,qq,r,time*0.05);
-		vec4 perlin = vec4(result, result, result, result);
-		finalColour = (aqua * perlin.a);
-		finalColour.rgb = finalColour.rgb + (1 - perlin.a) * darkBlue.rgb;
-		finalColour.rgb *= brightness;
-		finalColour.rgb += specularity;
+		
+		vec4 warpColour	= texture(skybox, (R));
+		
+		finalColour.rgb = ((greenyBlue.rgb + warpColour.rgb) * perlin);
+		finalColour.rgb = finalColour.rgb + (1 - perlin) * greenyBlue.rgb;
+		//finalColour.rgb *= brightness;
+		//finalColour.rgb += specularity;
 	}
 	else
-		finalColour.rgb *= AmbientLight;
+		finalColour.rgb *= vec3(0.1);
 	
-	finalColour.a = 0.75;
+	finalColour.a = 0.7;
 		
 	gl_FragColor = finalColour;
 }

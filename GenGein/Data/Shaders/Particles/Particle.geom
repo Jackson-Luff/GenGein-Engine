@@ -38,10 +38,7 @@ float rand(uint seed, float range)
 void main()
 {
 	// Interp colour
-	uint seed = uint(time * 1000.0 + (length(vPosition[0])/3));
-	vec4 randColour = vec4( rand(seed++, 1), rand(seed++, 1), rand(seed++, 1), 1);
-	
-	vColour = mix( colourStart + randColour, colourEnd - randColour, vLifetime[0] / vLifespan[0] );
+	vColour = mix( colourStart, colourEnd, vLifetime[0] / vLifespan[0] );
 	
 	// Calculate the size and create the corners of a quad
 	float halfSize = mix(sizeStart, sizeEnd, vLifetime[0] / vLifespan[0] ) * 0.5f;

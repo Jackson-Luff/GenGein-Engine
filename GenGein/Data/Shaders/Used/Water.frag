@@ -171,7 +171,7 @@ void main()
 	float weighting = 1.0;
 	float perlin = pattern(p,qq,rep,time*0.25) * weighting;
 	vec3 offset = vec3(0.5 * (perlin));
-	vec4 greenyBlue = texture(skybox, R + (R * offset)) * vec4(0.284313, 0.409, 0.409, 1);
+	vec4 greenyBlue = texture(skybox, R + (R * offset)) * vec4(0.384313, 0.509, 0.509, 1);
 	
 	// Diffused Light Calc's
 		vec3 lightVector = normalize(SunPos - vec3(vPosition));
@@ -187,7 +187,6 @@ void main()
 	if(SunPos.y > 3)
 	{
 		//perlin data
-		
 		
 		vec4 warpColour	= texture(skybox, (R));
 		

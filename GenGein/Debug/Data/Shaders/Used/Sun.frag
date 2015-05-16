@@ -10,7 +10,9 @@ in vec4 vWeight;
 in vec2 vCoords;
 
 // Lighting Attributes
-uniform vec3 AmbientLight;
+uniform vec3 eyePos;
+uniform vec3 lightPos = vec3( 0.0, 1.0, 0.0);
+uniform vec3 ambientLight = vec3(0.25, 0.25, 0.25);
 uniform float time;
 
 //Textures
@@ -25,9 +27,15 @@ uniform sampler2D alphaMap;
 uniform sampler2D displacementMap;
 uniform sampler2D decalMap;
 
+uniform vec4 LightDiffuseColour = vec4(1, 1, 1, 1);
+uniform vec4 LightAmbientColour = vec4(1, 1, 1, 1);
+uniform vec4 LightSpecularColour = vec4(0.3, 0.3, 0.3, 1);
+
+uniform float LightSpecularPower = 5.0;
+
 out vec4 pixelColour;
 
 void main()
 {
-	pixelColour = texture(ambientMap, vCoords);
+	pixelColour = vec4(1);//texture(diffuseMap, vCoords);
 }

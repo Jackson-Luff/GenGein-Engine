@@ -22,6 +22,8 @@ uniform float isKeyDown;
 
 const float INVERSE_MAX_UINT = 1.0f / 4294967295.0f;
 
+vec3 newVel;
+
 float rand(uint seed, float range)
 {
 	uint i = (seed ^ 12345391u) * 2654435769u;
@@ -35,33 +37,36 @@ void main()
 {
 	uint seed = uint(time * 1000.0) + uint(gl_VertexID);
 	float dt = deltaTime;
+		
+	newVel = normalize(Velocity);
 	
-	vec3 newVel = Velocity * 1.2;
+	vec3 Target = vec3(sin(time), cos(time), tan(time));
+	vec3 dir = normalize(Target - Position);
+	newVel *= dir;
+	
+	float a = Lifetime, b = Lifespan, c = 0.5, d = 0.5;
+	newVel.x += (a-b)*sin(time) + b * sin(time * ((a/b)-1));
+	newVel.y += (a-b)*sin(time) - b * sin(time * ((a/b)-1));
+	newVel.z += (a-b)*cos(time) - b * cos(time * ((a/b)-1));
+	
+	newVel.y = sin(newVel.y) + ( Lifetime/Lifespan * cos(time));
 	
 	vPosition = Position + (Velocity * dt);
 	vVelocity = newVel;
 	vLifetime = Lifetime + dt;
 	vLifespan = Lifespan;
 
-	// emit a new particle if key is down
-	if(isKeyDown == 1.0)
-	{
-		// if it's dead spawn a new one!
-		if(vLifetime > vLifespan)
-		{			
-			//Initialise velocity
-			vVelocity.x = (1/rand(seed++,2) -1) + -World[2].x;
-			vVelocity.y = (1/rand(seed++,2) -1) + -World[2].y;
-			vVelocity.z = (1/rand(seed++,2) -1) + -World[2].z;
-			vVelocity = normalize(vVelocity);
-			vPosition = emitterPosition;
-			vLifetime = 0;
-			vLifespan = rand(seed++, lifeMax - lifeMin) + lifeMin;
-		}
-	}
-	else if(vLifetime > vLifespan)
-	{
-		vPosition = vec3(10000,10000,10000);
+	// if it's dead spawn a new one!
+	if(vLifetime > vLifespan)
+	{			
+		//Initialise velocity
+		vVelocity.x = rand(seed++, 2) - 1;
+		vVelocity.y = rand(seed++, 2) - 1;
+		vVelocity.z = rand(seed++, 2) - 1;
+		vVelocity = normalize(vVelocity);
+		vPosition = emitterPosition;
+		vLifetime = 0;
+		vLifespan = rand(seed++, lifeMax - lifeMin) + lifeMin;
 	}
 }
 

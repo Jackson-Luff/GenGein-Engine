@@ -21,7 +21,6 @@ public:
 
 	void Render(const float& a_dt,
 		const float& a_incrTime,
-		const float& a_isKeyDown,
 		const glm::mat4& a_camWorldTrans,
 		const glm::vec3& a_SunPos);
 
@@ -29,6 +28,10 @@ public:
 	inline glm::vec3& GetPosition() { return m_position; }
 	inline glm::vec3 SetPosition(const glm::vec3& a_pos) 
 	{ return m_position = a_pos; }
+
+	void SendVariousUniformData(bool c_down,
+		bool v_down, bool b_down, bool n_down,
+		bool m_down);
 
 protected:
 

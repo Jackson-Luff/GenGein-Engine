@@ -1,12 +1,10 @@
 #version 430
 
 in vec4 vPosition;
-in vec4 vNormals;
 in vec4 vShadowCoords;
 in vec2 vCoords;
 
 uniform mat4 World;
-uniform vec3 AmbientLight;
 uniform vec3 SunPos;
 
 uniform sampler2D SandMap;
@@ -23,27 +21,33 @@ void main()
 {
 	// Sampling the textures
 	vec4 outColour;
-	vec4 sand = mix(texture(SandMap, vCoords*64), vec4(1), vPosition.y/10);
+	vec4 sand = mix(texture(SandMap, vCoords*64), vec4(1), vPosition.y);
 	vec4 grass = texture(GrassMap, vCoords*8);
 	vec4 dirt = texture(StoneMap, vCoords*8);
 	
+	vec4 vNormals = vec4(0,1,0,0);
+	
 	// Setting up the dot between normals and the up-vector
-	float dotNU = max(0,dot(normalize(vNormals.xyz), vec3(0,1,0)) );
+	float dotNU = dot(normalize(vNormals.xyz), vec3(0,1,0));
 	
 	// Diffused Light Calc's
 	vec3 lightVector = normalize(SunPos - vPosition.xyz);
-	float diffLight = max(0,dot(lightVector, normalize(vNormals.xyz) ));
+	float diffLight = dot(lightVector, normalize(vNormals.xyz) );
 	// -- 
 	
-	if(vPosition.y < waterHeight)
-		outColour = mix(sand,mix(dirt, grass, dotNU), vPosition.y/10);
-	else
-		outColour = mix(dirt, grass, dotNU);
+	outColour = mix(outColour, grass, dotNU);
+	outColour = mix(outColour, dirt, dotNU);
+	outColour = mix(outColour, sand, vPosition.y/10);
 	
-	if(SunPos.y > 0)
+	//if(vPosition.y < waterHeight)
+	//	outColour = mix(sand,mix(dirt, grass, dotNU), vPosition.y/10);
+	//else
+	//	outColour = mix(dirt, grass, dotNU);
+	
+	if(SunPos.y > -5)
 		outColour.rgb *= diffLight;
 	else
-		outColour.rgb *= AmbientLight;
+		outColour.rgb *= 1- vec3(vNormals.yyy);
 		
 	pixelColour = outColour;
 }

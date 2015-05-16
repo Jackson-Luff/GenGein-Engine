@@ -11,7 +11,6 @@ out float vLifetime;
 out float vLifespan;
 
 uniform mat4 World;
-uniform vec3 SunPos;
 uniform vec3 emitterPosition;
 uniform float time;
 uniform float deltaTime;
@@ -22,6 +21,8 @@ uniform float veloMax;
 uniform float isKeyDown;
 
 const float INVERSE_MAX_UINT = 1.0f / 4294967295.0f;
+
+vec3 newVel;
 
 float rand(uint seed, float range)
 {
@@ -36,44 +37,29 @@ void main()
 {
 	uint seed = uint(time * 1000.0) + uint(gl_VertexID);
 	float dt = deltaTime;
-	vec3 newVel = Velocity;
-	vec3 Target = SunPos;
 	
-	float dist = length(SunPos - Position);
-			
-	newVel += normalize(Target - Position);
+	newVel = Velocity;
 	
-	if(length(newVel) >= 50)
-	{
-		Target += vec3(sin(time), cos(time), sin(time) ); 
-		newVel *= 0.99;
-	}
-		
+	vec3 Target = vec3(sin(time), cos(time), tan(time));
+	vec3 dir = normalize(Target - Position);
+	newVel += dir;
 	
 	vPosition = Position + (Velocity * dt);
 	vVelocity = newVel;
 	vLifetime = Lifetime + dt;
 	vLifespan = Lifespan;
 
-	// emit a new particle if key is down
-	if(isKeyDown == 1.0)
-	{
-		// if it's dead spawn a new one!
-		if(vLifetime > vLifespan)
-		{			
-			//Initialise velocity
-			vVelocity.x = rand(seed++, 2)-1;
-			vVelocity.y = rand(seed++, 2)-1;
-			vVelocity.z = rand(seed++, 2)-1;
-			vVelocity = normalize(vVelocity);
-			vPosition = emitterPosition;
-			vLifetime = 0;
-			vLifespan = rand(seed++, lifeMax - lifeMin) + lifeMin;
-		}
-	}
-	else if(vLifetime > vLifespan)
-	{
-		vPosition = vec3(1000000);
+	// if it's dead spawn a new one!
+	if(vLifetime > vLifespan)
+	{			
+		//Initialise velocity
+		vVelocity.x = (rand(seed++,2) -1);
+		vVelocity.y = (rand(seed++,2) -1);
+		vVelocity.z = (rand(seed++,2) -1);
+		vVelocity = normalize(vVelocity);
+		vPosition = emitterPosition;
+		vLifetime = 0;
+		vLifespan = rand(seed++, lifeMax - lifeMin) + lifeMin;
 	}
 }
 
