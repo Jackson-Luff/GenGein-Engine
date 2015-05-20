@@ -32,9 +32,9 @@ void ParticlesNPrettyStuff::StartUp()
 		1000000,
 		0.1f, 28.0f,
 		1.0f, 10.0f,
-		0.01f, 0.7f,
-		glm::vec4(0.5f,0.5f,1,1),
-		glm::vec4(1, 0.4f, 1, 1));
+		0.01f, 0.2f,
+		glm::vec4(1,1,1,1),
+		glm::vec4(0, 0.5f, 0.5f, 1));
 }
 
 void ParticlesNPrettyStuff::ShutDown()

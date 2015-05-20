@@ -14,7 +14,7 @@ Player::~Player()
 void Player::ApplyPositions(const float& a_tileSize, const std::vector<glm::vec3>& a_boardData)
 {
 	if (a_boardData.size() <= 0) return;
-
+	
 	if (m_IDType == CHECKERS_DATA::PLAYER_01)
 	{
 		for (int i = 0; i < 12; i++)
@@ -86,17 +86,22 @@ void Player::Update(const double a_dt, const glm::vec3& a_posOfMouseToAxis, cons
 	{
 		m_pieceData[m_selectedPiece.indexOfSelected]->position = a_posOfMouseToAxis;
 		
-		if (a_hasClicked && isValidMove())
+		if (a_hasClicked)
 		{
 			MoveCheckerPiece();
 			m_hasMoved = true;
 		}
-		else
+		else if (isValidMove())
 		{
-			m_pieceData[m_selectedPiece.indexOfSelected]->position = m_selectedPiece.homePosition;
+			m_pieceData[m_selectedPiece.indexOfSelected]->position = a_posOfMouseToAxis;
 			m_selectedPiece.isSelected = false;
 			m_hasMoved = false;
 		}
+		else
+		{
+			m_pieceData[m_selectedPiece.indexOfSelected]->position = m_selectedPiece.homePosition;
+		}
+
 	}
 	else
 	{
@@ -117,14 +122,14 @@ void Player::Update(const double a_dt, const glm::vec3& a_posOfMouseToAxis, cons
 	}
 }
 
-void Player::Draw(const glm::mat4& a_projView)
+void Player::Draw(const glm::mat4& a_projView, const float& a_tileSize)
 {
 	Gizmos::clear();
 
 	for (auto& piece : m_pieceData)
 	{
 		Gizmos::addCylinderFilled(piece->position,
-			0.3f, 0.05f, 20, glm::vec4(piece->colour, 1));
+			a_tileSize / 3.0f, a_tileSize/10.0f, 20, glm::vec4(piece->colour, 1));
 	}
 
 	Gizmos::draw(a_projView);

@@ -38,7 +38,6 @@ float rand(uint seed, float range)
 void main()
 {
 	// Interp colour
-	
 	vColour = mix( colourStart, colourEnd, vLifetime[0] / vLifespan[0] );
 	
 	// Calculate the size and create the corners of a quad

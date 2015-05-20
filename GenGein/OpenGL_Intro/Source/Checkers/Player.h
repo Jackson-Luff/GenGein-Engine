@@ -15,7 +15,7 @@ public:
 	bool isValidMove();
 	void MoveCheckerPiece();
 	void Update(const double a_dt, const glm::vec3& a_posOfMouseToAxis, const int a_hasClicked);
-	void Draw(const glm::mat4& a_projView);
+	void Draw(const glm::mat4& a_projView, const float& a_tileSize);
 
 	bool m_hasMoved;
 private:

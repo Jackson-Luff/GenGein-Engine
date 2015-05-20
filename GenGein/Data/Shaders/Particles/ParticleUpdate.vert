@@ -38,18 +38,18 @@ void main()
 	uint seed = uint(time * 1000.0) + uint(gl_VertexID);
 	float dt = deltaTime;
 		
-	newVel = normalize(Velocity);
+	newVel = Velocity;
 	
 	vec3 Target = vec3(sin(time), cos(time), tan(time));
 	vec3 dir = normalize(Target - Position);
-	newVel *= dir;
+	newVel += dir;
 	
-	float a = Lifetime, b = Lifespan, c = 0.5, d = 0.5;
-	newVel.x += (a-b)*sin(time) + b * sin(time * ((a/b)-1));
-	newVel.y += (a-b)*sin(time) - b * sin(time * ((a/b)-1));
-	newVel.z += (a-b)*cos(time) - b * cos(time * ((a/b)-1));
+	//float a = Lifetime, b = Lifespan, c = 0.5, d = 0.5;
+	//newVel.x += (a-b)*sin(time) + b * sin(time * ((a/b)-1));
+	//newVel.y += (a-b)*sin(time) - b * sin(time * ((a/b)-1));
+	//newVel.z += (a-b)*cos(time) - b * cos(time * ((a/b)-1));
 	
-	newVel.y = sin(newVel.y) + ( Lifetime/Lifespan * cos(time));
+	//newVel.y = sin(newVel.y) + ( Lifetime/Lifespan * cos(time));
 	
 	vPosition = Position + (Velocity * dt);
 	vVelocity = newVel;

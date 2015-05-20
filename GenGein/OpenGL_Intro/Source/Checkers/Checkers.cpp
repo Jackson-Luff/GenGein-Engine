@@ -23,10 +23,11 @@ Checkers::~Checkers()
 void Checkers::GenCheckerBoardData(const float a_boardSize, const float a_tileCount)
 {
 	float tileSize = a_boardSize / a_tileCount;
+	float halfSize = a_boardSize / 2.0f;
 
 	m_tileCount = a_tileCount;
-
-	float halfSize = a_boardSize/2.0f;
+	m_tileSize = tileSize;
+	m_boardSize = a_boardSize;
 
 	//Verts
 	verts[0] = { glm::vec3(-halfSize, 0, halfSize), glm::vec2(0, 1) };
@@ -77,7 +78,7 @@ void Checkers::GenCheckerBoardData(const float a_boardSize, const float a_tileCo
 			glm::vec3 pos = vec3(r * tileSize, 0, c * tileSize);
 			pos.z -= halfSize;
 			pos.z += tileSize / 2.0f;
-			pos.x -= tileSize * 3.0f + tileSize / 2.0f;
+			pos.x -= tileSize * 3 + tileSize / 2.0f;
 
 			if ((r+c) % 2 == 0)
 				m_possiblePositions.push_back(pos);
@@ -129,21 +130,16 @@ void Checkers::Update(const double a_dt)
 
 	double x, y;
 	glfwGetCursorPos(m_pWindow, &x, &y);
+	
+	m_playerOne->Update(a_dt,
+		m_pBaseCamera->PickAgainstPlane(
+		(float)x, (float)y, glm::vec4(0, 1, 0, 0)),
+		glfwGetMouseButton(m_pWindow, GLFW_MOUSE_BUTTON_1));
 
-	if (m_playerOne->m_hasMoved)
-	{
-		m_playerTwo->Update(a_dt,
-			m_pBaseCamera->PickAgainstPlane(
-			(float)x, (float)y, glm::vec4(0, 1, 0, 0)),
-			glfwGetMouseButton(m_pWindow, GLFW_MOUSE_BUTTON_1));
-	}
-	else
-	{
-		m_playerOne->Update(a_dt,
-			m_pBaseCamera->PickAgainstPlane(
-			(float)x, (float)y, glm::vec4(0, 1, 0, 0)),
-			glfwGetMouseButton(m_pWindow, GLFW_MOUSE_BUTTON_1));
-	}
+	m_playerTwo->Update(a_dt,
+		m_pBaseCamera->PickAgainstPlane(
+		(float)x, (float)y, glm::vec4(0, 1, 0, 0)),
+		glfwGetMouseButton(m_pWindow, GLFW_MOUSE_BUTTON_1));
 }
 
 // Render things to screen
@@ -157,7 +153,7 @@ void Checkers::Render()
 	glBindBuffer(GL_ARRAY_BUFFER, m_VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-	m_playerOne->Draw(m_pBaseCamera->GetProjectionView());
-	m_playerTwo->Draw(m_pBaseCamera->GetProjectionView());
+	m_playerOne->Draw(m_pBaseCamera->GetProjectionView(), m_tileSize);
+	m_playerTwo->Draw(m_pBaseCamera->GetProjectionView(), m_tileSize);
 	//m_boardBase->Render();
 }

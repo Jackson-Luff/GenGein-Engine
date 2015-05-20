@@ -37,5 +37,5 @@ private:
 	std::vector<glm::vec3> m_possiblePositions;
 
 	Player* m_playerOne;
-	Player* m_playerTwo; 
+	Player* m_playerTwo;
 };

@@ -10,13 +10,13 @@ int main(int argc, char* argv[])
 {
 	srand((unsigned int)time(NULL));
 	
-	//Checkers* checkers = new Checkers(1200, 628, "Checkers");
-	//checkers->Run();
-	//delete checkers;
+	Checkers* checkers = new Checkers(1200, 628, "Checkers");
+	checkers->Run();
+	delete checkers;
 
-	ParticlesNPrettyStuff* particles = new ParticlesNPrettyStuff(1200, 628, "");
-	particles->Run();
-	delete particles;
+	//ParticlesNPrettyStuff* particles = new ParticlesNPrettyStuff(1200, 628, "");
+	//particles->Run();
+	//delete particles;
 
 	//ReflectAndRip* RnR = new ReflectAndRip(1200, 628, "Reflections And Ripples");
 	//RnR->Run();
