@@ -19,7 +19,7 @@
     <ClCompile Include="Source\Checkers\Checkers.cpp" />
     <ClCompile Include="Source\Engine\Cameras\BaseCamera.cpp" />
     <ClCompile Include="Source\Engine\Cameras\FlyCamera.cpp" />
-    <ClCompile Include="Source\Engine\AI\ConnectFour.cpp" />
+    <ClCompile Include="Source\Tests\ConnectFour\ConnectFour.cpp" />
     <ClCompile Include="Source\Engine\Core\BaseApp.cpp" />
     <ClCompile Include="Source\Engine\Core\ShaderHandler.cpp" />
     <ClCompile Include="Source\Engine\GUI\AntTweak.cpp" />
@@ -47,8 +47,8 @@
     <ClInclude Include="Source\Checkers\Checkers.h" />
     <ClInclude Include="Source\Engine\Cameras\BaseCamera.h" />
     <ClInclude Include="Source\Engine\Cameras\FlyCamera.h" />
-    <ClInclude Include="Source\Engine\AI\AIBase.h" />
-    <ClInclude Include="Source\Engine\AI\ConnectFour.h" />
+    <ClInclude Include="Source\Tests\ConnectFour\AIBase.h" />
+    <ClInclude Include="Source\Tests\ConnectFour\ConnectFour.h" />
     <ClInclude Include="Source\Engine\Core\BaseApp.h" />
     <ClInclude Include="Source\Engine\Core\ShaderHandler.h" />
     <ClInclude Include="Source\Engine\Culling.h" />

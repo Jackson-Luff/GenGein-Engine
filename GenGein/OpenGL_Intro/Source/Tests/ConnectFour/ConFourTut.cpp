@@ -1,7 +1,7 @@
 #include <gl_core_4_4.h>
 #include <glm/glm.hpp>
 
-#include "Engine\AI\ConnectFour.h"
+#include "Tests\ConnectFour\ConnectFour.h"
 #include "AIE\Gizmos.h"
 
 #include "Engine\GUI\AntTweak.h"
@@ -28,6 +28,8 @@ void ConFourTut::StartUp()
 	//Initialise camera
 	InitialiseFlyCamera(5.0f, 20.0f, 0.5f,
 		glm::vec3(20), glm::vec3(0));
+
+	Gizmos::create();
 
 	m_game = new ConnectFour();
 
@@ -82,7 +84,7 @@ void ConFourTut::Update(const double a_dt)
 void ConFourTut::Render()
 {
 	BaseApp::Render();
-
+	Gizmos::clear();
 	RenderSkyBox();
 
 	m_game->draw();

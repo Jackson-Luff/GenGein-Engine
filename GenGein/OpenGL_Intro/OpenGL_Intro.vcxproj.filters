@@ -4,7 +4,6 @@
     <ClCompile Include="..\Dependencies\gl_core\gl_core_4_4.cpp" />
     <ClCompile Include="..\Dependencies\gizmos\AIE\Gizmos.cpp" />
     <ClCompile Include="Source\main.cpp" />
-    <ClCompile Include="Source\Engine\AI\ConnectFour.cpp" />
     <ClCompile Include="Source\Engine\Core\ShaderHandler.cpp" />
     <ClCompile Include="Source\Engine\GUI\AntTweak.cpp" />
     <ClCompile Include="Source\Engine\Objects\BaseObject.cpp" />
@@ -28,11 +27,10 @@
     <ClCompile Include="Source\Checkers\Player.cpp" />
     <ClCompile Include="Source\Checkers\BasePlayer.cpp" />
     <ClCompile Include="Source\Tests\ParticlesNPrettyStuff.cpp" />
+    <ClCompile Include="Source\Tests\ConnectFour\ConnectFour.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Tutorial\CacheCohrence.h" />
-    <ClInclude Include="Source\Engine\AI\AIBase.h" />
-    <ClInclude Include="Source\Engine\AI\ConnectFour.h" />
     <ClInclude Include="Source\Engine\Core\ShaderHandler.h" />
     <ClInclude Include="Source\Engine\GUI\AntTweak.h" />
     <ClInclude Include="Source\Engine\Objects\BaseObject.h" />
@@ -60,5 +58,7 @@
     <ClInclude Include="Source\Checkers\BasePlayer.h" />
     <ClInclude Include="Source\Checkers\CheckersData.h" />
     <ClInclude Include="Source\Tests\ParticlesNPrettyStuff.h" />
+    <ClInclude Include="Source\Tests\ConnectFour\AIBase.h" />
+    <ClInclude Include="Source\Tests\ConnectFour\ConnectFour.h" />
   </ItemGroup>
 </Project>

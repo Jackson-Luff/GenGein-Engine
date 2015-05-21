@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Engine\AI\AIBase.h"
+#include "Tests\ConnectFour\AIBase.h"
 #include "Engine\Core\BaseApp.h"
 
 

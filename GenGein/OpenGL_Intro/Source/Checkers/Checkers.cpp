@@ -1,4 +1,3 @@
-#include <AIE\Gizmos.h> //REMOVE
 
 #include <gl_core_4_4.h>
 #include <glm\glm.hpp>
@@ -98,30 +97,27 @@ void Checkers::StartUp()
 	InitialiseFlyCamera(5.0f, 20.0f, 0.5f,
 		vec3(-10, 9, 0), vec3(0));
 
-	Gizmos::create();
-
 	ShaderHandler::LoadShaderProgram("CheckerBoard",
 		"Data/Shaders/Checkers/Assets/CheckerBoard.vert",
 		"Data/Shaders/Checkers/Assets/CheckerBoard.frag");
 	m_checkerProgID = &ShaderHandler::GetShader("CheckerBoard");
 
+	GenCheckerBoardData( 10.0f, 8.0f );
 
-	GenCheckerBoardData( 10.0f, 8.0f);
-
-	m_playerOne = new Player(CHECKERS_DATA::PLAYER_01);
+	m_playerOne = new Player(CHECKERS_DATA::PLAYER_BLUE);
 	m_playerOne->Initialise();
 	m_playerOne->ApplyPositions(m_tileSize, m_possiblePositions);
 
-	m_playerTwo = new Player(CHECKERS_DATA::PLAYER_02);
+	m_playerTwo = new Player(CHECKERS_DATA::PLAYER_RED);
 	m_playerTwo->Initialise();
 	m_playerTwo->ApplyPositions(m_tileSize, m_possiblePositions);
+
+	m_playerOne->m_isMyTurn = true;
 }
 
 // Destroy things
 void Checkers::ShutDown()
-{
-	Gizmos::destroy();
-}
+{}
 
 // Update loop
 void Checkers::Update(const double a_dt)
@@ -131,15 +127,26 @@ void Checkers::Update(const double a_dt)
 	double x, y;
 	glfwGetCursorPos(m_pWindow, &x, &y);
 	
-	m_playerOne->Update(a_dt,
-		m_pBaseCamera->PickAgainstPlane(
-		(float)x, (float)y, glm::vec4(0, 1, 0, 0)),
-		glfwGetMouseButton(m_pWindow, GLFW_MOUSE_BUTTON_1));
+	if (m_playerOne->m_isMyTurn)
+	{
+		m_playerOne->Update(a_dt,
+			m_pBaseCamera->PickAgainstPlane(
+			(float)x, (float)y, glm::vec4(0, 1, 0, 0)),
+			glfwGetMouseButton(m_pWindow, GLFW_MOUSE_BUTTON_1));
 
-	m_playerTwo->Update(a_dt,
-		m_pBaseCamera->PickAgainstPlane(
-		(float)x, (float)y, glm::vec4(0, 1, 0, 0)),
-		glfwGetMouseButton(m_pWindow, GLFW_MOUSE_BUTTON_1));
+		if (!m_playerOne->m_isMyTurn)
+			m_playerTwo->m_isMyTurn = true;
+	}
+	else if (m_playerTwo->m_isMyTurn)
+	{
+		m_playerTwo->Update(a_dt,
+			m_pBaseCamera->PickAgainstPlane(
+			(float)x, (float)y, glm::vec4(0, 1, 0, 0)),
+			glfwGetMouseButton(m_pWindow, GLFW_MOUSE_BUTTON_1));
+
+		if (!m_playerTwo->m_isMyTurn)
+			m_playerOne->m_isMyTurn = true;
+	}
 }
 
 // Render things to screen
@@ -153,7 +160,7 @@ void Checkers::Render()
 	glBindBuffer(GL_ARRAY_BUFFER, m_VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-	m_playerOne->Draw(m_pBaseCamera->GetProjectionView(), m_tileSize);
-	m_playerTwo->Draw(m_pBaseCamera->GetProjectionView(), m_tileSize);
+	m_playerOne->Draw(m_pBaseCamera->GetProjectionView());
+	m_playerTwo->Draw(m_pBaseCamera->GetProjectionView());
 	//m_boardBase->Render();
 }

@@ -5,20 +5,23 @@
 class Player : public BasePlayer
 {
 public:
-	Player(CHECKERS_DATA::PLAYER_TYPE a_type);
+	Player(CHECKERS_DATA::PIECE_TYPE a_type);
 	~Player();
 
 	
 	void Initialise();
 	void ApplyPositions(const float& a_tileSize, const std::vector<glm::vec3>& a_boardData);
 
-	bool isValidMove();
+	bool CheckIfCanJump(const vec3& a_a, const vec3& a_b);
+	bool TryJump(const vec3& a_a, const vec3& a_b);
+	bool isValidMove(const CHECKERS_DATA::MOVE_TYPE& a_type);
 	void MoveCheckerPiece();
 	void Update(const double a_dt, const glm::vec3& a_posOfMouseToAxis, const int a_hasClicked);
-	void Draw(const glm::mat4& a_projView, const float& a_tileSize);
-
-	bool m_hasMoved;
+	
+	bool m_isMyTurn;
 private:
-	std::vector<glm::vec3> m_possiblePositions;
+	uint m_closestPosIndex;
+	std::vector<glm::vec3> m_positionsOnBoard;
+	std::vector<glm::vec3> m_possibleMoves;
 	CHECKERS_DATA::SelectedPiece m_selectedPiece;
 };
