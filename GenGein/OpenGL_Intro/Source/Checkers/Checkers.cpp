@@ -79,8 +79,12 @@ void Checkers::GenCheckerBoardData(const float a_boardSize, const float a_tileCo
 			pos.z += tileSize / 2.0f;
 			pos.x -= tileSize * 3 + tileSize / 2.0f;
 
+			CHECKERS_DATA::BoardTile* tile = new CHECKERS_DATA::BoardTile();
+			tile->position = pos;
+			tile->tileID = CHECKERS_DATA::BLANKWHITE;
+
 			if ((r+c) % 2 == 0)
-				m_possiblePositions.push_back(pos);
+				m_tilesOnBoard.push_back(tile);
 
 			//use mod to find white/black based on index on x,y
 		}
@@ -106,11 +110,11 @@ void Checkers::StartUp()
 
 	m_playerOne = new Player(CHECKERS_DATA::PLAYER_BLUE);
 	m_playerOne->Initialise();
-	m_playerOne->ApplyPositions(m_tileSize, m_possiblePositions);
+	m_playerOne->ApplyPositions(m_tileSize, m_tilesOnBoard);
 
 	m_playerTwo = new Player(CHECKERS_DATA::PLAYER_RED);
 	m_playerTwo->Initialise();
-	m_playerTwo->ApplyPositions(m_tileSize, m_possiblePositions);
+	m_playerTwo->ApplyPositions(m_tileSize, m_tilesOnBoard);
 
 	m_playerOne->m_isMyTurn = true;
 }

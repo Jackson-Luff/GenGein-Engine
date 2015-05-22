@@ -18,7 +18,6 @@ public:
 	void Update(const double a_dt);
 	void Draw(const glm::mat4& a_projView);
 protected:
-	
 	CHECKERS_DATA::PIECE_TYPE m_IDType;
 	std::vector< CHECKERS_DATA::PieceData* > m_moveablePieces;
 	std::vector< CHECKERS_DATA::PieceData* > m_capturedPieces;

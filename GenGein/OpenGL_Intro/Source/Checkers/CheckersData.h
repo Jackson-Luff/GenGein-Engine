@@ -31,16 +31,12 @@ namespace CHECKERS_DATA
 		JUMP = 1,
 	};
 
-	struct PieceData
+	struct BoardTile
 	{
-		PieceData() : 
-		position(vec3(0)),
-		colour(vec3(0)) {}
-
-		vec3 position;
-		vec3 colour;
-		PIECE_TYPE type;
+		uint tileID;
+		glm::vec3 position;
 	};
+
 
 	struct BoardData
 	{
@@ -53,6 +49,13 @@ namespace CHECKERS_DATA
 		int index;
 		bool isSelected;
 		vec3 homePosition;
+	};
+	
+	struct PieceData
+	{
+		glm::vec3 position;
+		glm::vec3 colour;
+		PIECE_TYPE type;
 	};
 }
 

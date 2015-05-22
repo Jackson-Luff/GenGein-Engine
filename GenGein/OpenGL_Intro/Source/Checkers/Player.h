@@ -8,9 +8,10 @@ public:
 	Player(CHECKERS_DATA::PIECE_TYPE a_type);
 	~Player();
 
-	
+
 	void Initialise();
-	void ApplyPositions(const float& a_tileSize, const std::vector<glm::vec3>& a_boardData);
+	void ApplyPositions(const float& a_tileSize, 
+		const std::vector<CHECKERS_DATA::BoardTile*>& a_boardData);
 
 	bool CheckIfCanJump(const vec3& a_a, const vec3& a_b);
 	bool TryJump(const vec3& a_a, const vec3& a_b);
@@ -21,7 +22,7 @@ public:
 	bool m_isMyTurn;
 private:
 	uint m_closestPosIndex;
-	std::vector<glm::vec3> m_positionsOnBoard;
+	std::vector<CHECKERS_DATA::BoardTile*> m_TilesOnBoard;
 	std::vector<glm::vec3> m_possibleMoves;
 	CHECKERS_DATA::SelectedPiece m_selectedPiece;
 };

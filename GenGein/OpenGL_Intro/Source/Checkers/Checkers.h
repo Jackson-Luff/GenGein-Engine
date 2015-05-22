@@ -34,7 +34,7 @@ private:
 	uint m_VAO;
 
 	float m_boardSize, m_tileCount, m_tileSize;
-	std::vector<glm::vec3> m_possiblePositions;
+	std::vector<CHECKERS_DATA::BoardTile*> m_tilesOnBoard;
 
 	Player* m_playerOne;
 	Player* m_playerTwo;

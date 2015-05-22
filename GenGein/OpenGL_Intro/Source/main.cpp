@@ -6,13 +6,20 @@
 #include "Tests\ParticlesNPrettyStuff.h"
 #include "Checkers\Checkers.h"
 
+#include "Checkers_Clean\CheckersGame.h"
+
 int main(int argc, char* argv[])
 {
 	srand((unsigned int)time(NULL));
 	
-	Checkers* checkers = new Checkers(1200, 628, "Checkers");
-	checkers->Run();
-	delete checkers;
+	CheckersGame* board = new CheckersGame(1200, 628, "Checkers");
+	board->Run();
+
+	delete board;
+
+	//Checkers* checkers = new Checkers(1200, 628, "Checkers");
+	//checkers->Run();
+	//delete checkers;
 
 	//ParticlesNPrettyStuff* particles = new ParticlesNPrettyStuff(1200, 628, "");
 	//particles->Run();

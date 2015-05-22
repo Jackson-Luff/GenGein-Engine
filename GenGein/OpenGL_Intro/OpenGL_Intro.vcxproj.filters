@@ -28,6 +28,9 @@
     <ClCompile Include="Source\Checkers\BasePlayer.cpp" />
     <ClCompile Include="Source\Tests\ParticlesNPrettyStuff.cpp" />
     <ClCompile Include="Source\Tests\ConnectFour\ConnectFour.cpp" />
+    <ClCompile Include="Source\Checkers_Clean\Board.cpp" />
+    <ClCompile Include="Source\Checkers_Clean\CheckerBoard.cpp" />
+    <ClCompile Include="Source\Checkers_Clean\CheckersGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Tutorial\CacheCohrence.h" />
@@ -60,5 +63,8 @@
     <ClInclude Include="Source\Tests\ParticlesNPrettyStuff.h" />
     <ClInclude Include="Source\Tests\ConnectFour\AIBase.h" />
     <ClInclude Include="Source\Tests\ConnectFour\ConnectFour.h" />
+    <ClInclude Include="Source\Checkers_Clean\Board.h" />
+    <ClInclude Include="Source\Checkers_Clean\CheckerBoard.h" />
+    <ClInclude Include="Source\Checkers_Clean\CheckersGame.h" />
   </ItemGroup>
 </Project>
