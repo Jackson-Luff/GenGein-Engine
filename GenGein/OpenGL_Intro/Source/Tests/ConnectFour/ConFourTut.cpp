@@ -59,8 +59,7 @@ void ConFourTut::Update(const double a_dt)
 					// get the mouse position within the game grid
 					double x = 0, y = 0;
 					glfwGetCursorPos(m_pWindow, &x, &y);
-					m_pickPosition = m_pBaseCamera->PickAgainstPlane(
-						(float)x, (float)y, glm::vec4(0, 1, 0, 0));
+					m_pickPosition = m_pBaseCamera->PickAgainstPlane(glm::vec4(0, 1, 0, 0));
 					// determine which column was chosen
 					int column = (int)((m_pickPosition.z +
 						ConnectFour::COLUMNS) / 2);

@@ -107,8 +107,11 @@ glm::vec3 BaseCamera::ScreenPositionToDirection(c_float x, c_float y)
 
 // Returns the point of interscetion of a camera ray and a world-space plane
 // the plane has a normal of XYZ and is offset from (0,0,0) by -W in the direction of the normal
-glm::vec3 BaseCamera::PickAgainstPlane(c_float x, c_float y, c_vec4& plane) const
+glm::vec3 BaseCamera::PickAgainstPlane(c_vec4& plane) const
 {
+	double x = 0, y = 0;
+	glfwGetCursorPos(glfwGetCurrentContext(), &x, &y);
+
 	int width = 0, height = 0;
 	glfwGetWindowSize(glfwGetCurrentContext(), &width, &height);
 

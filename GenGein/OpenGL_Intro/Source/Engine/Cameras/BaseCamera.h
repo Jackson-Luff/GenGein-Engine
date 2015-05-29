@@ -57,7 +57,7 @@ public:
 	glm::vec3 ScreenPositionToDirection(c_float x, c_float y);
 	// Returns the point of interscetion of a camera ray and a world-space plane
 	// the plane has a normal of XYZ and is offset from (0,0,0) by -W in the direction of the normal
-	glm::vec3 PickAgainstPlane(c_float x, c_float y, c_vec4& plane) const;
+	glm::vec3 PickAgainstPlane(c_vec4& plane) const;
 
 	// Getters to retrieve the projection, view and projectionView transforms
 	inline c_mat4& GetProjection()	 const { return m_projectionTrans; }

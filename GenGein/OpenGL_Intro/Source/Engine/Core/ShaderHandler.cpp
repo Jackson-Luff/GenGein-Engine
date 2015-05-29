@@ -108,17 +108,17 @@ const void ShaderHandler::SetUpCameraUniforms(
 	const glm::mat4& a_camWorldMat)
 {
 	//unsigned int uiError;
-	for (auto it = m_programMap.begin(); it != m_programMap.end(); ++it)
+	for (auto& it : m_programMap)
 	{
-		glUseProgram(it->second);
+		glUseProgram(it.second);
 
-		GLint loc = glGetUniformLocation(it->second, "Projection");
+		GLint loc = glGetUniformLocation(it.second, "Projection");
 		glUniformMatrix4fv(loc, 1, false, &a_camProjMat[0][0]);
 
-		loc = glGetUniformLocation(it->second, "View");
+		loc = glGetUniformLocation(it.second, "View");
 		glUniformMatrix4fv(loc, 1, false, &a_camViewMat[0][0]);
 
-		loc = glGetUniformLocation(it->second, "World");
+		loc = glGetUniformLocation(it.second, "World");
 		glUniformMatrix4fv(loc, 1, false, &a_camWorldMat[0][0]);
 	}
 }
@@ -130,27 +130,27 @@ const void ShaderHandler::SetUpLightingUniforms(
 	const float& a_elapsedTime)
 {
 	//unsigned int uiError;
-	for (auto it = m_programMap.begin(); it != m_programMap.end(); ++it)
+	for (auto& it : m_programMap)
 	{
-		glUseProgram(it->second);
+		glUseProgram(it.second);
 
-		GLint loc = glGetUniformLocation(it->second, "AmbientLight");
+		GLint loc = glGetUniformLocation(it.second, "AmbientLight");
 		glUniform3fv(loc, 1, &a_ambientLight[0]);
 
-		loc = glGetUniformLocation(it->second, "SunPos");
+		loc = glGetUniformLocation(it.second, "SunPos");
 		glUniform3fv(loc, 1, &a_SunPos[0]);
 		
-		loc = glGetUniformLocation(it->second, "LightingHeight");
+		loc = glGetUniformLocation(it.second, "LightingHeight");
 		glUniform1f(loc, a_strtLightingHeight);
 
-		loc = glGetUniformLocation(it->second, "time");
+		loc = glGetUniformLocation(it.second, "time");
 		glUniform1f(loc, a_elapsedTime);
 	}
 }
 
 const void ShaderHandler::ReloadAllPrograms()
 {
-	for (auto it : m_programMap)
+	for (auto& it : m_programMap)
 	{
 		c_pChar name = it.first;
 		DirectoryData dirData = m_directoryMap[it.second];
@@ -168,7 +168,7 @@ const void ShaderHandler::ReloadAllPrograms()
 
 const void ShaderHandler::UnloadAllPrograms()
 {
-	for (auto prog : m_programMap)
+	for (auto& prog : m_programMap)
 	{
 		glDeleteProgram(prog.second);
 	}

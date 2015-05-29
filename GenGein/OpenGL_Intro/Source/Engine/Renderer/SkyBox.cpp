@@ -11,29 +11,78 @@ SkyBox::SkyBox()
 SkyBox::~SkyBox()
 {}
 
-void SkyBox::Create(c_str a_folderDir)
+void SkyBox::InitialiseDirs(SKYBOXES a_presetType, FILETYPES a_type)
 {
+	m_presetDirectires = std::vector<std::string>(SIZE);
+
+	const std::string names[6]
+	{
+		"posx", "negx",
+		"posy", "negy",
+		"posz", "negz",
+	};
+
+	const std::string fileTypes[2] {
+		".png", ".jpg"
+	};
+
+	const std::string fileType = fileTypes[a_type];
+
+	std::string skyDir;
+	
+	//Setup Sea Directory
+	switch (a_presetType)
+	{
+	case SkyBox::SEA:
+		skyDir = "Data/SkyBox/Sea/";
+		break;
+	case SkyBox::SKY:
+		skyDir = "Data/SkyBox/Sky/";
+		break;
+	case SkyBox::SPACE:
+		skyDir = "Data/SkyBox/Space/";
+		break;
+	case SkyBox::CHAPEL:
+		skyDir = "Data/SkyBox/Chapel/";
+		break;
+	case SkyBox::SAINT_PETERS:
+		skyDir = "Data/SkyBox/SaintPeters/";
+		break;
+	case SkyBox::YOKOHAMA:
+		skyDir = "Data/SkyBox/Yokohama/";
+		break;
+	default:
+		return;
+		break;
+	}
+
+	for (int i = 0; i < 6; i++)
+		m_presetDirectires[i] = skyDir + names[i] + fileType;
+}
+
+void SkyBox::Create(SKYBOXES a_presetType, FILETYPES a_fileType)
+{
+	InitialiseDirs(a_presetType, a_fileType);
+
 	ShaderHandler::LoadShaderProgram("SkyBox",
 		"Data/Shaders/Used/SkyBox.vert",
 		"Data/Shaders/Used/SkyBox.frag");
 
 	std::vector<c_str> faces;
-	faces.push_back(std::string(a_folderDir) + "right" + ".png");
-	faces.push_back(std::string(a_folderDir) + "left" + ".png");
-	faces.push_back(std::string(a_folderDir) + "top" + ".png");
-	faces.push_back(std::string(a_folderDir) + "bottom" + ".png");
-	faces.push_back(std::string(a_folderDir) + "back" + ".png");
-	faces.push_back(std::string(a_folderDir) + "front" + ".png");
+
+	for (uint i = 0; i < 6; i++)
+		faces.push_back(m_presetDirectires[i]);
+
 	m_dayTexture = TextureHandler::LoadCubeMap("SkyBox", "skybox", faces);
 	m_VAO = LoadCubeVertices();
 	faces.clear();
-	faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "right" + ".png");
-	faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "left" + ".png");
-	faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "top" + ".png");
-	faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "bottom" + ".png");
-	faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "back" + ".png");
-	faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "front" + ".png");
-	m_nightTexture = TextureHandler::LoadCubeMap("SkyBox", "skybox", faces);
+	//faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "posx" + ".jpg");
+	//faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "negx" + ".jpg");
+	//faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "posy" + ".jpg");
+	//faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "negy" + ".jpg");
+	//faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "posz" + ".jpg");
+	//faces.push_back(std::string("Data/Shaders/Used/Faces/Space/") + "negz" + ".jpg");
+	//m_nightTexture = TextureHandler::LoadCubeMap("SkyBox", "skybox", faces);
 
 	printf("SUCCESS: SkyBox Load Successful.\n\n");
 }

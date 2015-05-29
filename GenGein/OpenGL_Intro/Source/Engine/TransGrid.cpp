@@ -10,7 +10,6 @@ TransGrid::TransGrid()
 
 TransGrid::~TransGrid()
 {
-
 	delete[] verts;
 
 	glDeleteVertexArrays(1, &m_VAO);
@@ -134,7 +133,7 @@ void TransGrid::GenQuad(c_float a_scale, bool a_perlin, bool a_dimSqr)
 		{
 			verts[r * m_dims + c].position = glm::vec4((float)(c * a_scale), 0,(float)(r * a_scale), 1);
 			verts[r * m_dims + c].normal = glm::vec4(0, 1, 0, 0);
-			verts[r * m_dims + c].uv = glm::vec2((float)r / m_dims, (float)c / m_dims);
+			verts[r * m_dims + c].uv = glm::vec2((float)r / m_dims*2, (float)c / m_dims*2);
 		}
 	}
 

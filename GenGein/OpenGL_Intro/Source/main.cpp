@@ -4,17 +4,15 @@
 #include "Tests\Tessellation.h"
 #include "Tests\ConnectFour\ConFourTut.h"
 #include "Tests\ParticlesNPrettyStuff.h"
-#include "Checkers\Checkers.h"
-
-#include "Checkers_Clean\CheckersGame.h"
+#include "Checkers_Dirty\Checkers.h"
+#include "Checkers_Clean\GameOfCheckers.h"
 
 int main(int argc, char* argv[])
 {
 	srand((unsigned int)time(NULL));
 	
-	CheckersGame* board = new CheckersGame(1200, 628, "Checkers");
+	GameOfCheckers* board = new GameOfCheckers(1200, 628, "Checkers");
 	board->Run();
-
 	delete board;
 
 	//Checkers* checkers = new Checkers(1200, 628, "Checkers");

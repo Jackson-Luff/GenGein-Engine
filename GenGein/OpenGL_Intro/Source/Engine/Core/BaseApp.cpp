@@ -104,7 +104,7 @@ void BaseApp::StartUp()
 	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug", "DeltaTime", TW_TYPE_DOUBLE, (void*)&m_deltaTime);
 
 	m_pSkyBox = new SkyBox();
-	m_pSkyBox->Create("Data/Shaders/Used/Faces/Sky/");
+	m_pSkyBox->Create(SkyBox::CHAPEL, SkyBox::JPG);
 }
 
 void BaseApp::Update(const double a_dt)

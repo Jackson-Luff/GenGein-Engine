@@ -25,8 +25,11 @@ public:
 		c_pChar a_geo = nullptr, c_pChar a_tessC = nullptr, c_pChar a_tessE = nullptr);
 	const uint GetShader() const {	return *m_programID; };
 
-	void GenSegmentedGrid(c_uint a_dimensions, c_float a_segScale, bool a_perlin, bool a_dimSqr);
-	void GenQuad(c_float a_scale, bool a_perlin, bool a_dimSqr);
+	void GenSegmentedGrid(c_uint a_dimensions, c_float a_segScale,
+		bool a_perlin = false , bool a_dimSqr = false);
+
+	void GenQuad(c_float a_scale,
+		bool a_perlin = false, bool a_dimSqr = false);
 
 	void Render();
 

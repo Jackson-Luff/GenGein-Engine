@@ -285,7 +285,7 @@ void TextureHandler::UnloadTexture(c_pChar a_name)
 
 void TextureHandler::UnloadAllTextures()
 {
-	for (auto it : m_textureMap)
+	for (auto& it : m_textureMap)
 	{
 		glDeleteTextures(1, &(it.second).ID);
 	}
@@ -297,7 +297,7 @@ void TextureHandler::UnloadAllTextures()
 void TextureHandler::RenderAllTextures()
 {
 	int i = 0;
-	for (auto it : m_textureMap)
+	for (auto& it : m_textureMap)
 	{
 		if (it.second.textureUniLoc <= -1)
 			continue;

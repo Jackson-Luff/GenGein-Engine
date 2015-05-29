@@ -14,7 +14,7 @@ public:
 	}
 
 	void fit(const std::vector<glm::vec3> & points) {
-		for (auto p : points)
+		for (auto& p : points)
 		{
 			for (int i = 0; i < 3; i++) {
 				if (p[i] < min[i]) min[i] = p[i];
@@ -41,7 +41,7 @@ public:
 		
 		glm::vec3 min(1e37f), max(1e37f);
 		
-		for (auto p : points)
+		for (auto& p : points)
 		{
 			for (int i = 0; i < 3; i++) {
 				if (p[i] < min[i]) min[i] = p[i];

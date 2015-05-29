@@ -30,7 +30,7 @@ class Node
 {
 public:
 	Node() : parent(nullptr), localTrans(1) {}
-	virtual ~Node() { for (auto child : children) delete child; }
+	virtual ~Node() { for (auto& child : children) delete child; }
 
 	void addChild(Node* child){
 		children.push_back(child);
@@ -39,7 +39,7 @@ public:
 	virtual void Update() {
 		updateWorldTrans();
 
-		for (auto child : children)
+		for (auto& child : children)
 			child->Update();
 
 		updateWorldBounds();
@@ -57,7 +57,7 @@ public:
 		worldBounds.centre = worldTrans * localBounds.centre;
 		worldBounds.radius = localBounds.radius;
 
-		for (auto child : children)
+		for (auto& child : children)
 			worldBounds.fit(child->worldBounds);
 	}
 

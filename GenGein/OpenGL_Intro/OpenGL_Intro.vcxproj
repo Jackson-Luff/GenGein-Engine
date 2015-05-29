@@ -13,13 +13,12 @@
   <ItemGroup>
     <ClCompile Include="..\Dependencies\gizmos\AIE\Gizmos.cpp" />
     <ClCompile Include="..\Dependencies\gl_core\gl_core_4_4.cpp" />
-    <ClCompile Include="Source\Checkers_Clean\CheckersGame.cpp" />
-    <ClCompile Include="Source\Checkers_Clean\CheckerBoard.cpp" />
-    <ClCompile Include="Source\Checkers_Clean\Board.cpp" />
+    <ClCompile Include="Source\Checkers_Clean\CheckersInput.cpp" />
+    <ClCompile Include="Source\Checkers_Clean\CheckersVisual.cpp" />
+    <ClCompile Include="Source\Checkers_Clean\CheckersLogic.cpp" />
+    <ClCompile Include="Source\Checkers_Clean\CheckersBoard.cpp" />
+    <ClCompile Include="Source\Checkers_Clean\GameOfCheckers.cpp" />
     <ClCompile Include="Source\Tests\ParticlesNPrettyStuff.cpp" />
-    <ClCompile Include="Source\Checkers\BasePlayer.cpp" />
-    <ClCompile Include="Source\Checkers\Player.cpp" />
-    <ClCompile Include="Source\Checkers\Checkers.cpp" />
     <ClCompile Include="Source\Engine\Cameras\BaseCamera.cpp" />
     <ClCompile Include="Source\Engine\Cameras\FlyCamera.cpp" />
     <ClCompile Include="Source\Tests\ConnectFour\ConnectFour.cpp" />
@@ -43,14 +42,12 @@
     <ClCompile Include="Source\Tests\Tessellation.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Checkers_Clean\CheckersGame.h" />
-    <ClInclude Include="Source\Checkers_Clean\CheckerBoard.h" />
-    <ClInclude Include="Source\Checkers_Clean\Board.h" />
+    <ClInclude Include="Source\Checkers_Clean\CheckersInput.h" />
+    <ClInclude Include="Source\Checkers_Clean\CheckersVisual.h" />
+    <ClInclude Include="Source\Checkers_Clean\CheckersLogic.h" />
+    <ClInclude Include="Source\Checkers_Clean\CheckersBoard.h" />
+    <ClInclude Include="Source\Checkers_Clean\GameOfCheckers.h" />
     <ClInclude Include="Source\Tests\ParticlesNPrettyStuff.h" />
-    <ClInclude Include="Source\Checkers\BasePlayer.h" />
-    <ClInclude Include="Source\Checkers\CheckersData.h" />
-    <ClInclude Include="Source\Checkers\Player.h" />
-    <ClInclude Include="Source\Checkers\Checkers.h" />
     <ClInclude Include="Source\Engine\Cameras\BaseCamera.h" />
     <ClInclude Include="Source\Engine\Cameras\FlyCamera.h" />
     <ClInclude Include="Source\Tests\ConnectFour\AIBase.h" />
