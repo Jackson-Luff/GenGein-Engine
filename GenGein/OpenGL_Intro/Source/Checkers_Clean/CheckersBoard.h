@@ -22,4 +22,7 @@ private:
 	CheckersLogic* m_boardLogic;
 	CheckersVisual* m_boardVisual;
 	CheckersInput* m_boardInput;
+
+	//Remove me
+	glm::vec3 mousePos;
 };

@@ -19,7 +19,7 @@ void GameOfCheckers::StartUp()
 
 	//Initialise camera
 	InitialiseFlyCamera(5.0f, 20.0f, 0.5f,
-		glm::vec3(4,5,-4), glm::vec3(4,0,4));
+		glm::vec3(0,10,4), glm::vec3(0,5,-3));
 
 	m_checkerBoard = new CheckersBoard();
 	m_checkerBoard->Initialise();
@@ -34,7 +34,7 @@ void GameOfCheckers::Update(const double a_dt)
 {
 	BaseApp::Update(a_dt);
 	m_checkerBoard->Update(a_dt, 
-		m_pBaseCamera->PickAgainstPlane(glm::vec4(0,1,0,0)),
+		m_pBaseCamera->PickAgainstPlane(glm::vec4(0,1,0,7.32)),
 		glfwGetMouseButton(m_pWindow, GLFW_MOUSE_BUTTON_1));	
 }
 

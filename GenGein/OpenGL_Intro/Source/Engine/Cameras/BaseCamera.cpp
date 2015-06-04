@@ -111,19 +111,22 @@ glm::vec3 BaseCamera::PickAgainstPlane(c_vec4& plane) const
 {
 	double x = 0, y = 0;
 	glfwGetCursorPos(glfwGetCurrentContext(), &x, &y);
-
+	
 	int width = 0, height = 0;
 	glfwGetWindowSize(glfwGetCurrentContext(), &width, &height);
 
 	glm::vec3 screenPos(x / width * 2 - 1, (y / height * 2 - 1) * -1, -1);
-
+	
 	screenPos.x /= m_projectionTrans[0][0];
 	screenPos.y /= m_projectionTrans[1][1];
 
 	glm::vec3 dir = glm::normalize(m_worldTrans * glm::vec4(screenPos, 0)).xyz();
+	printf("%f, %f, %f\n", dir.x, dir.y, dir.z);
 
 	float d = (plane.w - glm::dot(m_worldTrans[3].xyz(), plane.xyz()) / glm::dot(dir, plane.xyz()));
 
+	//glm::vec3 pos = m_worldTrans[3].xyz() + dir * d;
+	//printf("%f, %f, %f\n", pos.x, pos.y, pos.z);
 	return m_worldTrans[3].xyz() + dir * d;
 }
 

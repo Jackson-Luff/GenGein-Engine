@@ -29,18 +29,22 @@ void CheckersLogic::InitialiseBasicBoard()
 		}
 		white = !white;
 	}
+
+	m_defaultTile = INVALID;
 }
 
 const TileType& CheckersLogic::GetPieceAt(c_uint& a_row, c_uint& a_col)
 {
-	if (IsValid(a_row, a_col))
-		return m_tileIDs[(a_row * m_tileSegs) + a_col];
-	return TileType();
+	if (!IsValid(a_row, a_col))
+		return m_defaultTile;
+		
+	return m_tileIDs[(a_row * m_tileSegs) + a_col];
 }
 
 bool CheckersLogic::IsValidMove(c_uint& a_row, c_uint& a_col, const MoveType& a_type)
 {
-	if (!IsValid(a_row, a_col)) return false;
+	if (!IsValid(a_row, a_col)) 
+		return false;
 
 	TileType& target = m_tileIDs[((a_row * m_tileSegs) + a_col) + a_type];
 
@@ -50,7 +54,7 @@ bool CheckersLogic::IsValidMove(c_uint& a_row, c_uint& a_col, const MoveType& a_
 	return true;
 }
 
-bool CheckersLogic::doMove(c_uint& a_currR, c_uint& a_currC,
+bool CheckersLogic::IsValidMove(c_uint& a_currR, c_uint& a_currC,
 	c_uint& a_destR, c_uint& a_destC)
 {
 	if (!IsValid(a_currR, a_currC)) return false;
@@ -65,7 +69,7 @@ bool CheckersLogic::doMove(c_uint& a_currR, c_uint& a_currC,
 
 bool CheckersLogic::SetPieceAt(c_uint& a_row, c_uint& a_col, const TileType& a_type)
 {
-	if (!IsValid(a_row, a_col)) 
+	if (!IsValid(a_row, a_col))
 		return false;
 	m_tileIDs[(a_row * m_tileSegs) + a_col] = a_type;
 	return true;
@@ -92,7 +96,7 @@ bool CheckersLogic::doMove(c_uint& a_row, c_uint& a_col, const MoveType& a_type)
 
 	return true;
 }
-		
+
 bool CheckersLogic::doMove(c_uint& a_currR, c_uint& a_currC,
 	c_uint& a_destR, c_uint& a_destC)
 {
@@ -140,25 +144,28 @@ bool CheckersLogic::doJump(c_uint& a_currR, c_uint& a_currC,
 	return true;
 }
 
-glm::uvec2 CheckersLogic::CalcTarget(c_uint& a_row, c_uint& a_col, const MoveType& a_type)
+const void CheckersLogic::GenPossibleMoves(c_uint& a_row, c_uint& a_col)
 {
-	uint index = ((a_row * m_tileSegs) + a_col) + a_type;
-	
-	return glm::uvec2(index / m_tileSegs, index%m_tileSegs);
-}
-
-std::vector< glm::uvec2 > CheckersLogic::GetPossibleMoves(c_uint& a_row, c_uint& a_col)
-{
-	std::vector<glm::uvec2> indexesOfValid;
-
-	for (uint i = 0; i < MOVETYPESIZE; i++)
+	for (uint i = 0; i < MOVETYPESIZE - 1; i++)
 	{
 		if (doMove(a_row, a_col, (MoveType)i))
-			indexesOfValid.push_back(CalcTarget(a_row, a_col, (MoveType)i));
+			m_possibleMoveIndexs.push_back(CalcTarget(a_row, a_col, (MoveType)i));
 	}
 }
 
+void CheckersLogic::ClearPossibleMoves()
+{
+	m_possibleMoveIndexs.clear();
+}
+
 // Private funcs:
+
+glm::uvec2 CheckersLogic::CalcTarget(c_uint& a_row, c_uint& a_col, const MoveType& a_type)
+{
+	uint index = ((a_row * m_tileSegs) + a_col) + a_type;
+
+	return glm::uvec2(index / m_tileSegs, index%m_tileSegs);
+}
 
 bool CheckersLogic::IsValid(c_uint& a_index)
 {
@@ -176,18 +183,12 @@ bool CheckersLogic::IsValid(c_uint& a_index)
 bool CheckersLogic::IsValid(c_uint& a_row, c_uint& a_col)
 {
 	//Check if index exceeds limit
-	if (a_row >= m_tileSegs || 
-		a_col >= m_tileSegs)
+	if (a_row < 0 || a_row >= m_tileSegs ||
+		a_row < 0 || a_col >= m_tileSegs)
 		return false;
 
 	if (m_tileIDs[a_row * m_tileSegs + a_col] == INVALID)
 		return false;
 
 	return true;
-}
-
-bool CheckersLogic::IsValid(const TileType& a_type)
-{
-	if (a_type != INVALID) return true;
-	return false;
 }

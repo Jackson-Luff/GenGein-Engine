@@ -6,11 +6,16 @@
 #include "Tests\ParticlesNPrettyStuff.h"
 #include "Checkers_Dirty\Checkers.h"
 #include "Checkers_Clean\GameOfCheckers.h"
+#include "PhysXTuts\PhysX_testing.h"
 
 int main(int argc, char* argv[])
 {
 	srand((unsigned int)time(NULL));
 	
+	//PhysX_testing* physX = new PhysX_testing(1200, 628, "PhysX testing");
+	//physX->Run();
+	//delete physX;
+
 	GameOfCheckers* board = new GameOfCheckers(1200, 628, "Checkers");
 	board->Run();
 	delete board;
