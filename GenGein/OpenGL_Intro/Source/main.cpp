@@ -1,12 +1,12 @@
 #include <time.h>
 
-#include "Tests\ReflectAndRip.h"
-#include "Tests\Tessellation.h"
-#include "Tests\ConnectFour\ConFourTut.h"
-#include "Tests\ParticlesNPrettyStuff.h"
-#include "Checkers_Dirty\Checkers.h"
+//#include "Tests\ReflectAndRip.h"
+//#include "Tests\Tessellation.h"
+//#include "Tests\ConnectFour\ConFourTut.h"
+//#include "Tests\ParticlesNPrettyStuff.h"
+//#include "Checkers_Dirty\Checkers.h"
 #include "Checkers_Clean\GameOfCheckers.h"
-#include "PhysXTuts\PhysX_testing.h"
+//#include "PhysXTuts\PhysX_testing.h"
 
 int main(int argc, char* argv[])
 {
@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
 	//checkers->Run();
 	//delete checkers;
 
-	//ParticlesNPrettyStuff* particles = new ParticlesNPrettyStuff(1200, 628, "");
+	//ParticlesNPrettyStuff* particles = new ParticlesNPrettyStuff(1200, 628, "Pretticles");
 	//particles->Run();
 	//delete particles;
 

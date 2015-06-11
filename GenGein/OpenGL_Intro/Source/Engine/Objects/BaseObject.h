@@ -4,12 +4,7 @@
 #include <glm\glm.hpp>
 #include <glm\ext.hpp>
 
-typedef unsigned int uint;
-typedef const unsigned int c_uint;
-
-using glm::vec3;
-using glm::vec4;
-using glm::mat4;
+using namespace glm;
 
 class BaseObject
 {
@@ -19,31 +14,29 @@ public:
 	~BaseObject();
 
 	// Getter / Setter of Position
-	glm::vec4 const GetPosition() { return m_localTrans[3]; }
-	void const SetPosition(vec3 newPos) { m_localTrans[3] = vec4(newPos,1); }
+	const f32vec4& GetPosition() { return m_localTrans[3]; }
+	void const SetPosition(const f32vec3& newPos) { m_localTrans[3] = f32vec4(newPos,1); }
 
 	// Getter / Setter of Rotation
-	inline void SetRotation( const float a_angleInDegrees, const vec3& a_appOfRot)
-		{ m_localTrans *= glm::rotate(a_angleInDegrees, a_appOfRot); }
+	inline const void SetRotation( const float32_t& a_angleInDegrees, const f32vec3& a_appOfRot)
+		{ m_localTrans *= rotate(a_angleInDegrees, a_appOfRot); }
 	
 	// Getter / Setter of Scale
-	inline const void SetScale(float a_scaleValue)
-		{m_localTrans *= glm::scale(vec3(a_scaleValue));}
+	inline const void SetScale(const float32_t& a_scaleValue)
+		{m_localTrans *= scale(f32vec3(a_scaleValue));}
 
 	// Getter / Setter of LocalTransform
-	inline glm::mat4 GetLocalTransform() const { return m_localTrans; }
-	inline const void SetLocalTransform(const glm::mat4 a_locTrans)
-	{ m_localTrans = a_locTrans; }
+	inline const f32mat4 GetLocalTransform() const 
+		{ return m_localTrans; }
+	inline const void SetLocalTransform(const f32mat4& a_locTrans)
+		{ m_localTrans = a_locTrans; }
 
 	inline const void SetLocalTransform(
-		const glm::vec3& a_pos,
-		const float& a_angle,
-		const glm::vec3& a_rot,
-		const glm::vec3& a_scale)
-	{ 
-		m_localTrans = glm::translate(a_pos) * 
-			glm::rotate(a_angle, a_rot) * glm::scale(a_scale);
-	}
+		const f32vec3& a_pos,
+		const float32_t& a_angle,
+		const f32vec3& a_rot,
+		const f32vec3& a_scale)
+	{ m_localTrans = translate(a_pos) *  rotate(a_angle, a_rot) * scale(a_scale); }
 
 	void ApplyOpenGLData();
 
@@ -51,32 +44,32 @@ protected:
 	// Vertex holds the layout info for the VBO
 	struct OBJVertex
 	{
-		glm::vec4 position;
-		glm::vec4 colour;
-		glm::vec4 normal;
-		glm::vec4 tangent;
-		glm::vec4 binormal;
-		glm::vec2 uv;
+		f32vec4 position;
+		f32vec4 colour;
+		f32vec4 normal;
+		f32vec4 tangent;
+		f32vec4 binormal;
+		f32vec2 uv;
 	};
 	
 	struct Temp_OBJ_Data
 	{
-		std::vector<glm::vec4> position, normals, colours;
-		std::vector<glm::vec2> texCoords;
+		std::vector<f32vec4> position, normals, colours;
+		std::vector<f32vec2> texCoords;
 		std::vector<OBJVertex> vertices;
-		std::vector<uint> indices;
+		std::vector<uint32_t> indices;
 	};
 
-	uint m_indexCount;
+	uint32_t m_indexCount;
 
-	uint m_VAO, m_VBO, m_IBO;
-	uint* m_programID;
+	uint32_t m_VAO, m_VBO, m_IBO;
+	uint32_t* m_programID;
 
-	int m_localMatUniLoc;
-	mat4 m_localTrans;
+	int32_t m_localMatUniLoc;
+	f32mat4 m_localTrans;
 
 	std::vector< FBXVertex > m_FBX_verts;
 	std::vector< OBJVertex > m_OBJ_verts;
-	std::vector< uint > m_indices;
+	std::vector< uint32_t > m_indices;
 };
 

@@ -87,7 +87,7 @@ void ReflectionTest::ShutDown()
 }
 
 // Update loop
-void ReflectionTest::Update(const double a_dt)
+void ReflectionTest::Update(const double_t a_dt)
 {
 	BaseApp::Update(a_dt);
 

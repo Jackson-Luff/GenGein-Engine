@@ -60,23 +60,13 @@ void PhysX_testing::SetUpEnvironment()
 	// Add it to the PhysX scene
 	m_pPhysicsScene->addActor(*plane);
 
-	// Add a box
-	for (int i = 0; i < 10; i++)
-	{
-		for (int j = 0; j < 10; j++)
-		{
-			float size = (i * 1.0f + j) + 1;
-			float density = 10.0f;
-			PxBoxGeometry box(size, size, size);
-			PxTransform transform(PxVec3(i, 2, j));
-			PxRigidDynamic* dynamicActor = PxCreateDynamic(*m_pPhysics,
-				transform, box, *m_pPhysicsMaterial, density);
-			// Add it to the PhysX scene
-			m_pPhysicsScene->addActor(*dynamicActor);
-		}
-	}
-	
-	
+	float density = 10.0f;
+	PxBoxGeometry box(2,2,2);
+	PxTransform transform(PxVec3(0, 15, 0));
+	PxRigidDynamic* dynamicActor = PxCreateDynamic(*m_pPhysics,
+		transform, box, *m_pPhysicsMaterial, density);
+	// Add it to the PhysX scene
+	m_pPhysicsScene->addActor(*dynamicActor);
 }
 
 void PhysX_testing::SetUpPhysX()
@@ -95,7 +85,7 @@ void PhysX_testing::SetUpPhysX()
 	m_pPhysicsMaterial = m_pPhysics->createMaterial(0.5f, 0.5f, 0.5f);
 
 	PxSceneDesc sceneDesc(m_pPhysics->getTolerancesScale());
-	sceneDesc.gravity = PxVec3(0.0f, -1.0f, 0.0f);
+	sceneDesc.gravity = PxVec3(0.0f, -10.0f, 0.0f);
 	sceneDesc.filterShader = &PxDefaultSimulationFilterShader;
 	sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(1);
 	m_pPhysicsScene = m_pPhysics->createScene(sceneDesc);

@@ -12,7 +12,7 @@ AntTweak::~AntTweak()
 	TwTerminate();
 }
 
-void AntTweak::Initialise( GLFWwindow* a_window, const uint a_scrnWidth, const uint a_scrnHeight )
+void AntTweak::Initialise(GLFWwindow* a_window, const uint32_t& a_scrnWidth, const uint32_t& a_scrnHeight)
 {
 	// Initialise Tweaker
 	if(!TwInit(TW_OPENGL_CORE, nullptr))

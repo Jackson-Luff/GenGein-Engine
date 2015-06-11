@@ -12,7 +12,7 @@ in vec2 vCoords;
 // Lighting Attributes
 uniform float time;
 uniform vec3 eyePos;
-uniform vec3 lightPos = vec3( 0.0, 1.0, 0.0);
+uniform vec3 lightPos = vec3(-4, 1, -4);
 uniform vec3 ambientLight = vec3(0.25, 0.25, 0.25);
 
 //Textures
@@ -40,14 +40,7 @@ void main()
 	// =========== LIGHTING ============
 
 	// Diffused Light Calc's
-	vec3 lightVector = normalize(vec3(1, 0, 0) - vPosition.xyz);
-
-	// Specular Light Calc's
-	//vec3 reflectedLightVec = reflect(-lightVector, vNormal);
-	//vec3 eyeVector = normalize(eyePos - vPosition.xyz);
-	//float specularity = dot(reflectedLightVec, eyeVector);
-	//specularity = pow(specularity, LightSpecularPower);
-
+	vec3 lightVector = normalize(lightPos - vPosition.xyz);
 	// =========== TEXTURES ============
 	
 	mat3 TBN = mat3(
@@ -60,6 +53,6 @@ void main()
 
 	// ============ POLISH ==============
 	// NOTE: AMBIENT IS NOT AMBIENT. ITS DIFFUSE. - FIX FBX LOADER.. FUCK
-	pixelColour = texture(diffuseMap, vCoords) + texture(specularMap, vCoords);
-	pixelColour.rgb *= d;
+	pixelColour = texture(diffuseMap, vCoords);// + texture(specularMap, vCoords);
+	//pixelColour.rgba = texture(normalMap, vCoords);
 }

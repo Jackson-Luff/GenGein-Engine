@@ -29,11 +29,11 @@ GPUParticleEmitter::~GPUParticleEmitter()
 }
 
 void GPUParticleEmitter::Initialise(
-	const uint a_maxParticles,
-	const float a_lifeTimeMin, const float a_lifeTimeMax,
-	const float a_velocityMin, const float a_velocityMax,
-	const float a_startSize, const float a_endSize,
-	const glm::vec4& a_startColour, const glm::vec4& a_endColour)
+	const uint32_t& a_maxParticles,
+	const float32_t& a_lifeTimeMin, const float32_t& a_lifeTimeMax,
+	const float32_t& a_velocityMin, const float32_t& a_velocityMax,
+	const float32_t& a_startSize, const float32_t& a_endSize,
+	const f32vec4& a_startColour, const f32vec4& a_endColour)
 {
 
 	// Store all variables passed in 
@@ -138,7 +138,8 @@ void GPUParticleEmitter::CreateUpdateShader()
 {
 	// Create a shader
 	uint vs = ShaderHandler::CreateShader(
-		"Data/Shaders/Particles/ParticleUpdate.vert", GL_VERTEX_SHADER);
+		"Data/Shaders/Particles/ParticleUpdate.vert", 
+		ShaderHandler::ShaderType::VERT_SHADER);
 
 	m_updateShader = glCreateProgram();
 	glAttachShader(m_updateShader, vs);
@@ -174,10 +175,10 @@ void GPUParticleEmitter::CreateUpdateShader()
 }
 
 void GPUParticleEmitter::Render(
-	const float& a_dt,
-	const float& a_incrTime,
-	const glm::mat4& a_camWorldTrans,
-	const glm::vec3& a_SunPos)
+	const float32_t& a_dt,
+	const float32_t& a_incrTime,
+	const f32mat4& a_camWorldTrans,
+	const f32vec3& a_SunPos)
 {	 
 	// Update the particles using transform feedback
 	glUseProgram(m_updateShader);
@@ -205,7 +206,7 @@ void GPUParticleEmitter::Render(
 	glBindVertexArray(m_vao[m_activeBuffer]);
 
 	// Work out the "other" stuff
-	uint otherBuffer = (m_activeBuffer + 1) % 2;
+	uint32_t otherBuffer = (m_activeBuffer + 1) % 2;
 
 	// Bind the buffer we will update into as points 
 	// and begin transform feedback
@@ -229,9 +230,11 @@ void GPUParticleEmitter::Render(
 	m_activeBuffer = otherBuffer;
 }
 
-void GPUParticleEmitter::SendVariousUniformData(bool c_down,
-	bool v_down, bool b_down, bool n_down,
-	bool m_down)
+void GPUParticleEmitter::SendVariousUniformData(const bool c_down,
+	const bool v_down,
+	const bool b_down, 
+	const bool n_down,
+	const bool m_down)
 {
 	int uniloc = glGetUniformLocation(m_updateShader, "C_down");
 

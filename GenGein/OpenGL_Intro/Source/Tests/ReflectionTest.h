@@ -30,7 +30,7 @@ public:
 	virtual void ShutDown();
 
 	// Update loop
-	virtual void Update(const double a_dt);
+	virtual void Update(const double_t a_dt);
 	// Render things to screen
 	virtual void Render();
 

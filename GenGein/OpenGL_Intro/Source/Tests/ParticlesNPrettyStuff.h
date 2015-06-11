@@ -1,9 +1,6 @@
 #pragma once
 #include "Engine\Core\BaseApp.h"
 
-typedef const int c_int;
-typedef const char* c_pChar;
-
 class GPUParticleEmitter;
 
 class ParticlesNPrettyStuff : public BaseApp
@@ -18,7 +15,7 @@ public:
 	// Deconstructed content
 	virtual void ShutDown();
 	// Update loop
-	virtual void Update(const double a_dt);
+	virtual void Update(const double_t a_dt);
 	// Render to GUI
 	virtual void Render();
 private:

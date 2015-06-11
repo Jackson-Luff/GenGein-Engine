@@ -17,8 +17,10 @@ TransGrid::~TransGrid()
 	glDeleteBuffers(1, &m_IBO);
 }
 
-void TransGrid::SetUpShaderProgram(c_pChar a_name, c_pChar a_vert, c_pChar a_frag,
-	c_pChar a_geo, c_pChar a_tessC, c_pChar a_tessE)
+void TransGrid::SetUpShaderProgram(const_pChar a_name,
+	const_pChar a_vert, const_pChar a_frag,
+	const_pChar a_geo, const_pChar a_tessC, 
+	const_pChar a_tessE)
 {
 	ShaderHandler::LoadShaderProgram(a_name,
 		a_vert, a_frag,
@@ -42,7 +44,7 @@ void TransGrid::AddPerlinToGUI()
 	a_gui->AddVarRW("Main Tweaker", "Environment", "Octaves", TwType::TW_TYPE_FLOAT, (void*)&m_octaves);*/
 }
 
-void TransGrid::ApplyDataToGL(uint* a_indices)
+void TransGrid::ApplyDataToGL(const uint32_t* a_indices)
 {
 	//Gen and bind Vertex Array Object
 	glGenVertexArrays(1, &m_VAO);
@@ -70,7 +72,9 @@ void TransGrid::ApplyDataToGL(uint* a_indices)
 	glBindVertexArray(0);
 }
 
-void TransGrid::GenSegmentedGrid(c_uint a_dim, c_float a_segScale, bool a_perlin, bool a_dimSqr)
+void TransGrid::GenSegmentedGrid(const uint32_t a_dim,
+	const float32_t a_segScale,
+	bool a_perlin, bool a_dimSqr)
 {
 	m_dims = a_dim;
 
@@ -118,7 +122,8 @@ void TransGrid::GenSegmentedGrid(c_uint a_dim, c_float a_segScale, bool a_perlin
 	delete[] indices;
 }
 
-void TransGrid::GenQuad(c_float a_scale, bool a_perlin, bool a_dimSqr)
+void TransGrid::GenQuad(const float32_t a_scale, 
+	bool a_perlin, bool a_dimSqr)
 {
 	m_dims = 2;
 

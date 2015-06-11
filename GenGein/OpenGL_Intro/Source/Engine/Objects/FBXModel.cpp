@@ -18,11 +18,11 @@ FBXModel::~FBXModel()
 
 bool FBXModel::LoadFBX(
 	const char* a_shaderName,
-	std::string a_directory,
-	FBXFile::UNIT_SCALE a_scale,
-	bool a_loadTextures,
-	bool a_loadAnimations,
-	bool a_flipTextureY)
+	const std::string a_directory,
+	const FBXFile::UNIT_SCALE a_scale,
+	const bool a_loadTextures,
+	const bool a_loadAnimations,
+	const bool a_flipTextureY)
 {
 	m_programID = &ShaderHandler::GetShader(a_shaderName);
 
@@ -36,10 +36,10 @@ bool FBXModel::LoadFBX(
 	m_pFbx->initialiseOpenGLTextures();
 	CreateOpenGLBuffers();
 
-	for (unsigned int i = 0; i < m_pFbx->getMeshCount(); ++i)
+	for (uint32_t i = 0; i < m_pFbx->getMeshCount(); ++i)
 	{
 		FBXMeshNode* mesh = m_pFbx->getMeshByIndex(i);
-		uint* glData = (uint*)mesh->m_userData;
+		uint32_t* glData = (uint32_t*)mesh->m_userData;
 
 		// call TextureLoad here
 		TextureHandler::LoadFBXTexture(a_shaderName, mesh->m_material);
@@ -52,11 +52,11 @@ bool FBXModel::LoadFBX(
 }
 
 bool FBXModel::LoadFBX(
-	std::string a_directory,
-	FBXFile::UNIT_SCALE a_scale,
-	bool a_loadTextures,
-	bool a_loadAnimations,
-	bool a_flipTextureY)
+	const std::string a_directory,
+	const FBXFile::UNIT_SCALE a_scale,
+	const bool a_loadTextures,
+	const bool a_loadAnimations,
+	const bool a_flipTextureY)
 {
 	ShaderHandler::LoadShaderProgram("FBXProgram",
 		"Data/Shaders/Used/FbxShader.vert",
@@ -75,10 +75,10 @@ bool FBXModel::LoadFBX(
 	CreateOpenGLBuffers();
 
 	// bind our vertex array object and draw the mesh
-	for (unsigned int i = 0; i < m_pFbx->getMeshCount(); ++i)
+	for (uint32_t i = 0; i < m_pFbx->getMeshCount(); ++i)
 	{
 		FBXMeshNode* mesh = m_pFbx->getMeshByIndex(i);
-		uint* glData = (uint*)mesh->m_userData;
+		uint32_t* glData = (uint32_t*)mesh->m_userData;
 
 		// Extracts textures from material and references data from
 		// Already stored data
@@ -93,13 +93,13 @@ bool FBXModel::LoadFBX(
 void FBXModel::CreateOpenGLBuffers()
 {
 	// create the GL VAO/VBO/IBO data for each mesh
-	for (unsigned int i = 0; i < m_pFbx->getMeshCount(); ++i)
+	for (uint32_t i = 0; i < m_pFbx->getMeshCount(); ++i)
 	{
 		// NOTE : PROBABLY NEED TO LINK PROG, VERT, FRAG
 
 		FBXMeshNode* mesh = m_pFbx->getMeshByIndex(i);
 		// storage for the opengl data in 3 unsigned int
-		uint* glData = new uint[3];
+		uint32_t* glData = new uint32_t[3];
 		// more gl shit;
 		glGenVertexArrays(1, &glData[0]);
 		glBindVertexArray(glData[0]);
@@ -111,7 +111,7 @@ void FBXModel::CreateOpenGLBuffers()
 			mesh->m_vertices.size() * sizeof(FBXVertex),
 			mesh->m_vertices.data(), GL_STATIC_DRAW);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-			mesh->m_indices.size() * sizeof(uint),
+			mesh->m_indices.size() * sizeof(uint32_t),
 			mesh->m_indices.data(), GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(0); // Positions
@@ -161,9 +161,10 @@ void FBXModel::CreateOpenGLBuffers()
 void FBXModel::CleanupOpenGLBuffers()
 {
 	// clean up the vertex data attached to each mesh
-	for (unsigned int i = 0; i < m_pFbx->getMeshCount(); ++i) {
+	for (uint32_t i = 0; i < m_pFbx->getMeshCount(); ++i)
+	{
 		FBXMeshNode* mesh = m_pFbx->getMeshByIndex(i);
-		unsigned int* glData = (unsigned int*)mesh->m_userData;
+		uint32_t* glData = (uint32_t*)mesh->m_userData;
 		glDeleteVertexArrays(1, &glData[0]);
 		glDeleteBuffers(1, &glData[1]);
 		glDeleteBuffers(1, &glData[2]);
@@ -171,7 +172,7 @@ void FBXModel::CleanupOpenGLBuffers()
 	}
 }
 
-void FBXModel::Update(const double a_elapsedTime)
+void FBXModel::Update(const double_t& a_elapsedTime)
 {
 	if (m_pFbx->getSkeletonCount() > 0)
 	{
@@ -180,7 +181,7 @@ void FBXModel::Update(const double a_elapsedTime)
 
 		skeleton->evaluate(animation, (float)a_elapsedTime);
 
-		for (uint bone_index = 0; bone_index < skeleton->m_boneCount; ++bone_index)
+		for (uint32_t bone_index = 0; bone_index < skeleton->m_boneCount; ++bone_index)
 			skeleton->m_nodes[bone_index]->updateGlobalTransform();
 	}
 }
@@ -199,10 +200,10 @@ void FBXModel::Render()
 	}
 
 	// bind our vertex array object and draw the mesh
-	for (unsigned int i = 0; i < m_pFbx->getMeshCount(); ++i)
+	for (uint32_t i = 0; i < m_pFbx->getMeshCount(); ++i)
 	{
 		FBXMeshNode* mesh = m_pFbx->getMeshByIndex(i);
-		uint* glData = (uint*)mesh->m_userData;
+		uint32_t* glData = (uint32_t*)mesh->m_userData;
 
 		glUniformMatrix4fv(m_localMatUniLoc, 1, GL_FALSE, &m_localTrans[0][0]);
 

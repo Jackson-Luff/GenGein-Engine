@@ -41,7 +41,7 @@ void ConFourTut::ShutDown()
 {
 }
 
-void ConFourTut::Update(const double a_dt)
+void ConFourTut::Update(const double_t a_dt)
 {
 	m_pBaseCamera->Update(a_dt);
 
@@ -57,7 +57,7 @@ void ConFourTut::Update(const double a_dt)
 				if (moveMade == false) {
 					moveMade = true;
 					// get the mouse position within the game grid
-					double x = 0, y = 0;
+					double_t x = 0, y = 0;
 					glfwGetCursorPos(m_pWindow, &x, &y);
 					m_pickPosition = m_pBaseCamera->PickAgainstPlane(glm::vec4(0, 1, 0, 0));
 					// determine which column was chosen

@@ -8,18 +8,16 @@ class BaseCamera;
 class AntTweak;
 class SkyBox;
 
-typedef const int c_int;
-typedef unsigned int uint;
-typedef const char* c_pChar;
-typedef const float c_float;
+using namespace glm;
+
 ////
 // Author: Jackson Luff
-// Name: GLApplication
+// Name: BaseApp
 // Type: class (standard)
 // Parent: None
 // Description:
-// * GLApplication contains all the nasty openGL
-// * away from the user to allow a smooth flow 
+// * BaseApp contains all the nasty openGL
+// * away from the user to allow a 'smooth' - LOL flow 
 // * throughout this framework.
 ////
 class BaseApp
@@ -27,7 +25,7 @@ class BaseApp
 public:
 	// Constructor
 	BaseApp();
-	BaseApp(c_int a_width, c_int a_height, c_pChar a_title);
+	BaseApp(const int32_t& a_width, const int32_t& a_height, const char* a_title);
 	// Deconstructor
 	~BaseApp();
 
@@ -35,20 +33,20 @@ public:
 	bool InitialiseGL();
 	
 	// Getter for FPS count
-	inline const double& GetFPS() const
+	inline const double_t& GetFPS() const
 		{ return m_FPS; }
 	// Getter for elapsed gametime 
-	inline const double GetElapsedTime() const 
+	inline const float32_t& GetElapsedTime() const 
 		{ return m_elapsedTime; }
 	// Getter for Delta Time
-	inline const double GetDeltaTime() const 
+	inline const double_t& GetDeltaTime() const 
 		{ return m_deltaTime; }
 	// Getter for MousePosition
-	inline const glm::dvec2 GetMousePosition() const
+	inline const dvec2 GetMousePosition() const
 	{
-		double x = 0, y = 0;
+		double_t x = 0, y = 0;
 		glfwGetCursorPos(m_pWindow, &x, &y);
-		return glm::dvec2(x, y);
+		return dvec2(x, y);
 	}
 
 	// Initialised content 
@@ -56,7 +54,7 @@ public:
 	// Deconstructed content
 	virtual void ShutDown() = 0;
 	// Update loop
-	virtual void Update( const double a_dt ) = 0;
+	virtual void Update( const double_t& a_dt ) = 0;
 	// Render to GUI
 	virtual void Render() = 0;
 	// Run the application
@@ -71,30 +69,35 @@ protected:
 	void CalculateTiming();
 	
 	// Return the width and/or height of the window
-	c_int GetWidth() const { return m_width; }
-	c_int GetHeight() const { return m_height; }
+	const int32_t& GetWidth() const 
+		{ return m_width; }
+	const int32_t& GetHeight() const 
+		{ return m_height; }
 	
 	// Return the size of the window
-	inline const glm::ivec2 GetWindowSize() const { return glm::ivec2(m_width, m_height); }
-	inline void SetWindowSize( c_int a_newWidth, c_int a_newHeight)
-	{ glfwSetWindowSize(m_pWindow, a_newWidth, a_newHeight); }
+	inline const i32vec2 GetWindowSize() const 
+		{ return i32vec2(m_width, m_height); }
+	inline void SetWindowSize(const int32_t& a_newWidth, const int32_t& a_newHeight)
+		{ glfwSetWindowSize(m_pWindow, a_newWidth, a_newHeight); }
 	
 	// Sends camera data to ALL shaderprograms
 	void ApplyCameraUniformSetup();
 
 	// Set-up basic camera data
 	void ApplyLightingSetup(
-		const glm::vec3& a_ambient,
-		const glm::vec3& m_sunPosition,
-		const float& a_strtLightingHeight);
+		const f32vec3& a_ambient,
+		const f32vec3& m_sunPosition,
+		const float32_t& a_strtLightingHeight);
 
 	// Initialises BaseCamera
-	void InitialiseFlyCamera(c_float a_minSpeed,
-		c_float a_maxSpeed, c_float a_rotationSpeed,
-		glm::vec3 a_position, glm::vec3 a_lookAt);
+	void InitialiseFlyCamera(const float32_t& a_minSpeed,
+		const float32_t& a_maxSpeed,
+		const float32_t& a_rotationSpeed,
+		const f32vec3& a_position, 
+		const f32vec3& a_lookAt);
 
 	// Program Shader ID
-	uint* m_pMainProgramID;
+	uint32_t* m_pMainProgramID;
 
 	// window app to allow visuals
 	GLFWwindow* m_pWindow;
@@ -105,18 +108,18 @@ protected:
 	// SkyBox viewer
 	SkyBox* m_pSkyBox;
 	// Sun Position
-	glm::vec3 m_sunPosition;
+	f32vec3 m_sunPosition;
 private:
 	// Initialise internal app variables and functionalities
 	void InitialiseAppElements();
 	// Holds value for elapsed time
-	float m_elapsedTime;
+	float32_t m_elapsedTime;
 	// Prev DT && FPS && Curr DT
-	double m_prevTime, m_FPS, m_deltaTime;
+	double_t m_prevTime, m_FPS, m_deltaTime;
 	// Size of window
-	int m_width, m_height;
+	int32_t m_width, m_height;
 	// Title of window
-	c_pChar m_title;
+	const char* m_title;
 	// Background colour
-	glm::vec4 m_backColour;
+	f32vec4 m_backColour;
 };

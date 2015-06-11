@@ -55,7 +55,8 @@ void main()
 	vVelocity = newVel;
 	vLifetime = Lifetime + dt;
 	vLifespan = Lifespan;
-
+	
+	vPosition = clamp(vPosition, -1,1);
 	// if it's dead spawn a new one!
 	if(vLifetime > vLifespan)
 	{			
@@ -64,7 +65,7 @@ void main()
 		vVelocity.y = rand(seed++, 2) - 1;
 		vVelocity.z = rand(seed++, 2) - 1;
 		vVelocity = normalize(vVelocity);
-		vPosition = emitterPosition;
+		vPosition = emitterPosition + vec3(sin(time)*0.5, tan(time)*0.5, cos(time)*0.5);
 		vLifetime = 0;
 		vLifespan = rand(seed++, lifeMax - lifeMin) + lifeMin;
 	}

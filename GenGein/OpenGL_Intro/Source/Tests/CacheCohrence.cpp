@@ -39,7 +39,7 @@ void CacheCohrence::Run()
 	QueryPerformanceCounter(&endTime);
 
 	// length of time taken in seconds
-	double duration = (endTime.QuadPart - startTime.QuadPart) / (double)perfFreq.QuadPart;
+	double_t duration = (endTime.QuadPart - startTime.QuadPart) / (double_t)perfFreq.QuadPart;
 
 	printf("Duration: %f seconds", duration);
 

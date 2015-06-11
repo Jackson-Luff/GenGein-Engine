@@ -1,193 +1,245 @@
 #include <iostream>	
 #include "CheckersLogic.h"
 
-using namespace BoardData;
+using MoveDirection = CheckersLogic::MoveDirection;
+using JumpDirection = CheckersLogic::JumpDirection;
+using TileID		= CheckersLogic::TileID;
 
 CheckersLogic::CheckersLogic()
+	: m_listOfValidMoves(std::vector<i32vec2>(0))
 {}
 
-CheckersLogic::~CheckersLogic()
-{}
-
-void CheckersLogic::InitialiseBasicBoard()
+const void CheckersLogic::InitialiseBasicBoard()
 {
 	bool white = true;
-
-	for (uint i = 0; i < m_tileSegs; ++i)
+	for (uint32_t r = 0; r < m_dimCount; r++)
 	{
-		for (uint j = 0; j < m_tileSegs; ++j)
+		for (uint32_t c = 0; c < m_dimCount; c++)
 		{
-			if (!white && j < (m_tileSegs / 2) - 1)
-				m_tileIDs[i*m_tileSegs + j] = PLAYER_RED;
-			else if (!white && j < (m_tileSegs / 2) + 1)
-				m_tileIDs[i*m_tileSegs + j] = BLANK;
-			else if (!white && j < m_tileSegs)
-				m_tileIDs[i*m_tileSegs + j] = PLAYER_BLUE;
+			if (!white && c < (m_dimCount / 2) - 1)
+				m_boardIDs[r*m_dimCount + c] = TileID::PLAYER_RED;
+			else if (!white && c < (m_dimCount / 2) + 1)
+				m_boardIDs[r*m_dimCount + c] = TileID::WHITE;
+			else if (!white && c < m_dimCount)
+				m_boardIDs[r*m_dimCount + c] = TileID::PLAYER_BLACK;
 			else
-				m_tileIDs[i*m_tileSegs + j] = INVALID;
+				m_boardIDs[r*m_dimCount + c] = TileID::BLACK;
 			white = !white;
 		}
 		white = !white;
 	}
-
-	m_defaultTile = INVALID;
 }
 
-const TileType& CheckersLogic::GetPieceAt(c_uint& a_row, c_uint& a_col)
+const TileID& CheckersLogic::GetIDAt(const i32vec2& a_cIndex)
 {
-	if (!IsValid(a_row, a_col))
-		return m_defaultTile;
-		
-	return m_tileIDs[(a_row * m_tileSegs) + a_col];
+	if (!isWithinBoard(a_cIndex))
+		return m_nullTile;
+	
+	return m_boardIDs[(a_cIndex.x * m_dimCount) + a_cIndex.y];
 }
 
-bool CheckersLogic::IsValidMove(c_uint& a_row, c_uint& a_col, const MoveType& a_type)
+const i32vec2 CheckersLogic::GetTargetIndex(const i32vec2& a_cIndex, const MoveDirection& a_type)
 {
-	if (!IsValid(a_row, a_col)) 
-		return false;
-
-	TileType& target = m_tileIDs[((a_row * m_tileSegs) + a_col) + a_type];
-
-	if (target != BLANK)
-		return false;
-
-	return true;
+	// Logic example:
+	// currIndex = (2,2);
+	// m_dimCount = 8;
+	// a_type = MOVE_TR = m_dimCount + 1;
+	// => ((row * m_dimCount) + col) + a_type = 2Dto1Dindex
+	// => 2Dto1Dindex = ((2 * 8) + 2) + (8+1) = 27
+	// => targetRow = 2Dto1Dindex % m_dimCount = 27%8 = 3
+	// => targetCol = 2Dto1Dindex / m_dimCount = 27/8 = 3
+	// #CORRECT ^_^
+	int32_t indexIn1D = ((a_cIndex.y * m_dimCount) + a_cIndex.x) + a_type;
+	return i32vec2(floor(indexIn1D % m_dimCount), floor(indexIn1D / m_dimCount));
 }
 
-bool CheckersLogic::IsValidMove(c_uint& a_currR, c_uint& a_currC,
-	c_uint& a_destR, c_uint& a_destC)
+const i32vec2 CheckersLogic::GetTargetIndex(const i32vec2& a_cIndex, const JumpDirection& a_type)
 {
-	if (!IsValid(a_currR, a_currC)) return false;
-
-	TileType& target = m_tileIDs[((a_destR * m_tileSegs) + a_destC)];
-
-	if (target != BLANK)
-		return false;
-
-	return true;
+	// Logic example:
+	// currIndex = (2,2);
+	// m_dimCount = 8;
+	// a_type = JUMP_TR = MOVE_TR + MOVE_TR = (m_dimCount + 1) + (m_dimCount + 1);
+	// => ((row * m_dimCount) + col) + a_type = 2Dto1Dindex
+	// => 2Dto1Dindex = ((2 * 8) + 2) + ((8+1)+(8+1)) = (18 + 18) = 36;
+	// => targetRow = 2Dto1Dindex % m_dimCount = 36%8 = 4
+	// => targetCol = 2Dto1Dindex / m_dimCount = 36/8 = 5
+	// #CORRECT ^_^
+	int32_t indexIn1D = ((a_cIndex.y * m_dimCount) + a_cIndex.x) + a_type;
+	return i32vec2(floor(indexIn1D % m_dimCount), floor(indexIn1D / m_dimCount));
 }
 
-bool CheckersLogic::SetPieceAt(c_uint& a_row, c_uint& a_col, const TileType& a_type)
+const bool CheckersLogic::SetPieceAt(const i32vec2& a_cIndex, const TileID& a_type)
 {
-	if (!IsValid(a_row, a_col))
-		return false;
-	m_tileIDs[(a_row * m_tileSegs) + a_col] = a_type;
-	return true;
-}
-
-bool CheckersLogic::SetPieceAt(c_uint& a_index, const TileType& a_type)
-{
-	if (!IsValid(a_index))
-		return false;
-	m_tileIDs[a_index] = a_type;
-	return true;
-}
-
-bool CheckersLogic::doMove(c_uint& a_row, c_uint& a_col, const MoveType& a_type)
-{
-	if (!IsValidMove(a_row, a_col, a_type))
+	if (!isWithinBoard(a_cIndex))
 		return false;
 
-	uint cIndex = (a_row * m_tileSegs) + a_col;
-	TileType& currType = m_tileIDs[cIndex];
-
-	SetPieceAt(cIndex + a_type, currType);
-	SetPieceAt(cIndex, BLANK);
-
-	return true;
-}
-
-bool CheckersLogic::doMove(c_uint& a_currR, c_uint& a_currC,
-	c_uint& a_destR, c_uint& a_destC)
-{
-	if (!IsValidMove(a_currR, a_currC, a_destR, a_destC))
-		return false;
-
-	uint cIndex = (a_currR * m_tileSegs) + a_currC;
-	uint tIndex = (a_destR * m_tileSegs) + a_destC;
-
-	SetPieceAt(tIndex, GetPieceAt(a_currC, a_currR));
-	SetPieceAt(cIndex, BLANK);
-
-	return true;
-}
-
-bool CheckersLogic::doJump(c_uint& a_row, c_uint& a_col, const MoveType& a_type)
-{
-	if (!doMove(a_row, a_col, a_type))
-		return false;
-	uint intercepted = ((a_row * m_tileSegs) + a_col) + (a_type / 2);
-
-	if (m_tileIDs[intercepted] != BLANK)
+	if (GetIDAt(a_cIndex) == TileID::BLACK)
 	{
-		SetPieceAt(intercepted, BLANK);
-		//add one to tally for player
+		printf("Cannot Set Piece of Black (invalid type).");
+		return false;
 	}
 
+	m_boardIDs[(a_cIndex.x * m_dimCount) + a_cIndex.y] = a_type;
 	return true;
 }
 
-bool CheckersLogic::doJump(c_uint& a_currR, c_uint& a_currC,
-	c_uint& a_destR, c_uint& a_destC)
-{
-	if (!doMove(a_currR, a_currC, a_destR, a_destC))
+const bool CheckersLogic::TryAToB(const i32vec2& a_cIndex, const i32vec2& a_tIndex)
+{ 
+	// Is move on possible move list (may not need this)
+	if (!isInPossibleMoveList(a_tIndex))
 		return false;
 
-	//uint intercepted = ((a_currR * m_tileSegs) + a_col) + (a_type / 2);
-	//
-	//if (m_tileIDs[intercepted] != BLANK)
-	//{
-	//	SetPieceAt(intercepted, BLANK);
-	//	//add one to tally for player
-	//}
+	SetPieceAt(a_tIndex, GetIDAt(a_cIndex));
+	SetPieceAt(a_cIndex, TileID::WHITE);
+	return true;
+}
+
+const bool CheckersLogic::TryMove(const i32vec2& a_cIndex, const MoveDirection& a_type)
+{
+	i32vec2 tIndex = GetTargetIndex(a_cIndex, a_type);
+
+	// Is move on possible move list (may not need this)
+	if (!isInPossibleMoveList(tIndex))
+		return false;
+
+	SetPieceAt(tIndex, GetIDAt(a_cIndex));
+	SetPieceAt(a_cIndex, TileID::WHITE);
+	return true;
+}
+
+const bool CheckersLogic::TryJump(const i32vec2& a_cIndex, const JumpDirection& a_type)
+{
+	i32vec2 tIndex = GetTargetIndex(a_cIndex, a_type);
+
+	if (!IsValidJump(a_cIndex, a_type))
+		return false;
+
+	// No piece to jump, thus invalid
+	// findInterception(a_cIndex, a_type)
+	//if (IsValidMove(a_cIndex, direction)
+	//	return false;
+
+	//Collect intercepted piece
+	SetPieceAt(tIndex, GetIDAt(a_cIndex));
+	SetPieceAt(a_cIndex, TileID::WHITE);
 
 	return true;
 }
 
-const void CheckersLogic::GenPossibleMoves(c_uint& a_row, c_uint& a_col)
+const void CheckersLogic::GeneratePossibleMoves(const i32vec2& a_cIndex)
 {
-	for (uint i = 0; i < MOVETYPESIZE - 1; i++)
-	{
-		if (doMove(a_row, a_col, (MoveType)i))
-			m_possibleMoveIndexs.push_back(CalcTarget(a_row, a_col, (MoveType)i));
-	}
+	// Move Tests
+	if (IsValidMove(a_cIndex, MoveDirection::MOVE_TL))
+		m_listOfValidMoves.push_back(GetTargetIndex(a_cIndex, MoveDirection::MOVE_TL));
+	if (IsValidMove(a_cIndex, MoveDirection::MOVE_TR))
+		m_listOfValidMoves.push_back(GetTargetIndex(a_cIndex, MoveDirection::MOVE_TR));
+	if (IsValidMove(a_cIndex, MoveDirection::MOVE_BR))
+		m_listOfValidMoves.push_back(GetTargetIndex(a_cIndex, MoveDirection::MOVE_BR));
+	if (IsValidMove(a_cIndex, MoveDirection::MOVE_BL))
+		m_listOfValidMoves.push_back(GetTargetIndex(a_cIndex, MoveDirection::MOVE_BL));
+	// Jump Tests 
+	if (IsValidJump(a_cIndex, JumpDirection::JUMP_TL))
+		m_listOfValidMoves.push_back(GetTargetIndex(a_cIndex, JumpDirection::JUMP_TL));
+	if (IsValidJump(a_cIndex, JumpDirection::JUMP_TR))	 				 
+		m_listOfValidMoves.push_back(GetTargetIndex(a_cIndex, JumpDirection::JUMP_TR));
+	if (IsValidJump(a_cIndex, JumpDirection::JUMP_BR))	 				 
+		m_listOfValidMoves.push_back(GetTargetIndex(a_cIndex, JumpDirection::JUMP_BR));
+	if (IsValidJump(a_cIndex, JumpDirection::JUMP_BL))	  				 
+		m_listOfValidMoves.push_back(GetTargetIndex(a_cIndex, JumpDirection::JUMP_BL));
+
 }
 
-void CheckersLogic::ClearPossibleMoves()
+const bool CheckersLogic::isInPossibleMoveList(const i32vec2& a_tIndex)
 {
-	m_possibleMoveIndexs.clear();
+	if (std::find(m_listOfValidMoves.begin(), m_listOfValidMoves.end(), a_tIndex) != m_listOfValidMoves.end())
+		return true;
+
+	return false;
+}
+
+const void CheckersLogic::ClearPossibleMovesList()
+{
+	m_listOfValidMoves.clear();
 }
 
 // Private funcs:
 
-glm::uvec2 CheckersLogic::CalcTarget(c_uint& a_row, c_uint& a_col, const MoveType& a_type)
+const bool CheckersLogic::TryMove(const i32vec2& a_cIndex, const i32vec2& a_tIndex)
 {
-	uint index = ((a_row * m_tileSegs) + a_col) + a_type;
-
-	return glm::uvec2(index / m_tileSegs, index%m_tileSegs);
-}
-
-bool CheckersLogic::IsValid(c_uint& a_index)
-{
-	//Check if index exceeds limit
-	if (a_index < 0 ||
-		a_index >= m_tileMaxSize)
+	// Is move on possible move list (may not need this)
+	if (!IsValidAtoB(a_cIndex, a_tIndex))
 		return false;
 
-	if (m_tileIDs[a_index] == INVALID)
+	SetPieceAt(a_tIndex, GetIDAt(a_cIndex));
+	SetPieceAt(a_cIndex, TileID::WHITE);
+
+	return true;
+}
+
+const bool CheckersLogic::TryJump(const i32vec2& a_cIndex, const i32vec2& a_tIndex)
+{
+	if (!IsValidAtoB(a_cIndex, a_tIndex))
+		return false;
+
+	// No piece to jump, thus invalid
+	if (IsValidAtoB(a_cIndex, a_tIndex))
+		return false;
+
+	//Collect intercepted piece
+	//setpiece(target, m_tiles[acIndex]);
+	//setpiece(me, WHITE);
+
+	return true;
+}
+
+const bool CheckersLogic::isWithinBoard(const i32vec2& a_cIndex)
+{
+	//Check if index exceeds limit
+	if (a_cIndex.x >= 0 || a_cIndex.x < m_dimCount ||
+		a_cIndex.y >= 0 || a_cIndex.y < m_dimCount)
+		return true;
+
+	return false;
+}
+
+const bool CheckersLogic::IsValidAtoB(const i32vec2& a_cIndex, const i32vec2& a_tIndex)
+{
+	if (!isWithinBoard(a_cIndex) || !isWithinBoard(a_tIndex))
+		return false;
+
+	if (!isInPossibleMoveList(a_tIndex))
 		return false;
 
 	return true;
 }
 
-bool CheckersLogic::IsValid(c_uint& a_row, c_uint& a_col)
+const bool CheckersLogic::IsValidMove(const i32vec2& a_cIndex, const MoveDirection& a_type)
 {
-	//Check if index exceeds limit
-	if (a_row < 0 || a_row >= m_tileSegs ||
-		a_row < 0 || a_col >= m_tileSegs)
+	i32vec2 tIndex = GetTargetIndex(a_cIndex, a_type);
+
+	if (!isWithinBoard(a_cIndex) || !isWithinBoard(tIndex))
 		return false;
 
-	if (m_tileIDs[a_row * m_tileSegs + a_col] == INVALID)
+	if (GetIDAt(tIndex) != TileID::WHITE)
+		return false;
+
+	return true;
+}
+
+const bool CheckersLogic::IsValidJump(const i32vec2& a_cIndex, const JumpDirection& a_type)
+{
+	i32vec2 tIndex = GetTargetIndex(a_cIndex, a_type);
+
+	if (!isWithinBoard(a_cIndex) || !isWithinBoard(tIndex))
+		return false;
+
+	//MoveDirection dir = (MoveDirection)a_type / 2;
+
+	//// Intercepted tile is white, thus not jumpable
+	//if (IsValidMove(a_cIndex, (MoveDirection)a_type/2))
+	//	return false;
+
+	if (GetIDAt(tIndex) != TileID::WHITE)
 		return false;
 
 	return true;

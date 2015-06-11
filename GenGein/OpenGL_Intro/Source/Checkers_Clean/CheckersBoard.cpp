@@ -4,11 +4,12 @@
 
 #include "CheckersBoard.h"
 
-CheckersBoard::CheckersBoard()
-{}
-
 CheckersBoard::~CheckersBoard()
-{}
+{
+	delete m_boardLogic;
+	delete m_boardVisual;
+	delete m_boardInput;
+}
 
 void CheckersBoard::Initialise()
 {
@@ -22,15 +23,12 @@ void CheckersBoard::Initialise()
 	m_boardInput->Initialise(m_boardLogic, m_boardVisual);
 }
 
-void CheckersBoard::Update(c_dub a_dt,
-	c_vec3 a_cursPos, int a_isClick)
+void CheckersBoard::Update(const double_t& a_dt, const f32vec3& a_cursPos, const int a_isClick)
 {
-	mousePos = a_cursPos;
 	m_boardInput->Update(a_dt, a_cursPos, a_isClick);
 }
 
-void CheckersBoard::Draw(const glm::mat4& a_camProjView)
+void CheckersBoard::Render(const glm::mat4& a_camProjView)
 {
-	m_boardVisual->Draw(a_camProjView);
-	m_boardVisual->RenderAtMousePosition(mousePos);
+	m_boardVisual->Render(a_camProjView);
 }

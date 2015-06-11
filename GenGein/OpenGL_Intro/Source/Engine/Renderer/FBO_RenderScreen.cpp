@@ -15,7 +15,7 @@ FBO_RenderScreen::~FBO_RenderScreen()
 {
 }
 
-void FBO_RenderScreen::Initialise(const uint a_desWidth, const uint a_desHeight)
+void FBO_RenderScreen::Initialise(const uint32_t& a_desWidth, const uint32_t& a_desHeight)
 {
 	m_width = a_desWidth;
 	m_height = a_desHeight;
@@ -27,9 +27,9 @@ void FBO_RenderScreen::Initialise(const uint a_desWidth, const uint a_desHeight)
 	ShaderHandler::LoadShaderProgram("FBOShader",
 		"Data/Shaders/FBO/RenderView.vert",
 		"Data/Shaders/FBO/RenderView.frag");
-	m_FBOShaderID = ShaderHandler::GetShader("FBOShader");
+	m_FBOShaderID = &ShaderHandler::GetShader("FBOShader");
 
-	m_textureUniLoc = glGetUniformLocation(m_FBOShaderID, "target");
+	m_textureUniLoc = glGetUniformLocation(*m_FBOShaderID, "target");
 }
 
 void FBO_RenderScreen::CreateFBO()
@@ -143,7 +143,7 @@ void FBO_RenderScreen::Render()
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	glUseProgram(m_FBOShaderID);
+	glUseProgram(*m_FBOShaderID);
 
 	// Texture uniform
 	glActiveTexture(GL_TEXTURE0);

@@ -5,15 +5,13 @@
 #include <glm\glm.hpp>
 #include "Engine\Renderer\TextureHandler.h"
 
-typedef const int c_int;
-typedef unsigned int uint;
-typedef const std::string c_str;
+typedef const std::string const_str;
 
 class SkyBox
 {
 public:
 
-	enum SKYBOXES
+	enum SKYBOXES : uint32_t
 	{
 		SEA				= 0,
 		SKY				= 1,
@@ -21,11 +19,10 @@ public:
 		CHAPEL			= 3,
 		SAINT_PETERS	= 4,
 		YOKOHAMA		= 5,
-
 		SIZE
 	};
 
-	enum FILETYPES
+	enum FILETYPES : uint32_t
 	{
 		PNG = 0,
 		JPG = 1
@@ -34,16 +31,16 @@ public:
 	SkyBox();
 	~SkyBox();
 
-	void Create(SKYBOXES a_presetType, FILETYPES a_fileType);
-	void Render(float a_condition);
+	void Create(const SKYBOXES& a_presetType, const FILETYPES& a_fileType);
+	void Render(const float32_t& a_condition);
 
 private:
-	void InitialiseDirs(SKYBOXES a_presetType, FILETYPES a_fileType);
+	void InitialiseDirs(const SKYBOXES& a_presetType, const FILETYPES& a_fileType);
 
-	uint LoadCubeVertices(); 
-	uint m_VAO;
+	const uint32_t LoadCubeVertices(); 
+	uint32_t m_VAO;
 	sTexture m_dayTexture;
 	sTexture m_nightTexture;
 
-	std::vector<std::string> m_presetDirectires;
+	std::vector<const_str> m_presetDirectires;
 };

@@ -41,7 +41,7 @@ void ParticlesNPrettyStuff::ShutDown()
 {
 }
 
-void ParticlesNPrettyStuff::Update(const double a_dt)
+void ParticlesNPrettyStuff::Update(const double_t a_dt)
 {
 	BaseApp::Update(a_dt);
 

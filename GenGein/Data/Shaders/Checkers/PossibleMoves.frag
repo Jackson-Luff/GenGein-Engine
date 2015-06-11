@@ -61,11 +61,5 @@ void main()
 	// ============ POLISH ==============
 	
 	pixelColour = texture(diffuseMap, vCoords) + texture(specularMap, vCoords);
-	
-	if(vPosition.z > 0)
-		pixelColour.rgb = mix(pixelColour.rgb, pixelColour.rgb/vec3(3), vPosition.z > 0);
-	else
-		pixelColour.r = 0.75;
-
 	pixelColour.rgb *= d;
 }

@@ -50,7 +50,7 @@ void ReflectAndRip::ShutDown()
 {
 }
 
-void ReflectAndRip::Update(const double a_dt)
+void ReflectAndRip::Update(const double_t a_dt)
 {
 	BaseApp::Update(a_dt);
 }

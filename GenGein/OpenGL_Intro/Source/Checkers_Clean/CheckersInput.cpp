@@ -2,61 +2,76 @@
 #include "CheckersVisual.h"
 #include "CheckersInput.h"
 
-CheckersInput::CheckersInput()
-{}
+using TileID = CheckersLogic::TileID;
 
+CheckersInput::CheckersInput()
+	: m_hasBeenSelected(false)	
+{}
 
 CheckersInput::~CheckersInput()
 {}
 
-void CheckersInput::Initialise(CheckersLogic* a_pLogicBoard, CheckersVisual* a_pVisualBoard)
+void CheckersInput::Initialise(CheckersLogic* a_pLogicBoard,
+	CheckersVisual* a_pVisualBoard)
 {
 	m_pLogic = a_pLogicBoard;
 	m_pVisual = a_pVisualBoard;
 }
 
-void CheckersInput::Update(c_dub a_dt, c_vec3& a_cursorPosWorld, c_int a_isClicked)
+void CheckersInput::Update(const double_t a_dt,
+	const f32vec3& a_cursorPosWorld, const int32_t a_isClicked)
 {
-	if (hasBeenSelected)
+	// Break Down into functions when you get back
+
+	if (m_hasBeenSelected)
 	{
-		glm::uvec2 iOfH = m_pVisual->GetSelectedPiece().indexOfHome;
+		i32vec2 iOfClosest = m_pVisual->GetClosestPositionTo(a_cursorPosWorld);
 
 		if (a_isClicked)
-			m_pVisual->SetPositionOfSelected(a_cursorPosWorld); // Follow Cursor
+			m_pVisual->SetPositionOfSelected(m_pVisual->GetPositionAt(iOfClosest)); // Follow Cursor
 		else if (!a_isClicked)
 		{
 			// Try to place down
-			if (m_pLogic->doMove(iOfH.x, iOfH.y, iOfClosest.x, iOfClosest.y))
-			{}
+			if (m_pLogic->isInPossibleMoveList(iOfClosest))
+			{
+				i32vec2 iOfH = m_pVisual->GetSelectedPiece().indexOfHome;
+				m_pLogic->TryAToB(iOfH, iOfClosest);
+			}
 			else
-				m_pVisual->SetPositionOfSelected(m_pVisual->GetPositionAt(iOfH.x, iOfH.y));
+				m_pVisual->ResetSelectedPiece();
 
-			m_pLogic->ClearPossibleMoves();
-			hasBeenSelected = false;
-			//m_isMyTurn = false;
+			m_pLogic->ClearPossibleMovesList();
+			m_hasBeenSelected = false;
 		}
 	}
-	else //if (m_isMyTurn)
+	else
 		BrowsingPieces(a_cursorPosWorld, a_isClicked);
 }
 
-bool CheckersInput::BrowsingPieces(c_vec3& a_cursorPosWorld, c_int a_isClicked)
+//NOTE: Might put this in the visual
+const bool CheckersInput::BrowsingPieces(const f32vec3& a_cursorPosWorld,
+	const int32_t a_isClicked)
 {
 	if (a_isClicked)
 	{
-		for (uint r = 0; r < m_pLogic->GetRowCount(); r++)
+		for (uint32_t r = 0; r < m_pLogic->m_dimCount; r++)
 		{
-			for (uint c = 0; c < m_pLogic->GetColCount(); c++)
+			for (uint32_t c = 0; c < m_pLogic->m_dimCount; c++)
 			{
-				float dist = glm::length(a_cursorPosWorld - m_pVisual->GetPositionAt(r, c));
+				if (m_pLogic->GetIDAt(i32vec2(r,c)) == TileID::BLACK)
+					continue;
 
-				if (dist < m_pLogic->GetTileSize() && a_isClicked)
+				float32_t dist = length(a_cursorPosWorld - m_pVisual->GetPositionAt(i32vec2(r, c)));
+				
+				if (dist < m_pLogic->m_tileSize && a_isClicked)
 				{
-					CheckersVisual::Selected sel = m_pVisual->GetSelectedPiece();
-					sel.type = m_pLogic->GetPieceAt(r, c);
-					sel.indexOfHome = glm::uvec2(r, c);
-					m_pLogic->GenPossibleMoves(r, c);
-					hasBeenSelected = true;
+					CheckersVisual::Selected sel;
+					i32vec2 cindex = i32vec2(r, c);
+					sel.type = m_pLogic->GetIDAt(cindex);
+					sel.indexOfHome = i32vec2(r, c);
+					m_pVisual->SetSelectedPiece(sel);
+					m_pLogic->GeneratePossibleMoves(cindex);
+					m_hasBeenSelected = true;
 					return true;
 				}
 			}

@@ -2,44 +2,40 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <glm\glm.hpp>
 
-typedef unsigned int		uint;
-typedef const unsigned int	c_uint;
-typedef const char*			c_pChar;
-typedef const std::string c_str;
+using const_str =  const std::string;
+using const_pChar = const char*;
 
 struct FBXMaterial;
 
 struct sTexture
 {
-	uint ID;
-	uint* programID;
-	int textureUniLoc;
+	uint32_t ID;
+	unsigned int* programID;
+	int32_t textureUniLoc;
 };
 
 class TextureHandler
 {
 public:
-
-	// Deconstructor
-	~TextureHandler();
 	
 	// Add a material based on desired name and directory
-	static sTexture LoadTexture(c_pChar a_prog, c_pChar a_name, c_str a_dir);
-	static sTexture LoadPerlin(c_pChar a_prog, c_pChar a_name, c_uint a_dim);
-	static sTexture LoadCubeMap(c_pChar a_prog, c_pChar a_name, std::vector<c_str> a_faces);
-	static uint		LoadFrameBuffer(c_pChar a_prog, c_pChar a_name, int a_width, int a_height);
-	static void		LoadFBXTexture(c_pChar a_prog, const FBXMaterial* a_texture);
+	static const sTexture LoadTexture(const_pChar a_prog, const_pChar a_name, const_str& a_dir);
+	static const sTexture LoadPerlin( const_pChar a_prog, const_pChar a_name, const uint32_t& a_dim);
+	static const sTexture LoadCubeMap(const_pChar a_prog, const_pChar a_name, std::vector<const_str>& a_faces);
+	static const uint32_t LoadFrameBuffer(const_pChar a_prog, const_pChar a_name, const int32_t& a_width, const int32_t& a_height);
+	static const void	  LoadFBXTexture(const_pChar a_prog, const FBXMaterial* a_texture);
 	// Get the texture by name
-	static inline sTexture GetTexture(c_pChar a_name);
+	static const sTexture GetTexture(const_pChar a_name);
 	// Remove a material by name
-	static void UnloadTexture(c_pChar a_name);
-	static void UnloadAllTextures();
+	static const void UnloadTexture(const_pChar a_name);
+	static const void UnloadAllTextures();
 	// Rendering the textures
-	static void RenderAllTextures();
+	static const void RenderAllTextures();
 private:
 	// Check if texture exists
-	static bool DoesTextureExist(c_pChar a_name);
+	static const bool DoesTextureExist(const_pChar a_name);
 
-	static std::map < c_pChar, sTexture > m_textureMap;
+	static std::map < const_pChar, sTexture > m_textureMap;
 };

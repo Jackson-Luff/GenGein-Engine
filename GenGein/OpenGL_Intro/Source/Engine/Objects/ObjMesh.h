@@ -35,21 +35,20 @@ public:
 	// Draw the mesh to screen
 	void Render();
 
-	// Getter for localMatrix
 private:
 
 	// Holds most attributes of a material
 	struct Material
 	{
 		std::string name;
-		glm::vec3 Ka, Kd, Ks;
-		float d, Ns, illum;
+		f32vec3 Ka, Kd, Ks;
+		float32_t d, Ns, illum;
 	};
 
 	//Calculates the tangent of the vertex
 	void CalcTangentNBiNormals();
 	// Returns size of index
-	inline const int GetIndexSize() const { return m_indexCount; }
+	inline const int32_t GetIndexSize() const { return m_indexCount; }
 	// Apply the data from the obj to the buffers
 	void ApplyDataToVertNIndexBuffers();
 
@@ -90,5 +89,5 @@ private:
 	// List of material pointers for multiple Renderer
 	std::vector< Material* > m_materials;
 	// Map the indices based on key input e.g '5/1/1'
-	std::map<std::string, unsigned int> m_vertexMap;
+	std::map<const std::string, uint32_t> m_vertexMap;
 };

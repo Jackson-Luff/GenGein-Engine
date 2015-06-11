@@ -3,8 +3,7 @@
 
 typedef unsigned int uint;
 
-using glm::vec4;
-using glm::vec2;
+using namespace glm;
 
 class FBO_RenderScreen
 {
@@ -12,7 +11,7 @@ public:
 	FBO_RenderScreen();
 	~FBO_RenderScreen();
 
-	void Initialise(const uint a_desWidth, const uint a_desHeight);
+	void Initialise(const uint32_t& a_desWidth, const uint32_t& a_desHeight);
 	void SaveOffScreenShot();
 	void Render();
 private:
@@ -27,11 +26,11 @@ private:
 	void ExtractTextureFromFBO();
 	void AttachDepthBuffer();
 	bool ValidateFBOMesh();
-	uint m_FBO, m_FBOTexture, m_FBODepth;
+	uint32_t m_FBO, m_FBOTexture, m_FBODepth;
 	
 	void SetUpViewSpace();
-	uint m_VAO, m_VBO;
-	uint m_width, m_height;
-	uint m_FBOShaderID;
+	uint32_t m_VAO, m_VBO;
+	uint32_t m_width, m_height;
+	uint32_t* m_FBOShaderID;
 	int m_textureUniLoc;
 };

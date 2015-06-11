@@ -4,8 +4,6 @@
 #include <PhysX\pvd\PxVisualDebugger.h>
 #include "Engine\Core\BaseApp.h"
 
-typedef const int c_int;
-
 using namespace physx;
 
 class PhysX_testing : public BaseApp

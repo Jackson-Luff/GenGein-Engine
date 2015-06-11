@@ -2,8 +2,6 @@
 
 #include "BaseCamera.h"
 
-typedef const float c_float;
-typedef const double c_double;
 ////
 // Author: Jackson Luff
 // Name: Fly Camera
@@ -19,37 +17,50 @@ class FlyCamera : public BaseCamera
 public:
 	// Constructors
 	FlyCamera();
-	FlyCamera(c_float a_minSpeed, c_float a_maxSpeed, c_float a_rotationSpeed);
+	FlyCamera(const float32_t& a_minSpeed,
+		const float32_t& a_maxSpeed,
+		const float32_t& a_rotationSpeed);
 	// Deconstructor
 	~FlyCamera();
 	// Update loop
-	virtual void Update( c_double a_dt );
+	virtual void Update( const double_t& a_dt );
 	
 	// Get / Set the minimum fly speed
-	inline c_float& GetMinFlySpeed() const { return m_speed.x; }
-	inline void SetMinFlySpeed( c_float a_fSpeed ) { m_speed.x = a_fSpeed; }
+	inline const float32_t& GetMinFlySpeed() const 
+		{ return m_speed.x; }
+	inline void SetMinFlySpeed(const float32_t& a_fSpeed) 
+		{ m_speed.x = a_fSpeed; }
+
 	// Get / Set the current fly speed
-	inline c_float& GetCurrFlySpeed() const { return m_speed.y; }
-	inline void SetCurrFlySpeed( c_float a_fSpeed ) { m_speed.y = a_fSpeed; }
+	inline const float32_t& GetCurrFlySpeed() const 
+		{ return m_speed.y; }
+	inline void SetCurrFlySpeed(const float32_t& a_fSpeed)
+		{ m_speed.y = a_fSpeed; }
+
 	// Get / Set the maximum fly speed
-	inline c_float& GetMaxFlySpeed() const { return m_speed.z; }
-	inline void SetMaxFlySpeed( c_float a_fSpeed ) { m_speed.z = a_fSpeed; }
+	inline const float32_t& GetMaxFlySpeed() const 
+		{ return m_speed.z; }
+	inline void SetMaxFlySpeed(const float32_t& a_fSpeed)	
+		{ m_speed.z = a_fSpeed; }
+
 	// Get / Set the camera rotation
-	inline c_float& GetRotSpeed() const { return m_fRotSpeed; }
-	inline void SetRotSpeed( c_float fSpeed ) { m_fRotSpeed = fSpeed; }
+	inline const float32_t& GetRotSpeed() const 
+		{ return m_fRotSpeed; }
+	inline void SetRotSpeed(const float32_t& fSpeed) 
+		{ m_fRotSpeed = fSpeed; }
 
 protected:
 	// Input Handles
-	void HandleKeyboardInput( c_double a_dt );
-	void HandleMouseInput( c_double a_dt );
+	void HandleKeyboardInput( const double_t& a_dt );
+	void HandleMouseInput(const double_t& a_dt);
 	// Calculate the rotation of the camera
-	void CalculateRotation( c_double a_dt, c_double a_dx, c_double a_dy );
+	void CalculateRotation(const double_t& a_dt, const double_t& a_dx, const double_t& a_dy);
 	// Speed variant (x : min, y : curr, z : max)
-	glm::vec3 m_speed;
+	f32vec3 m_speed;
 	// Rotational speed
-	float m_fRotSpeed;
+	float32_t m_fRotSpeed;
 	// Mouse is down boolean
 	bool m_bViewButtonClicked;
 	// Previous Mouse coordinates
-	double m_dCursorX, m_dCursorY;
+	double_t m_dCursorX, m_dCursorY;
 };

@@ -17,7 +17,7 @@ using glm::vec3;
 using glm::vec4;
 using glm::mat4;
 
-void error_callback(c_int a_error, c_pChar a_description)
+void error_callback(int32_t a_error, c_pChar a_description)
 {
 	// Prints the error to console.
 	printf("%i  %s", a_error, a_description);
@@ -25,12 +25,15 @@ void error_callback(c_int a_error, c_pChar a_description)
 
 BaseApp::BaseApp() :
 m_prevTime(0),
+m_deltaTime(0),
+m_elapsedTime(0),
+m_FPS(0),
 m_width(0),
 m_height(0),
 m_title(0)
 {}
 
-BaseApp::BaseApp(c_int a_width, c_int a_height, c_pChar a_title)
+BaseApp::BaseApp(const int32_t& a_width, const int32_t& a_height, c_pChar a_title)
 {
 	// Apply window width, height and title.
 	m_width = a_width;
@@ -75,19 +78,14 @@ bool BaseApp::InitialiseGL()
 	}
 	
 	// Background Colouring
-	m_backColour = vec4(0.0f, 0.3f, 0.7f, 1.0);
-	m_backColour = vec4(0,0,0, 1.0);
+	m_backColour = f32vec4(0.0f, 0.3f, 0.7f, 1.0);
+	m_backColour = f32vec4(0,0,0, 1.0);
 	// All's a-go. 
 	return true;
 }
 
 void BaseApp::StartUp()
 {
-	m_prevTime = 0;
-	m_deltaTime = 0;
-	m_elapsedTime = 0;
-	m_FPS = 0;
-
 	glEnable(GL_DEPTH_TEST );
 	glDepthFunc(GL_LEQUAL);
 
@@ -107,7 +105,7 @@ void BaseApp::StartUp()
 	m_pSkyBox->Create(SkyBox::CHAPEL, SkyBox::JPG);
 }
 
-void BaseApp::Update(const double a_dt)
+void BaseApp::Update(const double_t& a_dt)
 {
 	m_pBaseCamera->Update(a_dt);
 
@@ -142,7 +140,7 @@ void BaseApp::CalculateTiming()
 	m_deltaTime = glfwGetTime() - m_prevTime;
 	m_prevTime = glfwGetTime();
 
-	m_elapsedTime += (float)m_deltaTime;
+	m_elapsedTime += (float32_t)m_deltaTime;
 	m_FPS = 1.0f / m_deltaTime;
 }
 
@@ -164,7 +162,7 @@ void BaseApp::Render()
 
 void BaseApp::InitialiseAppElements()
 {
-	m_sunPosition = vec3(0, 300, 0);
+	m_sunPosition = f32vec3(0, 300, 0);
 	ApplyCameraUniformSetup();
 
 	// Add a read only FPS output variable to the GUI tweaker specified
@@ -186,24 +184,26 @@ void BaseApp::ApplyCameraUniformSetup()
 }
 
 void BaseApp::ApplyLightingSetup(
-	const vec3& a_ambient,
-	const vec3& m_sunPosition,
-	const float& a_strtLightingHeight)
+	const f32vec3& a_ambient,
+	const f32vec3& m_sunPosition,
+	const float32_t& a_strtLightingHeight)
 {
 	ShaderHandler::SetUpLightingUniforms(
 		a_ambient,
 		m_sunPosition,
 		a_strtLightingHeight,
-		(float)GetElapsedTime());
+		(float32_t)GetElapsedTime());
 }
 
-void BaseApp::InitialiseFlyCamera(c_float a_minSpeed,
-	c_float a_maxSpeed, c_float a_rotationSpeed,
-	glm::vec3 a_position, glm::vec3 a_lookAt)
+void BaseApp::InitialiseFlyCamera(const float32_t& a_minSpeed,
+	const float32_t& a_maxSpeed,
+	const float32_t& a_rotationSpeed,
+	const f32vec3& a_position,
+	const f32vec3& a_lookAt)
 {
 	//Initialise camera
 	FlyCamera* pFlyCam = new FlyCamera(a_minSpeed, a_maxSpeed, a_rotationSpeed);
-	pFlyCam->SetPosition(vec4(a_position,1));
+	pFlyCam->SetPosition(f32vec4(a_position,1));
 	pFlyCam->LookAt(a_lookAt);
 	pFlyCam->InitialisePerspective(glm::pi<float>()*0.25f, 16 / 9.f, 0.1f, 10000.0f);
 	pFlyCam->SetInputWindow(m_pWindow);

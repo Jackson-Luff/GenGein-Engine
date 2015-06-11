@@ -3,6 +3,7 @@
 #include "Tests\ConnectFour\AIBase.h"
 #include "Engine\Core\BaseApp.h"
 
+using namespace glm;
 
 class MCTS : public AI {
 public:
@@ -28,7 +29,7 @@ public:
 	// Deconstructed content
 	virtual void ShutDown();
 	// Update loop
-	virtual void Update(const double a_dt);
+	virtual void Update(const double_t a_dt);
 	// Render to GUI
 	virtual void Render();
 

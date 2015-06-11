@@ -108,19 +108,19 @@ void ObjMesh::ApplyDataToVertNIndexBuffers()
 	glEnableVertexAttribArray(3);
 	glEnableVertexAttribArray(4);
 	glEnableVertexAttribArray(5);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(OBJVertex), ((char*)0) + (sizeof(glm::vec4) * 0));
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(OBJVertex), ((char*)0) + (sizeof(glm::vec4) * 1));
-	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(OBJVertex), ((char*)0) + (sizeof(glm::vec4) * 2));
-	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(OBJVertex), ((char*)0) + (sizeof(glm::vec4) * 3));
-	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(OBJVertex), ((char*)0) + (sizeof(glm::vec4) * 4));
-	glVertexAttribPointer(5, 2, GL_FLOAT, GL_FALSE, sizeof(OBJVertex), ((char*)0) + (sizeof(glm::vec4) * 5));
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(OBJVertex), ((char*)0) + (sizeof(f32vec4) * 0));
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(OBJVertex), ((char*)0) + (sizeof(f32vec4) * 1));
+	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(OBJVertex), ((char*)0) + (sizeof(f32vec4) * 2));
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(OBJVertex), ((char*)0) + (sizeof(f32vec4) * 3));
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(OBJVertex), ((char*)0) + (sizeof(f32vec4) * 4));
+	glVertexAttribPointer(5, 2, GL_FLOAT, GL_FALSE, sizeof(OBJVertex), ((char*)0) + (sizeof(f32vec4) * 5));
 
 	m_indexCount = m_indices.size();
 
 	// Generate and bind the to the index array object
 	glGenBuffers(1, &m_IBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexCount * sizeof(GLuint), &m_indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexCount * sizeof(uint32_t), &m_indices[0], GL_STATIC_DRAW);
 	
 	// Null the binded vert array
 	glBindVertexArray(0);
@@ -129,31 +129,31 @@ void ObjMesh::ApplyDataToVertNIndexBuffers()
 void ObjMesh::CalcTangentNBiNormals()
 {
 	std::vector<OBJVertex>&verts = m_OBJ_verts;
-	std::vector<  uint   >&index = m_indices;
+	std::vector<  uint32_t   >&index = m_indices;
 
-	for (uint i = 0; i < index.size() - 3; i += 3)
+	for (uint32_t i = 0; i < index.size() - 3; i += 3)
 	{
 		// Create triangulation of vert positions 
-		glm::vec4 v0 = verts[index[i + 0]].position;
-		glm::vec4 v1 = verts[index[i + 1]].position;
-		glm::vec4 v2 = verts[index[i + 2]].position;
+		f32vec4 v0 = verts[index[i + 0]].position;
+		f32vec4 v1 = verts[index[i + 1]].position;
+		f32vec4 v2 = verts[index[i + 2]].position;
 
 		// Create triangulation of vert uv's
-		glm::vec2 uv0 = verts[index[i + 0]].uv;
-		glm::vec2 uv1 = verts[index[i + 1]].uv;
-		glm::vec2 uv2 = verts[index[i + 2]].uv;
+		f32vec2 uv0 = verts[index[i + 0]].uv;
+		f32vec2 uv1 = verts[index[i + 1]].uv;
+		f32vec2 uv2 = verts[index[i + 2]].uv;
 
 		// Edges of the triangle : position delta
-		glm::vec4 deltaPos1 = v1 - v0;
-		glm::vec4 deltaPos2 = v2 - v0;
+		f32vec4 deltaPos1 = v1 - v0;
+		f32vec4 deltaPos2 = v2 - v0;
 
 		// UV delta
-		glm::vec2 deltaUV1 = uv1 - uv0;
-		glm::vec2 deltaUV2 = uv2 - uv0;
+		f32vec2 deltaUV1 = uv1 - uv0;
+		f32vec2 deltaUV2 = uv2 - uv0;
 
-		float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
-		glm::vec4 t = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y)*r;
-		glm::vec4 bi = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x)*r;
+		float32_t r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+		f32vec4 t = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y)*r;
+		f32vec4 bi = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x)*r;
 
 		verts[index[i+0]].binormal = bi;
 		verts[index[i+1]].binormal = bi;
@@ -193,31 +193,31 @@ std::string ObjMesh::parseString(c_string a_src, c_string code)
 	return std::string(buffer);
 }
 
-float ObjMesh::parseFloat(c_string a_src, c_string a_code)
+float32_t ObjMesh::parseFloat(c_string a_src, c_string a_code)
 {
 	// Source the inputted string to return a 'wanted' float
-	float trait;
+	float32_t trait;
 	std::string scanStr = a_code + " %f";
 	sscanf_s(a_src.c_str(), scanStr.c_str(), &trait);
 	return trait;
 }
 
-glm::vec2 ObjMesh::parseVec2(c_string a_src, c_string a_code)
+f32vec2 ObjMesh::parseVec2(c_string a_src, c_string a_code)
 {
 	// Source the inputted string to return a 'wanted' vector2
-	float x, y;
+	float32_t x, y;
 	std::string scanStr = a_code + " %f %f";
 	sscanf_s(a_src.c_str(), scanStr.c_str(), &x, &y);
-	return glm::vec2(x, y);
+	return f32vec2(x, y);
 }
 
-glm::vec3 ObjMesh::parseVec3(c_string a_src, c_string a_code)
+f32vec3 ObjMesh::parseVec3(c_string a_src, c_string a_code)
 {
 	// Source the inputted string to return a 'wanted' vector3
-	float x, y, z;
+	float32_t x, y, z;
 	std::string scanStr = a_code + " %f %f %f";
 	sscanf_s(a_src.c_str(), scanStr.c_str(), &x, &y, &z);
-	return glm::vec3(x, y, z);
+	return f32vec3(x, y, z);
 }
 
 void ObjMesh::checkIndices(c_string a_str)
@@ -225,15 +225,15 @@ void ObjMesh::checkIndices(c_string a_str)
 	// Used once to initialise face type
 	if (!m_indexChecked)
 	{
-		int bestSample = 0;
-		int sampleV1 = -1, sampleU1 = -1, sampleN1 = -1;
-		int tmp = -1, sampleV4 = -1;
+		int32_t bestSample = 0;
+		int32_t sampleV1 = -1, sampleU1 = -1, sampleN1 = -1;
+		int32_t tmp = -1, sampleV4 = -1;
 
 		// If the sampled data is found, form'X' will return 1
-		int form1 = sscanf(a_str.c_str(), "f %d", &sampleV1);
-		int form2 = sscanf(a_str.c_str(), "f %d/%d ", &sampleV1, &sampleU1);
-		int form3 = sscanf(a_str.c_str(), "f %d//%d", &sampleV1, &sampleN1);
-		int form4 = sscanf(a_str.c_str(), "f %d/%d/%d", &sampleV1, &sampleU1, &sampleN1);
+		int32_t form1 = sscanf(a_str.c_str(), "f %d", &sampleV1);
+		int32_t form2 = sscanf(a_str.c_str(), "f %d/%d ", &sampleV1, &sampleU1);
+		int32_t form3 = sscanf(a_str.c_str(), "f %d//%d", &sampleV1, &sampleN1);
+		int32_t form4 = sscanf(a_str.c_str(), "f %d/%d/%d", &sampleV1, &sampleU1, &sampleN1);
 
 		// Check if form1 was the sample
 		// and set bools accordingly
@@ -278,7 +278,7 @@ void ObjMesh::checkIndices(c_string a_str)
 
 void ObjMesh::addIndices(c_string a_str)
 {
-	glm::ivec4 v(-1), u(-1), n(-1);
+	i32vec4 v(-1), u(-1), n(-1);
 
 	// Check indices for sampling the face data 
 	checkIndices(a_str);
@@ -360,12 +360,12 @@ void ObjMesh::addIndices(c_string a_str)
 
 void ObjMesh::ApplyIndexInfo(c_string a_key)
 {
-	glm::ivec3 vI;
+	i32vec3 vI;
 
 	// vI.x : position, vI.y : uv, vI.z : normal.
 	sscanf(a_key.c_str(), "%d/%d/%d", &vI.x, &vI.y, &vI.z);
 
-	for (int i = 0; i < 3; i++)
+	for (int32_t i = 0; i < 3; i++)
 		if (vI[i] < 0) vI[i] = 0;
 
 	// Checking to see if that vertex already exists 
@@ -380,7 +380,7 @@ void ObjMesh::ApplyIndexInfo(c_string a_key)
 		// It's a new vertex!
 		OBJVertex newVert;
 		newVert.position = m_object.position[vI.x];
-		newVert.colour = glm::vec4(1);
+		newVert.colour = f32vec4(1);
 
 		if (m_hasUV)
 			newVert.uv = m_object.texCoords[vI.y];
@@ -393,11 +393,11 @@ void ObjMesh::ApplyIndexInfo(c_string a_key)
 		m_OBJ_verts.push_back(newVert);
 
 		// Push back the index for the new vertex
-		unsigned int uiIndex = m_OBJ_verts.size() - 1;
+		uint32_t uiIndex = m_OBJ_verts.size() - 1;
 		m_indices.push_back(uiIndex);
 
 		// Pair this key to that unique index
-		m_vertexMap.insert(std::pair<std::string, unsigned int>(a_key, uiIndex));
+		m_vertexMap.insert(std::pair<const std::string, uint32_t>(a_key, uiIndex));
 	}
 }
 
@@ -427,19 +427,19 @@ void ObjMesh::loadObjects(c_string a_objPath)
 
 			//Grabs data based on the stored .obj flags
 			if (buffer.find("v ") == 0)
-				m_object.position.push_back(glm::vec4(parseVec3(buffer, "v"), 1.0f));
+				m_object.position.push_back(f32vec4(parseVec3(buffer, "v"), 1.0f));
 			else if (buffer.find("vn") == 0)
-				m_object.normals.push_back(glm::vec4(parseVec3(buffer, "vn"), 1.0f));
+				m_object.normals.push_back(f32vec4(parseVec3(buffer, "vn"), 1.0f));
 			else if (buffer.find("vt") == 0)
 			{
-				glm::vec2 vt = parseVec2(buffer, "vt");
+				f32vec2 vt = parseVec2(buffer, "vt");
 				vt.y *= -1;
 				m_object.texCoords.push_back(vt);
 			}
 			else if (buffer.find("usemtl ") == 0)
 			{
 				std::string name = parseString(buffer, "usemtl ");
-				for (unsigned int i = 0; i < m_materials.size(); i++)
+				for (uint32_t i = 0; i < m_materials.size(); i++)
 				{
 					if (name == m_materials[i]->name)
 					{
