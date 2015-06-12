@@ -23,6 +23,7 @@
     <ClCompile Include="Source\Checkers_Clean\CheckersInput.cpp" />
     <ClCompile Include="Source\Checkers_Clean\CheckersBoard.cpp" />
     <ClCompile Include="Source\Checkers_Clean\GameOfCheckers.cpp" />
+    <ClCompile Include="Source\Checkers_Clean\CheckersAudio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Tutorial\CacheCohrence.h" />
@@ -48,5 +49,6 @@
     <ClInclude Include="Source\Checkers_Clean\CheckersInput.h" />
     <ClInclude Include="Source\Checkers_Clean\CheckersBoard.h" />
     <ClInclude Include="Source\Checkers_Clean\GameOfCheckers.h" />
+    <ClInclude Include="Source\Checkers_Clean\CheckersAudio.h" />
   </ItemGroup>
 </Project>

@@ -36,10 +36,10 @@ void CheckersInput::Update(const double_t a_dt,
 			{
 				i32vec2 iOfH = m_pVisual->GetSelectedPiece().indexOfHome;
 				m_pLogic->TryAToB(iOfH, iOfClosest);
-			}
-			else
-				m_pVisual->ResetSelectedPiece();
 
+			}
+
+			m_pVisual->ResetSelectedPiece();
 			m_pLogic->ClearPossibleMovesList();
 			m_hasBeenSelected = false;
 		}
@@ -63,7 +63,7 @@ const bool CheckersInput::BrowsingPieces(const f32vec3& a_cursorPosWorld,
 
 				float32_t dist = length(a_cursorPosWorld - m_pVisual->GetPositionAt(i32vec2(r, c)));
 				
-				if (dist < m_pLogic->m_tileSize && a_isClicked)
+				if (dist < (m_pLogic->m_tileSize/2.0f) && a_isClicked)
 				{
 					CheckersVisual::Selected sel;
 					i32vec2 cindex = i32vec2(r, c);

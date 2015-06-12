@@ -52,5 +52,5 @@ void main()
 	// ============ POLISH ==============
 	
 	pixelColour = texture(diffuseMap, vCoords) + texture(specularMap, vCoords);
-	pixelColour.rgb = (pixelColour.rgb * d) + vec3(0.5, 0, 0);
+	pixelColour.rgb = pixelColour.rgb * vec3(0.7, 0.2, 0.2);
 }

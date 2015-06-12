@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="..\Dependencies\gizmos\AIE\Gizmos.cpp" />
     <ClCompile Include="..\Dependencies\gl_core\gl_core_4_4.cpp" />
+    <ClCompile Include="Source\Checkers_Clean\CheckersAudio.cpp" />
     <ClCompile Include="Source\Checkers_Clean\CheckersInput.cpp" />
     <ClCompile Include="Source\Checkers_Clean\CheckersVisual.cpp" />
     <ClCompile Include="Source\Checkers_Clean\CheckersLogic.cpp" />
@@ -35,6 +36,7 @@
     <ClCompile Include="Source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Checkers_Clean\CheckersAudio.h" />
     <ClInclude Include="Source\Checkers_Clean\CheckersInput.h" />
     <ClInclude Include="Source\Checkers_Clean\CheckersVisual.h" />
     <ClInclude Include="Source\Checkers_Clean\CheckersLogic.h" />

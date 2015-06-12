@@ -41,6 +41,7 @@ void main()
 
 	// Diffused Light Calc's
 	vec3 lightVector = normalize(vec3(1, 0, 0) - vPosition.xyz);
+	float brightness = dot(lightVector, normalize(vNormal) );
 
 	// Specular Light Calc's
 	//vec3 reflectedLightVec = reflect(-lightVector, vNormal);
@@ -59,7 +60,6 @@ void main()
 	float d = max( 0, dot( normalize( TBN * N ), lightVector ));
 
 	// ============ POLISH ==============
-	
-	pixelColour = texture(diffuseMap, vCoords) + texture(specularMap, vCoords);
-	pixelColour.rgb *= d;
+	pixelColour = vec4( 0.647, 0.165, 0.165, 1);
+	pixelColour.rgb = pixelColour.rgb * brightness;
 }

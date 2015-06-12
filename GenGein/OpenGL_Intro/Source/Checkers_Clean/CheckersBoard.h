@@ -5,6 +5,7 @@
 class CheckersLogic;
 class CheckersVisual;
 class CheckersInput;
+class CheckersAudio;
 
 ////
 // Author: Jackson Luff
@@ -28,7 +29,8 @@ public:
 	// Renders board visual
 	void Render(const glm::mat4& a_camProjView);
 private:
-	CheckersLogic* m_boardLogic;
-	CheckersVisual* m_boardVisual;
-	CheckersInput* m_boardInput;
+	CheckersLogic* m_pLogic;
+	CheckersVisual* m_pVisual;
+	CheckersInput* m_pInput;
+	CheckersAudio* m_pAudio;
 };

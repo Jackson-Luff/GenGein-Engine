@@ -56,8 +56,8 @@ const void CheckersVisual::ResetSelectedPiece()
 {
 	CheckersVisual::Selected sel;
 	sel.type = CheckersLogic::TileID::BLACK;
-	sel.indexOfHome = glm::i32vec2(NULL);
-	sel.currPosition = glm::f32vec3(NULL);
+	sel.indexOfHome = glm::u32vec2(-3987655);
+	sel.currPosition = glm::f32vec3(-3987655);
 	SetSelectedPiece(sel);
 }
 

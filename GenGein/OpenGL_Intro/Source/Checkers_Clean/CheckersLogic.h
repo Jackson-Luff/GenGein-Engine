@@ -105,11 +105,6 @@ public:
 	
 private:
 	
-	// Move function used under the hood for a more A to B use
-	const bool TryMove(const i32vec2& a_pointA, const i32vec2& a_pointB);
-	// Move function used under the hood for a more A to B use
-	const bool TryJump(const i32vec2& a_pointA, const i32vec2& a_pointB);
-
 	// Checks if index(s) given are within range of dimension limitation
 	const bool isWithinBoard(const i32vec2& a_cIndex);
 
