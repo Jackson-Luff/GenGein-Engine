@@ -43,7 +43,7 @@ void CheckersBoard::Update(const double_t& a_dt, const f32vec3& a_cursPos,
 	if (m_turn == m_pInput->GetTurn())
 		m_pInput->Update(a_dt, a_cursPos, a_isClick);
 	else if (m_turn == m_pAI->GetTurn())
-		m_pAI->MakeDecision(*m_pLogic);
+		m_pAI->MakeDecision(m_pLogic);
 
 	if (m_pAI->GetTurn() == TURN_SYS::PLAYER)
 		m_turn = TURN_SYS::PLAYER;

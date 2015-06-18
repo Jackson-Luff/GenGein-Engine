@@ -26,7 +26,7 @@ public:
 
 	virtual ~MCTS() {}
 
-	virtual const int32_t MakeDecision(LogicHandle& a_board);
+	virtual const int32_t MakeDecision(const LogicHandle* a_board);
 
 	inline const TURN_SYS& GetTurn() const
 		{ return m_turn; }
