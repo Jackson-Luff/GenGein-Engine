@@ -47,10 +47,10 @@ void main()
 		normalize( vNormal ));
 
     vec3 N = texture(normalMap, vCoords).xyz * 2 - 1;
-	float d = max( 0, dot( normalize( TBN * N ), lightVector ));
+	vec3 S = texture(specularMap, vCoords).xyz * 2 - 1;
+	float d = max( 0, dot( normalize( TBN * N * S), lightVector ));
 
 	// ============ POLISH ==============
-	
-	pixelColour = texture(diffuseMap, vCoords) + texture(specularMap, vCoords);
-	pixelColour.rgb = (pixelColour.rgb) * vec3(0.23);
+	pixelColour = texture(diffuseMap, vCoords);
+	//pixelColour.rgb = pixelColour.rgb * d;
 }

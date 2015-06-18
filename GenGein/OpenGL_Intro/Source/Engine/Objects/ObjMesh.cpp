@@ -47,7 +47,7 @@ void ObjMesh::LoadObject( c_pChar a_folderDir, c_pChar a_fileName )
 }
 
 // Same Constructor but accepts custom texture name
-void ObjMesh::LoadObject( c_pChar a_folderDir, c_pChar a_fileDir, c_pChar a_textureName)
+void ObjMesh::LoadObject( c_pChar a_folderDir, c_pChar a_fileName, c_pChar a_textureName)
 {
 	/*
 	c_pChar folderDir;
@@ -71,11 +71,12 @@ void ObjMesh::LoadObject( c_pChar a_folderDir, c_pChar a_fileDir, c_pChar a_text
 	ShaderHandler::LoadShaderProgram("ObjShader",
 		"Data/Shaders/Geometry/ObjShader.vert",
 		"Data/Shaders/Geometry/ObjShader.frag");
+	m_programID = &ShaderHandler::GetShader("ObjShader");
 
 	// Apply the material based upon the input directory
 	m_folderDirectory = a_folderDir;
-	loadMaterials(m_folderDirectory + "/" + a_fileDir + ".mtl");
-	loadObjects(m_folderDirectory + "/" + a_fileDir + ".obj");
+	loadMaterials(m_folderDirectory + "/" + a_fileName + ".mtl");
+	loadObjects(m_folderDirectory + "/" + a_fileName + ".obj");
 
 	CalcTangentNBiNormals();
 
@@ -128,8 +129,8 @@ void ObjMesh::ApplyDataToVertNIndexBuffers()
 
 void ObjMesh::CalcTangentNBiNormals()
 {
-	std::vector<OBJVertex>&verts = m_OBJ_verts;
-	std::vector<  uint32_t   >&index = m_indices;
+	std::vector<OBJVertex>& verts = m_OBJ_verts;
+	std::vector<uint32_t>& index = m_indices;
 
 	for (uint32_t i = 0; i < index.size() - 3; i += 3)
 	{

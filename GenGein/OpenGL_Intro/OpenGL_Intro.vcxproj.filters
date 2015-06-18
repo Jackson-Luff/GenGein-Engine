@@ -18,12 +18,20 @@
     <ClCompile Include="Source\Engine\Cameras\BaseCamera.cpp" />
     <ClCompile Include="Source\Engine\Cameras\FlyCamera.cpp" />
     <ClCompile Include="Source\Engine\Core\BaseApp.cpp" />
+    <ClCompile Include="Source\Checkers_Clean\CheckersAI.cpp" />
+    <ClCompile Include="Source\Checkers_Clean\CheckersAudio.cpp" />
+    <ClCompile Include="Source\Checkers_Clean\CheckersBoard.cpp" />
+    <ClCompile Include="Source\Checkers_Clean\CheckersInput.cpp" />
     <ClCompile Include="Source\Checkers_Clean\CheckersLogic.cpp" />
     <ClCompile Include="Source\Checkers_Clean\CheckersVisual.cpp" />
-    <ClCompile Include="Source\Checkers_Clean\CheckersInput.cpp" />
-    <ClCompile Include="Source\Checkers_Clean\CheckersBoard.cpp" />
     <ClCompile Include="Source\Checkers_Clean\GameOfCheckers.cpp" />
-    <ClCompile Include="Source\Checkers_Clean\CheckersAudio.cpp" />
+    <ClCompile Include="Source\Checkers\AI\MCTS.cpp" />
+    <ClCompile Include="Source\Checkers\Core\AudioHandle.cpp" />
+    <ClCompile Include="Source\Checkers\Core\InputHandle.cpp" />
+    <ClCompile Include="Source\Checkers\Core\LogicHandle.cpp" />
+    <ClCompile Include="Source\Checkers\Core\VisualHandle.cpp" />
+    <ClCompile Include="Source\Checkers\CheckersBoard.cpp" />
+    <ClCompile Include="Source\Checkers\GameOfCheckers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Tutorial\CacheCohrence.h" />
@@ -44,11 +52,19 @@
     <ClInclude Include="Source\Engine\Cameras\BaseCamera.h" />
     <ClInclude Include="Source\Engine\Cameras\FlyCamera.h" />
     <ClInclude Include="Source\Engine\Core\BaseApp.h" />
+    <ClInclude Include="Source\Checkers_Clean\CheckersAI.h" />
+    <ClInclude Include="Source\Checkers_Clean\CheckersAudio.h" />
+    <ClInclude Include="Source\Checkers_Clean\CheckersBoard.h" />
+    <ClInclude Include="Source\Checkers_Clean\CheckersInput.h" />
     <ClInclude Include="Source\Checkers_Clean\CheckersLogic.h" />
     <ClInclude Include="Source\Checkers_Clean\CheckersVisual.h" />
-    <ClInclude Include="Source\Checkers_Clean\CheckersInput.h" />
-    <ClInclude Include="Source\Checkers_Clean\CheckersBoard.h" />
     <ClInclude Include="Source\Checkers_Clean\GameOfCheckers.h" />
-    <ClInclude Include="Source\Checkers_Clean\CheckersAudio.h" />
+    <ClInclude Include="Source\Checkers\AI\MCTS.h" />
+    <ClInclude Include="Source\Checkers\Core\AudioHandle.h" />
+    <ClInclude Include="Source\Checkers\Core\InputHandle.h" />
+    <ClInclude Include="Source\Checkers\Core\LogicHandle.h" />
+    <ClInclude Include="Source\Checkers\Core\VisualHandle.h" />
+    <ClInclude Include="Source\Checkers\CheckersBoard.h" />
+    <ClInclude Include="Source\Checkers\GameOfCheckers.h" />
   </ItemGroup>
 </Project>

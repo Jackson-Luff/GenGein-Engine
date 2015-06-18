@@ -89,12 +89,19 @@ protected:
 		const f32vec3& m_sunPosition,
 		const float32_t& a_strtLightingHeight);
 
-	// Initialises BaseCamera
+	// Initialises Fly Camera
 	void InitialiseFlyCamera(const float32_t& a_minSpeed,
 		const float32_t& a_maxSpeed,
 		const float32_t& a_rotationSpeed,
 		const f32vec3& a_position, 
 		const f32vec3& a_lookAt);
+
+	// Initialise Pan-Zoom Camera
+	//void InitialisePanZoomCamera(
+	//	const float32_t& a_moveSpeed,
+	//	const float32_t& a_rotSpeed,
+	//	const f32vec3& a_position,
+	//	const f32vec3& a_lookAt);
 
 	// Program Shader ID
 	uint32_t* m_pMainProgramID;

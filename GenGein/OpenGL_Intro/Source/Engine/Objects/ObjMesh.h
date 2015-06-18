@@ -29,8 +29,8 @@ public:
 	~ObjMesh();
 	
 	// Load up the obj
-	void LoadObject( c_pChar a_folderDir, c_pChar a_fileDir);
-	void LoadObject( c_pChar a_folderDir, c_pChar a_fileDir, c_pChar a_textureName);
+	void LoadObject(c_pChar a_folderDir, c_pChar a_fileName);
+	void LoadObject(c_pChar a_folderDir, c_pChar a_fileName, c_pChar a_textureName);
 	
 	// Draw the mesh to screen
 	void Render();

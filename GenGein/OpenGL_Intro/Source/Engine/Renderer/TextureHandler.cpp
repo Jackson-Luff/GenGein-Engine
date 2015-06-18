@@ -9,13 +9,14 @@
 #include "TextureHandler.h"
 
 //Shortening
-using TextureMap = std::map<const_pChar, sTexture>;
+using TextureMap = std::vector<std::pair<const_pChar, sTexture>>;
 TextureMap TextureHandler::m_textureMap = TextureMap();
 
 // Add a texture based on desired name and directory
 const sTexture TextureHandler::LoadTexture(const_pChar a_prog, const_pChar a_name, const_str& a_dir)
 {
-	if (DoesTextureExist(a_name)) return m_textureMap[a_name];
+	if (DoesTextureExist(a_name)) 
+		return m_textureMap[GetTextureIndex(a_name)].second;
 
 	sTexture texture = sTexture();
 
@@ -55,7 +56,7 @@ const sTexture TextureHandler::LoadTexture(const_pChar a_prog, const_pChar a_nam
 
 	texture.programID = &ShaderHandler::GetShader(a_prog);
 	texture.textureUniLoc = glGetUniformLocation(*texture.programID, a_name);
-	m_textureMap[a_name] = texture;
+	m_textureMap.push_back({ a_name, texture });
 
 	return texture;
 }
@@ -63,7 +64,8 @@ const sTexture TextureHandler::LoadTexture(const_pChar a_prog, const_pChar a_nam
 // Add a texture based on desired name and directory
 const sTexture TextureHandler::LoadPerlin(const_pChar a_prog, const_pChar a_name, const uint32_t& a_dim)
 {
-	if (DoesTextureExist(a_name)) return m_textureMap[a_name];
+	if (DoesTextureExist(a_name)) 
+		return m_textureMap[GetTextureIndex(a_name)].second;
 
 	sTexture perlin;
 
@@ -99,7 +101,7 @@ const sTexture TextureHandler::LoadPerlin(const_pChar a_prog, const_pChar a_name
 	perlin.programID = &ShaderHandler::GetShader(a_prog);
 	perlin.textureUniLoc = glGetUniformLocation(*perlin.programID, a_name);
 
-	m_textureMap[a_name] = perlin;
+	m_textureMap.push_back({ a_name, perlin });
 
 	delete[] perlin_data;
 
@@ -151,7 +153,7 @@ const sTexture TextureHandler::LoadCubeMap(const_pChar a_prog, const_pChar a_nam
 
 	cubeMapTexture.programID = &ShaderHandler::GetShader(a_prog);
 	cubeMapTexture.textureUniLoc = glGetUniformLocation(*cubeMapTexture.programID, a_name);
-	m_textureMap[a_name] = cubeMapTexture;
+	m_textureMap.push_back({ a_name, cubeMapTexture });
 
 	return cubeMapTexture;
 }
@@ -187,7 +189,7 @@ const void TextureHandler::LoadFBXTexture(const_pChar a_prog, const FBXMaterial*
 		texture.ID = a_mat->textures[i]->handle;
 		texture.programID = &ShaderHandler::GetShader(a_prog);
 		texture.textureUniLoc = glGetUniformLocation(*texture.programID, types[i]);
-		m_textureMap[a_mat->textures[i]->path.c_str()] = texture;
+		m_textureMap.push_back({ a_mat->textures[i]->path.c_str(), texture });
 	}
 }
 
@@ -232,8 +234,7 @@ const uint32_t TextureHandler::LoadFrameBuffer(const_pChar a_prog, const_pChar a
 
 	FBO.programID = &ShaderHandler::GetShader(a_prog);
 	FBO.textureUniLoc = glGetUniformLocation(*FBO.programID, a_name);
-
-	m_textureMap[a_name] = FBO;
+	m_textureMap.push_back({ a_name, FBO });
 
 	return m_fbo;
 }
@@ -242,22 +243,39 @@ const uint32_t TextureHandler::LoadFrameBuffer(const_pChar a_prog, const_pChar a
 const sTexture TextureHandler::GetTexture(const_pChar a_name)
 {
 	if (DoesTextureExist(a_name))
-		return m_textureMap.at(a_name);
+	{
+		for (auto pair : m_textureMap)
+		{
+			if (pair.first == a_name)
+				return pair.second;
+		}
+	}
 
 	printf("No texture exists for that name.");
 	return sTexture();
 }
 
+const int32_t TextureHandler::GetTextureIndex(const_pChar a_name)
+{
+	if (DoesTextureExist(a_name))
+	{
+		for (uint32_t i = 0; i < m_textureMap.size(); i++)
+		{
+			if (m_textureMap[i].first == a_name)
+				return i;
+		}
+	}
+
+	printf("No texture exists for that name.");
+	return -1;
+}
+
 // Remove a material by name
 const void TextureHandler::UnloadTexture(const_pChar a_name)
 {
-	// Doesn't exist check
-	if (!DoesTextureExist(a_name)) 
-		return;
+	sTexture texture = GetTexture(a_name);
 	
-	glDeleteTextures(1, &m_textureMap[a_name].ID);
-
-	m_textureMap.erase(a_name);
+	glDeleteTextures(1, &texture.ID);
 }
 
 const void TextureHandler::UnloadAllTextures()
@@ -291,8 +309,11 @@ const void TextureHandler::RenderAllTextures()
 // Check if texture exists
 const bool TextureHandler::DoesTextureExist(const_pChar a_name)
 {
-	if (m_textureMap.find(a_name) == m_textureMap.end())
-		return false;
-
-	return true;
+	for (auto pair : m_textureMap)
+	{
+		if (pair.first == a_name)
+			return true;
+	}
+	
+	return false;
 }

@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GenGein", "OpenGL_Intro\OpenGL_Intro.vcxproj", "{68C8DABB-A9CA-41A7-BE9B-BE809F13DF60}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysX", "PhysX\PhysX.vcxproj", "{381498AB-2BB2-421F-9807-EFCEA9AF0328}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{68C8DABB-A9CA-41A7-BE9B-BE809F13DF60}.Debug|Win32.Build.0 = Debug|Win32
 		{68C8DABB-A9CA-41A7-BE9B-BE809F13DF60}.Release|Win32.ActiveCfg = Release|Win32
 		{68C8DABB-A9CA-41A7-BE9B-BE809F13DF60}.Release|Win32.Build.0 = Release|Win32
+		{381498AB-2BB2-421F-9807-EFCEA9AF0328}.Debug|Win32.ActiveCfg = Debug|Win32
+		{381498AB-2BB2-421F-9807-EFCEA9AF0328}.Debug|Win32.Build.0 = Debug|Win32
+		{381498AB-2BB2-421F-9807-EFCEA9AF0328}.Release|Win32.ActiveCfg = Release|Win32
+		{381498AB-2BB2-421F-9807-EFCEA9AF0328}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

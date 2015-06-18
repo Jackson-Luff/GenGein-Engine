@@ -5,7 +5,7 @@
 //#include "Tests\ConnectFour\ConFourTut.h"
 //#include "Tests\ParticlesNPrettyStuff.h"
 //#include "Checkers_Dirty\Checkers.h"
-#include "Checkers_Clean\GameOfCheckers.h"
+#include "Checkers\GameOfCheckers.h"
 //#include "PhysXTuts\PhysX_testing.h"
 
 int main(int argc, char* argv[])

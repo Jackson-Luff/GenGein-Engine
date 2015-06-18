@@ -103,6 +103,8 @@ void BaseApp::StartUp()
 
 	m_pSkyBox = new SkyBox();
 	m_pSkyBox->Create(SkyBox::CHAPEL, SkyBox::JPG);
+
+	m_elapsedTime = 0;
 }
 
 void BaseApp::Update(const double_t& a_dt)
@@ -116,7 +118,6 @@ void BaseApp::Update(const double_t& a_dt)
 
 void BaseApp::DebugControls()
 {
-
 	if (glfwGetKey(m_pWindow, GLFW_KEY_GRAVE_ACCENT))
 	{
 		glEnable(GL_CULL_FACE);
@@ -209,6 +210,21 @@ void BaseApp::InitialiseFlyCamera(const float32_t& a_minSpeed,
 	pFlyCam->SetInputWindow(m_pWindow);
 	m_pBaseCamera = pFlyCam;
 }
+//
+//void BaseApp::InitialisePanZoomCamera(
+//	const float32_t& a_moveSpeed,
+//	const float32_t& a_rotSpeed,
+//	const f32vec3& a_position,
+//	const f32vec3& a_lookAt)
+//{
+//	//Initialise camera
+//	PanZoomCamera* pPanCam = new PanZoomCamera(a_moveSpeed, a_rotSpeed);
+//	pPanCam->SetPosition(f32vec4(a_position, 1));
+//	pPanCam->LookAt(a_lookAt);
+//	pPanCam->InitialisePerspective(glm::pi<float>()*0.25f, 16 / 9.f, 0.1f, 10000.0f);
+//	pPanCam->SetInputWindow(m_pWindow);
+//	m_pBaseCamera = pPanCam;
+//}
 
 void BaseApp::Run()
 {

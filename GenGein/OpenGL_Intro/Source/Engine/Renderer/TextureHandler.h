@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include <map>
 #include <string>
 #include <glm\glm.hpp>
 
@@ -28,6 +27,7 @@ public:
 	static const void	  LoadFBXTexture(const_pChar a_prog, const FBXMaterial* a_texture);
 	// Get the texture by name
 	static const sTexture GetTexture(const_pChar a_name);
+	static const int32_t  GetTextureIndex(const_pChar);
 	// Remove a material by name
 	static const void UnloadTexture(const_pChar a_name);
 	static const void UnloadAllTextures();
@@ -37,5 +37,5 @@ private:
 	// Check if texture exists
 	static const bool DoesTextureExist(const_pChar a_name);
 
-	static std::map < const_pChar, sTexture > m_textureMap;
+	static std::vector<std::pair<const_pChar, sTexture>> m_textureMap;
 };
