@@ -41,18 +41,8 @@ void main()
 
 	// Diffused Light Calc's
 	vec3 lightVector = normalize(SunPos - vPosition.xyz);
-	// =========== TEXTURES ============
-	
-	mat3 TBN = mat3(
-		normalize( vTangent ),
-		normalize( vBiNormal ),
-		normalize( vNormal ));
-
-	vec3 N = texture(normalMap, vCoords).xyz * 2 - 1;
-	vec3 S = texture(specularMap, vCoords).xyz * 2 - 1;
-	float d =  max(0,dot( normalize( TBN * N * S), lightVector ));
-
+	float brightness = pow(max(0,dot(lightVector, normalize(vNormal))), 1.0);
 	// ============ POLISH ==============
 	pixelColour = texture(diffuseMap, vCoords);
-	//pixelColour.rgb = pixelColour.rgb * d;
+	pixelColour.rgb = pixelColour.rgb * (brightness);
 }

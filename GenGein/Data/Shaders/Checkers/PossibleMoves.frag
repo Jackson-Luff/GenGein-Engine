@@ -12,7 +12,7 @@ in vec2 vCoords;
 // Lighting Attributes
 uniform float time;
 uniform vec3 eyePos;
-uniform vec3 lightPos = vec3( 0.0, 1.0, 0.0);
+uniform vec3 SunPos = vec3( 0.0, 1.0, 0.0);
 uniform vec3 ambientLight = vec3(0.25, 0.25, 0.25);
 
 //Textures
@@ -40,30 +40,9 @@ void main()
 	// =========== LIGHTING ============
 
 	// Diffused Light Calc's
-	vec3 lightVector = normalize(vec3(1, 0, 0) - vPosition.xyz);
-	float brightness = dot(lightVector, normalize(vNormal) );
-
-	// Specular Light Calc's
-	//vec3 reflectedLightVec = reflect(-lightVector, vNormal);
-	//vec3 eyeVector = normalize(eyePos - vPosition.xyz);
-	//float specularity = dot(reflectedLightVec, eyeVector);
-	//specularity = pow(specularity, LightSpecularPower);
-
-	// =========== TEXTURES ============
-	
-	mat3 TBN = mat3(
-		normalize( vTangent ),
-		normalize( vBiNormal ),
-		normalize( vNormal ));
-
-    vec3 N = texture(normalMap, vCoords).xyz * 2 - 1;
-	vec3 S = texture(specularMap, vCoords).xyz * 2 - 1;
-	float d = max( 0, dot( normalize( TBN * N * S ), lightVector ));
-
+	vec3 lightVector = normalize(SunPos - vPosition.xyz);
+	float brightness = pow(max(0,dot(lightVector, normalize(vNormal))), 1.0);
 	// ============ POLISH ==============
-	//pixelColour = vec4( 0.647, 0.165, 0.165, 1);
-	//pixelColour.rgb = pixelColour.rgb * brightness;
-	
 	pixelColour = texture(diffuseMap, vCoords);
-	//pixelColour.rgb = pixelColour.rgb * d;
+	pixelColour.rgb = pixelColour.rgb * (brightness);
 }
