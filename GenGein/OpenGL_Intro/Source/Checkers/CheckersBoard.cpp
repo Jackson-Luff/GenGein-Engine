@@ -29,7 +29,7 @@ void CheckersBoard::Initialise()
 	m_pInput->Initialise(m_pLogic, m_pVisual, m_pAudio);
 
 	//MonteCarlo playouts: 80 
-	m_pAI = new MCTS(80);
+	m_pAI = new MCTS(m_pLogic, 80);
 
 	m_turn = TURN_SYS::PLAYER;
 }
@@ -40,18 +40,21 @@ void CheckersBoard::Update(const double_t& a_dt, const f32vec3& a_cursPos,
 	if (a_isRKeyDown)
 		m_pLogic->InitialiseBasicBoard();
 
-	if (m_turn == m_pInput->GetTurn())
-		m_pInput->Update(a_dt, a_cursPos, a_isClick);
-	else if (m_turn == m_pAI->GetTurn())
-		m_pAI->MakeDecision(m_pLogic);
-
-	if (m_pAI->GetTurn() == TURN_SYS::PLAYER)
-		m_turn = TURN_SYS::PLAYER;
-
-	if (m_pInput->GetTurn() == TURN_SYS::AI)
-		m_turn = TURN_SYS::AI;
-
+	switch (m_turn)
+	{
+	case CheckersBoard::TURN_SYS::PLAYER:
+		if (m_pInput->Update(a_dt, a_cursPos, a_isClick))
+			m_turn = TURN_SYS::AI;
+		break;
+	case CheckersBoard::TURN_SYS::AI:
+		if (m_pAI->PlayTurn())
+			m_turn = TURN_SYS::PLAYER;
+		break;
+	}
+	
 	m_pAudio->Update(a_dt);
+
+	m_pLogic->TryForGameOver();
 }
 
 void CheckersBoard::Render(const glm::f32mat4& a_camProjView)

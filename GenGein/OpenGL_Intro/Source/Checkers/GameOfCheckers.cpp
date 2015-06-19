@@ -48,7 +48,7 @@ void GameOfCheckers::Render()
 	RenderSkyBox();
 	m_checkerBoard->Render(m_pBaseCamera->GetProjectionView());
 
-	ApplyLightingSetup(vec3(0.3),
-		vec3(2 * sin(GetElapsedTime()), 2, 2 * cos(GetElapsedTime())),
+	ApplyLightingSetup(vec3(0.3f),
+		vec3(2.0f * sin(GetElapsedTime()), 2, 2.0f * cos(GetElapsedTime())),
 		0);
 }

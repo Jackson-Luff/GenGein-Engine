@@ -5,6 +5,8 @@
 class LogicHandle;
 
 using TURN_SYS = CheckersBoard::TURN_SYS;
+using PairOfIndex = std::pair<i32vec2, i32vec2>;
+using VectorOfMoves = std::vector<PairOfIndex>;
 
 ////
 // Author: Jackson Luff
@@ -20,21 +22,34 @@ using TURN_SYS = CheckersBoard::TURN_SYS;
 class MCTS
 {
 public:
-	MCTS(const int32_t a_playOuts) : 
+	// Constructor
+	MCTS(LogicHandle* a_pBoard, const int32_t a_playOuts) :
+		m_pLogic(a_pBoard),
 		m_playOuts(a_playOuts),
-		m_turn(TURN_SYS::AI) {}
+		m_turn(TURN_SYS::AI) 
+	{}
 
+	// Deconstructor
 	virtual ~MCTS() {}
 
-	virtual const int32_t MakeDecision(const LogicHandle* a_board);
+	// Plays AI turn
+	const bool PlayTurn();
 
+	// Returns who's turn it is
 	inline const TURN_SYS& GetTurn() const
 		{ return m_turn; }
 
 private:
-	// The number of times it will sim a game
-	int32_t m_playOuts;
+	// Make AI decision
+	const PairOfIndex MakeDecision();
+	// Evaluate the health of move
+	const float32_t EvaluateWeighting(LogicHandle& a_pLogic);
 
+	// Board reference (non-&)
+	LogicHandle* m_pLogic;
+	// Num' of games to sim'
+	int32_t m_playOuts;
+	// Who's turn it is
 	TURN_SYS m_turn;
 };
 

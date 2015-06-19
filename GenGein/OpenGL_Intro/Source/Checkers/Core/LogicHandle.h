@@ -1,8 +1,10 @@
 ﻿#pragma once
 #include <vector>
 #include <glm\glm.hpp>
+#include "Checkers\CheckersBoard.h"
 
 using namespace glm;
+using TURN_SYS = CheckersBoard::TURN_SYS;
 
 ////
 // Author: Jackson Luff
@@ -29,8 +31,8 @@ public:
 	// |_|C|_|_| # => T = C + MOVE_TR;
 	enum MoveDirection : int32_t
 	{
-		MOVE_TL =  m_dimCount + 1,
-		MOVE_TR =  m_dimCount - 1,
+		MOVE_TL =  m_dimCount - 1,
+		MOVE_TR =  m_dimCount + 1,
 		MOVE_BR = -m_dimCount + 1,
 		MOVE_BL = -m_dimCount - 1,
 		MOVE_DIR_SIZE = 4,
@@ -86,7 +88,7 @@ public:
 	const bool SetPieceAt(const i32vec2& a_cIndex, const TileID& a_type);
 
 	// Attempts a more A to B approach to movement
-	const bool TryAToB(const i32vec2& a_cIndex, const i32vec2& a_tIndex);
+	const bool TryAToB(const i32vec2& a_cIndex, const i32vec2& a_tIndex, const bool a_CheckMoveList = true);
 	// Move to a specific location based on requested input
 	const bool TryMove(const i32vec2& a_cIndex, const MoveDirection& a_type);
 	// Jump to a specific location based on requested input
@@ -98,7 +100,7 @@ public:
 	// NOTE: List is stored in m_listOfValidMoves
 	const void GeneratePossibleMoves(const i32vec2& a_cIndex);
 	// Generates list of possible moves for all of that ID
-	const std::vector<i32vec2> GeneratePossibleMoves(const TileID& a_ID);
+	const std::vector<std::pair<i32vec2, i32vec2>> GeneratePossibleMoves(const TURN_SYS a_ID);
 	// Clears Possible Moves
 	const void ClearPossibleMovesList();
 	// Checks if the target location is within possible move list
@@ -107,8 +109,25 @@ public:
 	inline const std::vector<i32vec2>& GetPossibleMovesList() const 
 		{ return m_indexListOfPosMoves; }
 	
+	// Returns the number of pieces on board via type
+	const int32_t GetNumberOf(const TURN_SYS a_whosTurnIsIt);
+	//
+	const i32vec2 IsJumpAvaliabeAt(const i32vec2 a_cIndex);
+
+	// Forces over other moves
+	bool m_forceJump;
 private:
+
+	//
+	const bool IsJumpAvaliabeAtAll(const TURN_SYS a_whosTurnIsIt);
 	
+	// Applies isValidMove() on all surrounding possibilities 
+	const void PerformSurroundingChecksForRed(std::vector<i32vec2>& a_indexs, const i32vec2 a_cIndex);
+	// Applies isValidJump() on all surrounding possibilities 
+	const void PerformSurroundingChecksForBlack(std::vector<i32vec2>& a_indexs, const i32vec2 a_cIndex);
+	// Applies isValidMove() & isValidJump() on all surrounding possibilities 
+	const void PerformSurroundingChecksForKings(std::vector<i32vec2>& a_indexs, const i32vec2 a_cIndex);
+
 	// Returns 2D coords of target location via 2D coords of current via move type 
 	const i32vec2 MoveDirTo2DIndex(const i32vec2& a_cIndex, const MoveDirection& a_type);
 	// Returns 2D coords of target location via 2D coords of current via jump type 
@@ -123,7 +142,7 @@ private:
 	const bool IsValidMove(const i32vec2& a_cIndex, const MoveDirection& a_type);
 	// Checks to see if there is a valid jump based on jump type
 	const bool IsValidJump(const i32vec2& a_cIndex, const JumpDirection& a_type);
-	
+
 	// Representation of board via ID system
 	TileID m_boardIDs[m_tileMaxSize];
 	// Is always invalid (used in checks for; get via ref)

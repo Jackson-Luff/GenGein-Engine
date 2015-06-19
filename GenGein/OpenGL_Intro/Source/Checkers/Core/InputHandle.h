@@ -28,7 +28,7 @@ public:
 	// Initialise creates pointer types to Logic and Visual boards
 	void Initialise(LogicHandle* a_pLogic, VisualHandle* a_pVisual, AudioHandle* a_pAudio);
 	// Update handles input based on selection
-	void Update(const double_t a_dt, const glm::f32vec3& a_cursorPosWorld, const int32_t a_isClicked);
+	const bool Update(const double_t a_dt, const glm::f32vec3& a_cursorPosWorld, const int32_t a_isClicked);
 
 	// Browses Pieces relative to positions to find selected piece.
 	const bool BrowsingPieces(const glm::f32vec3& a_cursorPosWorld, const int32_t a_isClicked);

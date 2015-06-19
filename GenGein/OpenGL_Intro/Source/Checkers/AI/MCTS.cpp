@@ -4,107 +4,108 @@
 
 using TileID = LogicHandle::TileID;
 
-const int32_t MCTS::MakeDecision(const LogicHandle* a_board)
+const bool MCTS::PlayTurn()
 {
-	LogicHandle newBoard = *a_board;
-	std::vector<i32vec2> possMovesTiny = newBoard.GeneratePossibleMoves(TileID::PLAYER_BLACK);
-	std::vector<i32vec2> possMovesKing = newBoard.GeneratePossibleMoves(TileID::PLAYER_BLACK_KING);
+	PairOfIndex move = MakeDecision();
 
-	int32_t bestMoveIndex = -1;
-	float32_t bestFitness = -999;
-	float32_t fitnessValue;
-	
-	int32_t playOuts = 20;// possMoves.size();
-	int32_t depth = 10;
-
-	for (int32_t i = 0; i < playOuts; i++)
+	//Move based on optimum target
+	if (m_pLogic->TryAToB(move.first, move.second, false))
 	{
-		LogicHandle nextBoard = newBoard;
+		m_turn = TURN_SYS::PLAYER;
+		return true;
+	}
 
-		for (int32_t i = 0; i < m_playOuts; i++)
+	return false;
+}
+
+const PairOfIndex MCTS::MakeDecision()
+{
+	// Copy off a new board
+	LogicHandle newBoard = *m_pLogic;
+
+	// Gen possible moves for a colour
+	VectorOfMoves possMoves = newBoard.GeneratePossibleMoves(TURN_SYS::AI);
+
+	if (possMoves.size() == 0)
+		m_pLogic->TryForGameOver();
+
+	// Variables used to determine optimum playthrough
+	int32_t leafNodesSize = possMoves.size();
+	int32_t bestMoveIndex = -1;
+	int32_t depth = 10;
+	float32_t bestWeight = -999;
+	float32_t currWeight = 0;
+	
+	// Selection Step
+	for (int32_t l = 0; l < leafNodesSize; l++)
+	{
+		// Instance another board
+		LogicHandle nextBoard = newBoard;
+		// Iterate possible playthroughs for selection
+		nextBoard.TryAToB(possMoves[l].first, possMoves[l].second, false);
+		// Nullify weight per instance of playthrough
+		currWeight = 0;
+
+		for (int32_t t = 0; t < m_playOuts; t++)
 		{
 			LogicHandle tempBoard = nextBoard;
-			//Depth into game (normally until the end)
-			for (int32_t i = 0; i < depth; i++)
-			{
 
+			// Ensures it starts on the other players turn
+			TURN_SYS currTurn = TURN_SYS::AI;
+			if (currTurn == TURN_SYS::AI)
+				currTurn = TURN_SYS::PLAYER;
+
+			//Depth into game (normally until the end)
+			for (int32_t d = 0; d < depth; d++)
+			{
+				// Generate Moves for Player
+				VectorOfMoves tempMoves = tempBoard.GeneratePossibleMoves(currTurn);
+
+				if (tempMoves.size() <= 0)
+					break;
+
+				// Randomly chosen move to play
+				int32_t tempIndex = rand() % tempMoves.size();
+				PairOfIndex chosenMove = tempMoves[tempIndex];
+
+				// Play random move
+				tempBoard.TryAToB(chosenMove.first, chosenMove.second, false);
+				
+				// Switch to temp player turn
+				if (currTurn == TURN_SYS::PLAYER)
+					currTurn = TURN_SYS::AI;
+				else
+					currTurn = TURN_SYS::PLAYER;
 			}
+			// Apply ratio based on pieces on board
+			currWeight -= EvaluateWeighting(tempBoard);
+		}
+
+		// Determine average weight of playthrough
+		currWeight /= leafNodesSize;
+		currWeight *= EvaluateWeighting(nextBoard);
+
+		// Update the best weighting
+		if (currWeight > bestWeight)
+		{
+			bestWeight = currWeight;
+			bestMoveIndex = l;
 		}
 	}
 
-	m_turn = TURN_SYS::PLAYER;
-	return 0;
+	// Optimum choice
+	return possMoves[bestMoveIndex];
 }
 
-//
-//const int32_t MakeDecisionPseudo()
-//{
-//	// Create new board
-//	// Gen Possible moves for board
-//	//int32_t depth = 10;
-//	//int32_t bestMoveIndex = -1;
-//	//float32_t bestFitness = -999;
-//	//float32_t fitness;
-//	//int32_t playOuts = 10;
-//	//for (int32_t p = 0; p < playOuts; p++)
-//	//{
-//	//	//nextBoard = new Board
-//	//	//RunMove(nextBoard, posMoves[p]);
-//	//	fitness = 0;
-//	//
-//	//	//Play a number of sim games
-//	//	for (int32_t s = 0; s < playOuts; s++)
-//	//	{
-//	//		//tempBoard = nextBoard
-//	//
-//	//		//TileID = Black
-//	//		// TileID == Black? TileID = WHITE
-//	//
-//	//		for (int32_t d = 0; d < depth; d++)
-//	//		{
-//	//			//vector<Movement> moves = Get Valid Moves();
-//	//
-//	//			// size check for = 0
-//	//
-//	//			// index = rand() % moves.size();
-//	//
-//	//			//Movement chosenMove = moves[index];
-//	//
-//	//			//RunMove(tempBoard, chosenMove);
-//	//
-//	//			//turn == White? turn == Black 
-//	//			// else turn == WHITE
-//	//		}
-//	//
-//	//		//fitness += EvaluateFitness(tempBoard);
-//	//	}
-//	//
-//	//	//fitness /= playOuts;
-//		//fitness += EvaluateFitness(nextBoard);
-//
-//	//	if (fitness > bestFitness)
-//	//	{
-//	//		bestFitness = fitness;
-//	//		bestMoveIndex = p;
-//	//	}
-//	//}
-//	//
-//	//return possMoves[bestMoveIndex];
-//	return 0;
-//}
-//
-//float EvaluateFitness(LogicHandle& a_board)
-//{
-//	//LogicHandle testBoard = a_board;
-//
-//	//TileID enemyID = TileID::PLAYER_RED;
-//	//if (m_colour == TileID::PLAYER_RED)
-//	//	enemyID = TileID::PLAYER_BLACK;
-//
-//	// get number of my pieces via GetNumberOf(tileID)
-//	// get number of their pieces via GetNumberOf(tileID)
-//	// get number of total pieces via GetNumberOf(tileID)
-//
-//	// return (float)myPieces / (float)totalPieces;
-//	return 0.0f;
-//}
+const float32_t MCTS::EvaluateWeighting(LogicHandle& a_pLogic)
+{
+	TURN_SYS oppType = TURN_SYS::PLAYER;
+	if (oppType == TURN_SYS::PLAYER)
+		oppType = TURN_SYS::AI;
+
+	const int32_t myPieces = a_pLogic.GetNumberOf(m_turn);
+	const int32_t theirPieces = a_pLogic.GetNumberOf(oppType);
+	float32_t totalPieces = (float32_t)(myPieces + theirPieces);
+
+	return myPieces / totalPieces;
+}

@@ -41,10 +41,6 @@ void VisualHandle::Render(const glm::mat4& a_camProjView)
 	RenderSelectedPiece();
 
 	RenderPossibleMoves();
-
-	if (m_pLogic->TryForGameOver())
-		printf("GAME OVER!\n");
-	//m_gameOverQuad->Render();
 }
 
 void VisualHandle::Shutdown()
@@ -152,7 +148,7 @@ const void VisualHandle::LoadFBXFiles()
 
 	m_pPossMovePiece = new FBXModel();
 	m_pPossMovePiece->LoadFBX("PossibleMoves",
-		"Data/Models/Checkers/selectorGame.fbx",
+		"Data/Models/Checkers/selector_Game.fbx",
 		FBXFile::UNITS_METER);
 
 	m_pSelectorPiece = new FBXModel();
@@ -189,7 +185,7 @@ const void VisualHandle::RenderPieces()
 			{
 				for (int32_t i = 0; i < 2; i++)
 				{
-					pos.y += i * 0.07f;
+					pos.y += i * 0.05f;
 					m_pCheckerPieceR->SetLocalTransform(glm::translate(pos));
 					m_pCheckerPieceR->Render();
 				}
@@ -198,7 +194,7 @@ const void VisualHandle::RenderPieces()
 			{
 				for (int32_t i = 0; i < 2; i++)
 				{
-					pos.y += i * 0.15f;
+					pos.y += i * 0.05f;
 					m_pCheckerPieceB->SetLocalTransform(glm::translate(pos));
 					m_pCheckerPieceB->Render();
 				}
@@ -233,11 +229,10 @@ const void VisualHandle::RenderPossibleMoves()
 
 const bool VisualHandle::IsWithinArrayBounds(const i32vec2& a_cIndex)
 {
-	if (a_cIndex.x >= 0 &&
-		a_cIndex.x < m_pLogic->m_dimCount &&
-		a_cIndex.y >= 0 &&
-		a_cIndex.y < m_pLogic->m_dimCount)
+	//Check if index exceeds limit
+	if (a_cIndex.x >= 0 && a_cIndex.x < m_pLogic->m_dimCount &&
+		a_cIndex.y >= 0 && a_cIndex.y < m_pLogic->m_dimCount)
 		return true;
-
+	 
 	return false;
 }

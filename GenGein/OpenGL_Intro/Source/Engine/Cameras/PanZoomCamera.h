@@ -47,4 +47,6 @@ protected:
 	bool m_bViewButtonClicked;
 	// Previous Mouse coordinates
 	double_t m_dCursorX, m_dCursorY;
+
+	float32_t tempTimer;
 };

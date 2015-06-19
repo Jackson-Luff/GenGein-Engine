@@ -23,13 +23,13 @@ void InputHandle::Initialise(LogicHandle* a_pLogic,
 	m_turn = TURN_SYS::PLAYER;
 }
 
-void InputHandle::Update(const double_t a_dt,
+const bool InputHandle::Update(const double_t a_dt,
 	const f32vec3& a_cursorPosWorld, const int32_t a_isClicked)
 {
 	// Break Down into functions when you get back
 
 	if (m_pLogic->TryForGameOver())
-		return;
+		return false;
 
 	if (m_hasBeenSelected)
 	{
@@ -53,8 +53,30 @@ void InputHandle::Update(const double_t a_dt,
 				i32vec2 iOfH = m_pVisual->GetSelectedPiece().indexOfHome;
 				if (m_pLogic->TryAToB(iOfH, iOfClosest))
 				{
+					// Standard Jump
 					m_pAudio->PlayHasMovedSound();
+					m_pLogic->ClearPossibleMovesList();
+
+					if (m_pLogic->IsJumpAvaliabeAt(iOfClosest) != i32vec2(-1))
+					{
+						if (m_pLogic->TryAToB(iOfClosest, m_pLogic->IsJumpAvaliabeAt(iOfClosest)))
+						{
+							// Double Jump
+							m_pAudio->PlayHasMovedSound();
+							m_pLogic->ClearPossibleMovesList();
+							if (m_pLogic->IsJumpAvaliabeAt(m_pLogic->IsJumpAvaliabeAt(iOfClosest)) != i32vec2(-1))
+							{
+								if (m_pLogic->TryAToB(iOfClosest, m_pLogic->IsJumpAvaliabeAt(iOfClosest)))
+								{
+									// Triple Jump
+									m_pAudio->PlayHasMovedSound();
+									m_pLogic->ClearPossibleMovesList();
+								}
+							}
+						}
+					}
 					m_turn = TURN_SYS::AI;
+					return true;
 				}
 			}
 
@@ -66,6 +88,8 @@ void InputHandle::Update(const double_t a_dt,
 	}
 	else
 		BrowsingPieces(a_cursorPosWorld, a_isClicked);
+
+	return false;
 }
 
 //NOTE: Might put this in the visual
@@ -78,9 +102,9 @@ const bool InputHandle::BrowsingPieces(const f32vec3& a_cursorPosWorld,
 		{
 			for (uint32_t c = 0; c < m_pLogic->m_dimCount; c++)
 			{
-				if (m_pLogic->GetIDAt(i32vec2(r, c)) == TileID::BLANK_BLACK ||
-					m_pLogic->GetIDAt(i32vec2(r, c)) == TileID::BLANK_RED ||
-					m_pLogic->GetIDAt(i32vec2(r, c)) == TileID::PLAYER_BLACK || 
+				if (m_pLogic->GetIDAt(i32vec2(r, c)) == TileID::BLANK_BLACK  ||
+					m_pLogic->GetIDAt(i32vec2(r, c)) == TileID::BLANK_RED	 || 
+					m_pLogic->GetIDAt(i32vec2(r, c)) == TileID::PLAYER_BLACK ||
 					m_pLogic->GetIDAt(i32vec2(r, c)) == TileID::PLAYER_BLACK_KING )
 					continue;
 
@@ -100,10 +124,6 @@ const bool InputHandle::BrowsingPieces(const f32vec3& a_cursorPosWorld,
 						printf("This type is PLAYER_RED!\n");
 					else if (sel.type == TileID::PLAYER_BLACK)
 						printf("This type is PLAYER_BLACK!\n");
-					else if (sel.type == TileID::PLAYER_RED_KING)
-						printf("This type is PLAYER_RED_KING!\n");
-					else if(sel.type == TileID::PLAYER_BLACK_KING)
-						printf("This type is PLAYER_BLACK_KING!\n");
 					return true;
 				}
 			}

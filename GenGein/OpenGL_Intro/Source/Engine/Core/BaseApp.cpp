@@ -94,6 +94,7 @@ void BaseApp::StartUp()
 	glBlendEquation(GL_FUNC_ADD);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glClearColor(0.266f, 0.286f, 0.305f, 1);
 	printf("Program Shader yet to be initialised.\n\n");
 
 	// Initialise GUI and create a tweaker
