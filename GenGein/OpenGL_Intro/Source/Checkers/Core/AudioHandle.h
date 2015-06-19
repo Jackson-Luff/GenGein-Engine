@@ -38,9 +38,9 @@ private:
 	// Builds the channel group for audio compontent
 	bool CreateChannelGroup(const char* a_name);
 	// Creates a 2D sound (must make channel group prior)
-	bool Create2DSound(const char* a_dir, FMOD::Sound& a_sound, const uint32_t a_fmodType = FMOD_DEFAULT);
+	bool Create2DSound(const char* a_dir, FMOD::Sound** a_sound, const uint32_t a_fmodType = FMOD_DEFAULT);
 	// Creates a 3D sound (must make channel group prior)
-	bool Create3DSound(const char* a_dir, FMOD::Sound& a_sound, const FMOD_VECTOR a_pos, const uint32_t a_fmodType = FMOD_DEFAULT);
+	bool Create3DSound(const char* a_dir, FMOD::Sound** a_sound, const FMOD_VECTOR a_pos, const uint32_t a_fmodType = FMOD_DEFAULT);
 	// Plays the background sounds on intialise
 	void PlayBackgroundSounds();
 

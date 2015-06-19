@@ -93,6 +93,11 @@ const PairOfIndex MCTS::MakeDecision()
 		}
 	}
 
+	if (bestMoveIndex == -1)
+	{
+		return PairOfIndex(i32vec2(-1), i32vec2(-1));
+	}
+
 	// Optimum choice
 	return possMoves[bestMoveIndex];
 }

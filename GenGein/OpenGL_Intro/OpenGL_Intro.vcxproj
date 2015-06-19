@@ -35,6 +35,7 @@
     <ClCompile Include="Source\Engine\Renderer\TextureHandler.cpp" />
     <ClCompile Include="Source\Engine\TransGrid.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\PhysXTuts\PhysX_testing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Checkers\AI\MCTS.h" />
@@ -61,6 +62,8 @@
     <ClInclude Include="Source\Engine\Renderer\SkyBox.h" />
     <ClInclude Include="Source\Engine\Renderer\TextureHandler.h" />
     <ClInclude Include="Source\Engine\TransGrid.h" />
+    <ClInclude Include="Source\PhysXTuts\MyAllocator.h" />
+    <ClInclude Include="Source\PhysXTuts\PhysX_testing.h" />
     <ClInclude Include="Source\Tutorial\CacheCohrence.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

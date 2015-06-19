@@ -18,11 +18,11 @@ const void LogicHandle::InitialiseBasicBoard()
 		for (uint32_t c = 0; c < m_dimCount; c++)
 		{
 			if (!white && c < (m_dimCount / 2) - 1)
-				m_boardIDs[r*m_dimCount + c] = TileID::PLAYER_RED_KING;
+				m_boardIDs[r*m_dimCount + c] = TileID::PLAYER_RED;
 			else if (!white && c < (m_dimCount / 2) + 1)
 				m_boardIDs[r*m_dimCount + c] = TileID::BLANK_RED;
 			else if (!white && c < m_dimCount)
-				m_boardIDs[r*m_dimCount + c] = TileID::PLAYER_BLACK;
+				 m_boardIDs[r*m_dimCount + c] = TileID::PLAYER_BLACK;
 			else
 				m_boardIDs[r*m_dimCount + c] = TileID::BLANK_BLACK;
 			white = !white;
