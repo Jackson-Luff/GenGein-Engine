@@ -1,0 +1,26 @@
+#pragma once
+#include "PhysActor.h"
+
+class PhysPlane : public PhysActor
+{
+public:
+	~PhysPlane();
+	PhysPlane();
+	PhysPlane(const glm::vec3 a_normal, const float a_dist);
+
+	virtual void Update(const glm::vec3 a_gravity, const float a_dt);
+	virtual void Debug();
+	
+	//
+	inline const float& GetDistance() 
+		{ return m_distance; };
+	//
+	inline const glm::vec3& GetNormal()
+		{ return m_normal; }
+
+private:
+	virtual void MakeGizmo();
+
+	float m_distance;
+	glm::vec3 m_normal;
+};

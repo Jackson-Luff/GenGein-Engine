@@ -13,13 +13,13 @@
   <ItemGroup>
     <ClCompile Include="..\Dependencies\gizmos\AIE\Gizmos.cpp" />
     <ClCompile Include="..\Dependencies\gl_core\gl_core_4_4.cpp" />
-    <ClCompile Include="Source\Checkers\AI\MCTS.cpp" />
-    <ClCompile Include="Source\Checkers\CheckersBoard.cpp" />
-    <ClCompile Include="Source\Checkers\Core\AudioHandle.cpp" />
-    <ClCompile Include="Source\Checkers\Core\InputHandle.cpp" />
-    <ClCompile Include="Source\Checkers\Core\LogicHandle.cpp" />
-    <ClCompile Include="Source\Checkers\Core\VisualHandle.cpp" />
-    <ClCompile Include="Source\Checkers\GameOfCheckers.cpp" />
+    <ClCompile Include="Source\Extras\LetsGetPhysical\Components\Assets\PhysPlane.cpp" />
+    <ClCompile Include="Source\Extras\LetsGetPhysical\PhysicsTest01.cpp" />
+    <ClCompile Include="Source\Extras\LetsGetPhysical\Components\PhysScene.cpp" />
+    <ClCompile Include="Source\Extras\LetsGetPhysical\Components\Assets\PhysSphere.cpp" />
+    <ClCompile Include="Source\Extras\LetsGetPhysical\Components\Assets\PhysCube.cpp" />
+    <ClCompile Include="Source\Extras\LetsGetPhysical\Components\RigidBody.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Source\Engine\Cameras\BaseCamera.cpp" />
     <ClCompile Include="Source\Engine\Cameras\FlyCamera.cpp" />
     <ClCompile Include="Source\Engine\Core\BaseApp.cpp" />
@@ -34,17 +34,22 @@
     <ClCompile Include="Source\Engine\Renderer\SkyBox.cpp" />
     <ClCompile Include="Source\Engine\Renderer\TextureHandler.cpp" />
     <ClCompile Include="Source\Engine\TransGrid.cpp" />
-    <ClCompile Include="Source\main.cpp" />
-    <ClCompile Include="Source\PhysXTuts\PhysX_testing.cpp" />
+    <ClCompile Include="Source\Extras\Checkers\AI\MCTS.cpp" />
+    <ClCompile Include="Source\Extras\Checkers\CheckersBoard.cpp" />
+    <ClCompile Include="Source\Extras\Checkers\Core\AudioHandle.cpp" />
+    <ClCompile Include="Source\Extras\Checkers\Core\InputHandle.cpp" />
+    <ClCompile Include="Source\Extras\Checkers\Core\LogicHandle.cpp" />
+    <ClCompile Include="Source\Extras\Checkers\Core\VisualHandle.cpp" />
+    <ClCompile Include="Source\Extras\Checkers\GameOfCheckers.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Checkers\AI\MCTS.h" />
-    <ClInclude Include="Source\Checkers\CheckersBoard.h" />
-    <ClInclude Include="Source\Checkers\Core\AudioHandle.h" />
-    <ClInclude Include="Source\Checkers\Core\InputHandle.h" />
-    <ClInclude Include="Source\Checkers\Core\LogicHandle.h" />
-    <ClInclude Include="Source\Checkers\Core\VisualHandle.h" />
-    <ClInclude Include="Source\Checkers\GameOfCheckers.h" />
+    <ClInclude Include="Source\Extras\LetsGetPhysical\Components\Assets\PhysPlane.h" />
+    <ClInclude Include="Source\Extras\LetsGetPhysical\PhysicsTest01.h" />
+    <ClInclude Include="Source\Extras\LetsGetPhysical\Components\PhysScene.h" />
+    <ClInclude Include="Source\Extras\LetsGetPhysical\Components\Assets\PhysSphere.h" />
+    <ClInclude Include="Source\Extras\LetsGetPhysical\Components\Assets\PhysCube.h" />
+    <ClInclude Include="Source\Extras\LetsGetPhysical\Components\RigidBody.h" />
+    <ClInclude Include="Source\Extras\LetsGetPhysical\Components\Assets\PhysActor.h" />
     <ClInclude Include="Source\Engine\Cameras\BaseCamera.h" />
     <ClInclude Include="Source\Engine\Cameras\FlyCamera.h" />
     <ClInclude Include="Source\Engine\Core\BaseApp.h" />
@@ -62,8 +67,13 @@
     <ClInclude Include="Source\Engine\Renderer\SkyBox.h" />
     <ClInclude Include="Source\Engine\Renderer\TextureHandler.h" />
     <ClInclude Include="Source\Engine\TransGrid.h" />
-    <ClInclude Include="Source\PhysXTuts\MyAllocator.h" />
-    <ClInclude Include="Source\PhysXTuts\PhysX_testing.h" />
+    <ClInclude Include="Source\Extras\Checkers\AI\MCTS.h" />
+    <ClInclude Include="Source\Extras\Checkers\CheckersBoard.h" />
+    <ClInclude Include="Source\Extras\Checkers\Core\AudioHandle.h" />
+    <ClInclude Include="Source\Extras\Checkers\Core\InputHandle.h" />
+    <ClInclude Include="Source\Extras\Checkers\Core\LogicHandle.h" />
+    <ClInclude Include="Source\Extras\Checkers\Core\VisualHandle.h" />
+    <ClInclude Include="Source\Extras\Checkers\GameOfCheckers.h" />
     <ClInclude Include="Source\Tutorial\CacheCohrence.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -127,6 +137,12 @@
       <Command>
       </Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy /Y $(SolutionDir)Data $(SolutionDir)\$(ConfigurationName)\Data\</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy Data</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
