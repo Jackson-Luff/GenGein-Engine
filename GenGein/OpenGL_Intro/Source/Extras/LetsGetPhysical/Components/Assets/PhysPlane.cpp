@@ -31,11 +31,11 @@ void PhysPlane::Debug()
 
 void PhysPlane::MakeGizmo()
 {
-	float lineSegLngth = 300;
-	glm::vec2 centerPoint = glm::vec2(m_normal) * m_distance;
-	glm::vec2 parallel = glm::vec2(m_normal.y, -m_normal.x);
+	float lineSegLngth = 75;
+	glm::vec3 centerPoint = m_normal * m_distance;
+	glm::vec3 parallel = glm::vec3(m_normal.y, -m_normal.x, 0);
 
-	glm::vec2 start = centerPoint + (parallel * lineSegLngth);
-	glm::vec2 end   = centerPoint - (parallel * lineSegLngth);
-	Gizmos::add2DLine(start, end, glm::vec4(1));
+	glm::vec3 start = centerPoint + (parallel * lineSegLngth);
+	glm::vec3 end   = centerPoint - (parallel * lineSegLngth);
+	Gizmos::addLine(start, end, glm::vec4(1));
 }

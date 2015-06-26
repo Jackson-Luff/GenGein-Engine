@@ -22,7 +22,7 @@ RigidBody::RigidBody(const glm::vec3 a_pos, const glm::vec3 a_vel, const float a
 void RigidBody::Update(const glm::vec3 a_gravity, const float a_dt)
 {
 	m_position += m_velocity * a_dt;
-
+	//m_velocity *= 0.99f;
 	ApplyForce(a_gravity);
 }
 

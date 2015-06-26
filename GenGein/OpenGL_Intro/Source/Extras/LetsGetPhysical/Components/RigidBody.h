@@ -16,11 +16,20 @@ public:
 	void ApplyForce(const glm::vec3 a_force);
 	void ApplyForceToActor(RigidBody* const a_actorB, const glm::vec3 a_force);
 
+	// Get Mass
+	inline const float& GetMass() 
+		{ return m_mass; }
+
+	// Get Mass
+	inline const float& Get2DRotation() 
+		{ return m_rotation2D; }
+
 	// Set | Get Position
 	inline const glm::vec3 GetPosition() 
 		{ return m_position; };
 	inline void SetPosition(const glm::vec3& a_pos)
 		{ m_position = a_pos; };
+
 	// Set | Get Velocity
 	inline const glm::vec3 GetVelocity() 
 		{ return m_velocity; };

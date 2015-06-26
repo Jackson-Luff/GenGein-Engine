@@ -103,7 +103,7 @@ void BaseApp::StartUp()
 	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug", "DeltaTime", TW_TYPE_DOUBLE, (void*)&m_deltaTime);
 
 	m_pSkyBox = new SkyBox();
-	m_pSkyBox->Create(SkyBox::CHAPEL, SkyBox::JPG);
+	m_pSkyBox->Create(SkyBox::SPACE, SkyBox::PNG);
 
 	m_elapsedTime = 0;
 }
@@ -148,6 +148,8 @@ void BaseApp::CalculateTiming()
 
 void BaseApp::RenderSkyBox()
 {
+	TextureHandler::RenderAllTextures();
+
 	glDepthFunc(GL_LEQUAL);
 	glUseProgram(ShaderHandler::GetShader("SkyBox"));
 	m_pSkyBox->Render(m_sunPosition.y);

@@ -14,6 +14,8 @@ public:
 
 	inline const float& GetRadius() 
 		{ return m_radius; };
+	inline void SetRadius(const float& a_rad) 
+	{ m_radius = a_rad; };
 
 private:
 	virtual void MakeGizmo();
