@@ -17,7 +17,7 @@ PhysicsAssignment::PhysicsAssignment(const int a_width, const int a_hieght, cons
 PhysicsAssignment::~PhysicsAssignment()
 {
 	delete m_physicsHandle;
-	//delete m_physXHandle;
+	delete m_physXHandle;
 }
 
 void PhysicsAssignment::StartUp()
@@ -30,17 +30,24 @@ void PhysicsAssignment::StartUp()
 
 	m_physicsHandle = new PhysicsHandle();
 	m_physicsHandle->StartUp();
+
+	m_physXHandle = new PhysXHandle();
+	m_physXHandle->StartUp();
 }
 
 void PhysicsAssignment::ShutDown()
 {
 	m_physicsHandle->ShutDown();
+	m_physXHandle->ShutDown();
 }
 
 void PhysicsAssignment::Update(const double& a_dt)
 {
 	BaseApp::Update(a_dt);
-	m_physicsHandle->Update(a_dt);
+
+	//m_physicsHandle->Update(a_dt);
+
+	m_physXHandle->Update(a_dt);
 }
 
 void PhysicsAssignment::Render()
@@ -49,5 +56,7 @@ void PhysicsAssignment::Render()
 	RenderSkyBox();
 
 	glm::mat4 projView = m_pBaseCamera->GetProjectionView();
-	m_physicsHandle->Render(projView);
+	//m_physicsHandle->Render(projView);
+
+	m_physXHandle->Render(projView);
 }
