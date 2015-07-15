@@ -17,20 +17,16 @@
     <ClCompile Include="Source\Engine\Cameras\BaseCamera.cpp" />
     <ClCompile Include="Source\Engine\Cameras\FlyCamera.cpp" />
     <ClCompile Include="Source\Engine\Core\BaseApp.cpp" />
-    <ClCompile Include="Source\Extras\Checkers\AI\MCTS.cpp" />
-    <ClCompile Include="Source\Extras\Checkers\Core\AudioHandle.cpp" />
-    <ClCompile Include="Source\Extras\Checkers\Core\InputHandle.cpp" />
-    <ClCompile Include="Source\Extras\Checkers\Core\LogicHandle.cpp" />
-    <ClCompile Include="Source\Extras\Checkers\Core\VisualHandle.cpp" />
-    <ClCompile Include="Source\Extras\Checkers\CheckersBoard.cpp" />
-    <ClCompile Include="Source\Extras\Checkers\GameOfCheckers.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Source\Extras\LetsGetPhysical\PhysicsTest01.cpp" />
-    <ClCompile Include="Source\Extras\LetsGetPhysical\Components\Assets\PhysCube.cpp" />
-    <ClCompile Include="Source\Extras\LetsGetPhysical\Components\Assets\PhysSphere.cpp" />
-    <ClCompile Include="Source\Extras\LetsGetPhysical\Components\PhysScene.cpp" />
-    <ClCompile Include="Source\Extras\LetsGetPhysical\Components\RigidBody.cpp" />
-    <ClCompile Include="Source\Extras\LetsGetPhysical\Components\Assets\PhysPlane.cpp" />
+    <ClCompile Include="Source\Assessments\Physical\PhysicsHandle.cpp" />
+    <ClCompile Include="Source\Assessments\Physical\PhysXHandle.cpp" />
+    <ClCompile Include="Source\Assessments\Physical\PhysicsAssignment.cpp" />
+    <ClCompile Include="Source\Assessments\Physical\Engine\Assets\PhysAABB.cpp" />
+    <ClCompile Include="Source\Assessments\Physical\Engine\Assets\PhysPlane.cpp" />
+    <ClCompile Include="Source\Assessments\Physical\Engine\Assets\PhysSphere.cpp" />
+    <ClCompile Include="Source\Assessments\Physical\Engine\PhysScene.cpp" />
+    <ClCompile Include="Source\Assessments\Physical\Engine\RigidBody.cpp" />
+    <ClCompile Include="Source\Engine\Input\InputHandle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Tutorial\CacheCohrence.h" />
@@ -51,19 +47,16 @@
     <ClInclude Include="Source\Engine\Cameras\BaseCamera.h" />
     <ClInclude Include="Source\Engine\Cameras\FlyCamera.h" />
     <ClInclude Include="Source\Engine\Core\BaseApp.h" />
-    <ClInclude Include="Source\Extras\Checkers\AI\MCTS.h" />
-    <ClInclude Include="Source\Extras\Checkers\Core\AudioHandle.h" />
-    <ClInclude Include="Source\Extras\Checkers\Core\InputHandle.h" />
-    <ClInclude Include="Source\Extras\Checkers\Core\LogicHandle.h" />
-    <ClInclude Include="Source\Extras\Checkers\Core\VisualHandle.h" />
-    <ClInclude Include="Source\Extras\Checkers\CheckersBoard.h" />
-    <ClInclude Include="Source\Extras\Checkers\GameOfCheckers.h" />
-    <ClInclude Include="Source\Extras\LetsGetPhysical\PhysicsTest01.h" />
-    <ClInclude Include="Source\Extras\LetsGetPhysical\Components\Assets\PhysCube.h" />
-    <ClInclude Include="Source\Extras\LetsGetPhysical\Components\Assets\PhysSphere.h" />
-    <ClInclude Include="Source\Extras\LetsGetPhysical\Components\PhysScene.h" />
-    <ClInclude Include="Source\Extras\LetsGetPhysical\Components\RigidBody.h" />
-    <ClInclude Include="Source\Extras\LetsGetPhysical\Components\Assets\PhysPlane.h" />
-    <ClInclude Include="Source\Extras\LetsGetPhysical\Components\Assets\PhysActor.h" />
+    <ClInclude Include="Source\Assessments\Physical\PhysicsHandle.h" />
+    <ClInclude Include="Source\Assessments\Physical\PhysXHandle.h" />
+    <ClInclude Include="Source\Assessments\Physical\PhysicsAssignment.h" />
+    <ClInclude Include="Source\Assessments\Physical\Engine\Assets\PhysAABB.h" />
+    <ClInclude Include="Source\Assessments\Physical\Engine\Assets\PhysActor.h" />
+    <ClInclude Include="Source\Assessments\Physical\Engine\Assets\PhysPlane.h" />
+    <ClInclude Include="Source\Assessments\Physical\Engine\Assets\PhysSphere.h" />
+    <ClInclude Include="Source\Assessments\Physical\Engine\PhysScene.h" />
+    <ClInclude Include="Source\Assessments\Physical\Engine\RigidBody.h" />
+    <ClInclude Include="Source\Assessments\Physical\Engine\MyAllocator.h" />
+    <ClInclude Include="Source\Engine\Input\InputHandle.h" />
   </ItemGroup>
 </Project>

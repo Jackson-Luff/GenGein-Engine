@@ -11,9 +11,9 @@ public:
 
 	struct VertexData
 	{
-		f32vec4 position;
-		f32vec4 normal;
-		f32vec2 uv;
+		glm::vec4 position;
+		glm::vec4 normal;
+		glm::vec2 uv;
 	};
 
 	// Base Functions:
@@ -27,11 +27,11 @@ public:
 	const uint32_t* GetShader() const
 		{ return m_programID; };
 
-	void GenSegmentedGrid(const uint32_t a_dimensions, const float32_t a_segScale,
+	void GenSegmentedGrid(const unsigned int a_dimensions, const float a_segScale,
 		bool a_perlin = false ,
 		bool a_dimSqr = false);
 
-	void GenQuad(const float32_t a_scale,
+	void GenQuad(const float a_scale,
 		bool a_perlin = false,
 		bool a_dimSqr = false);
 
@@ -39,7 +39,7 @@ public:
 
 private:
 	// Send Vertex data to Buffers:
-	void ApplyDataToGL(const uint32_t* a_indices);
+	void ApplyDataToGL(const unsigned int* a_indices);
 
 	// Base Mods:
 	void AddPerlinToGUI();
@@ -48,12 +48,12 @@ private:
 
 	// Base data for outcome:
 	VertexData* verts;
-	uint32_t m_indexCount;
-	uint32_t m_VAO, m_VBO, m_IBO;
-	uint32_t* m_programID;
+	unsigned int m_indexCount;
+	unsigned int m_VAO, m_VBO, m_IBO;
+	unsigned int* m_programID;
 
 	// Perlin private members:
-	uint32_t m_dims;
+	unsigned int m_dims;
 	float m_persistence;
 	float m_amplitude;
 	float m_octaves;

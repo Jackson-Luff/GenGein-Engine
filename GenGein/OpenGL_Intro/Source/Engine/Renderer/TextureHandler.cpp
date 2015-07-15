@@ -113,14 +113,15 @@ const sTexture TextureHandler::LoadCubeMap(const_pChar a_prog, const_pChar a_nam
 {
 	sTexture cubeMapTexture;
 	glGenTextures(1, &cubeMapTexture.ID);
-	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture.ID);
 
-	int32_t width = 0, height = 0, format = 0;
+	int width, height, format;
 	unsigned char* data;
 
-	for (uint32_t i = 0; i < a_faces.size(); i++)
+	for (unsigned int i = 0; i < a_faces.size(); i++)
 	{
+		width = 0, height = 0, format = 0;
+
 		data = stbi_load(a_faces[i].c_str(), &width, &height, &format, STBI_default);
 
 		if (data == NULL)
@@ -142,6 +143,8 @@ const sTexture TextureHandler::LoadCubeMap(const_pChar a_prog, const_pChar a_nam
 
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, format,
 			width, height, 0, format, GL_UNSIGNED_BYTE, data);
+
+		stbi_image_free(data);
 	}
 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

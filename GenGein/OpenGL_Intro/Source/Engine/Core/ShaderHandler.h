@@ -40,7 +40,7 @@ public:
 	~ShaderHandler();
 
 	//Getter for the shader program
-	static uint& GetShader(const_pChar a_shaderName);
+	static unsigned int& GetShader(const_pChar a_shaderName);
 	// Create a GL program with inputted vert and frag shaders
 	static const uint32_t LoadShaderProgram(const_pChar a_shaderName,
 		const_pChar a_vertexShader, const_pChar a_pixelShader,
@@ -49,7 +49,7 @@ public:
 		bool checkForExists = true);
 	
 	// Initialise Shader Content
-	static const uint32_t CreateShader(const_pChar a_shaderDir, const ShaderType& a_type);
+	static const void CreateShader(const_pChar a_shaderDir, const ShaderType& a_type, uint32_t& a_IDContainer);
 
 	static const void SetUpCameraUniforms(
 		const f32mat4& a_camProjMat,
@@ -75,6 +75,6 @@ private:
 	// Reads the shader based on the directory 
 	static const_pChar ReadShaderCode(const_pChar a_filePath);
 
-	static std::map< uint32_t, DirectoryData> m_directoryMap;
-	static std::map< const_pChar, uint > m_programMap;
+	static std::map< unsigned int, DirectoryData> m_directoryMap;
+	static std::map< const_pChar, unsigned int > m_programMap;
 };

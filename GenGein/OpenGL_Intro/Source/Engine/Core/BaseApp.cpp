@@ -4,6 +4,7 @@
 #include <glm\ext.hpp>
 #include <GLFW\glfw3.h>
 
+#include "Engine\Input\InputHandle.h"
 #include "Engine\Renderer\TextureHandler.h"
 #include "Engine\Core\ShaderHandler.h"
 #include "Engine\GUI\AntTweak.h"
@@ -13,6 +14,7 @@
 
 #include "BaseApp.h"
 
+using namespace Input;
 using glm::vec3;
 using glm::vec4;
 using glm::mat4;
@@ -45,6 +47,7 @@ BaseApp::BaseApp(const int32_t& a_width, const int32_t& a_height, c_pChar a_titl
 
 BaseApp::~BaseApp()
 {
+	m_pAntTweakGUI->ShutDown();
 	delete m_pSkyBox;
 	delete m_pBaseCamera;
 }
@@ -71,7 +74,8 @@ bool BaseApp::InitialiseGL()
 	glfwMakeContextCurrent(m_pWindow);
 
 	// OpenGL Loader Generator
-	if (ogl_LoadFunctions() == ogl_LOAD_FAILED) {
+	if (ogl_LoadFunctions() == ogl_LOAD_FAILED)
+	{
 		glfwDestroyWindow(m_pWindow);
 		glfwTerminate();
 		return false;
@@ -103,7 +107,7 @@ void BaseApp::StartUp()
 	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug", "DeltaTime", TW_TYPE_DOUBLE, (void*)&m_deltaTime);
 
 	m_pSkyBox = new SkyBox();
-	m_pSkyBox->Create(SkyBox::SPACE, SkyBox::PNG);
+	m_pSkyBox->Create(SkyBox::SPACE);
 
 	m_elapsedTime = 0;
 }
@@ -119,28 +123,29 @@ void BaseApp::Update(const double_t& a_dt)
 
 void BaseApp::DebugControls()
 {
-	if (glfwGetKey(m_pWindow, GLFW_KEY_GRAVE_ACCENT))
+	if (Keyboard::isKeyDown(KEY_GRAVE_ACCENT))
 	{
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 	}
 
-	if (glfwGetKey(m_pWindow, GLFW_KEY_1))
+	if (Keyboard::isKeyDown(KEY_1))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	else if (glfwGetKey(m_pWindow, GLFW_KEY_2))
+	else if (Keyboard::isKeyDown(KEY_2))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 	else
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	if (glfwGetKey(m_pWindow, GLFW_KEY_P) == GLFW_PRESS)
+	if (Keyboard::isKeyDown(KEY_P))
 		ShaderHandler::ReloadAllPrograms();
 }
 
 void BaseApp::CalculateTiming()
 {
 	// Calculating dt based on glfw time
-	m_deltaTime = glfwGetTime() - m_prevTime;
-	m_prevTime = glfwGetTime();
+	const double currTime = glfwGetTime();
+	m_deltaTime = currTime - m_prevTime;
+	m_prevTime = currTime;
 
 	m_elapsedTime += (float32_t)m_deltaTime;
 	m_FPS = 1.0f / m_deltaTime;
@@ -152,7 +157,7 @@ void BaseApp::RenderSkyBox()
 
 	glDepthFunc(GL_LEQUAL);
 	glUseProgram(ShaderHandler::GetShader("SkyBox"));
-	m_pSkyBox->Render(m_sunPosition.y);
+	m_pSkyBox->Render();
 	glDepthFunc(GL_LESS);
 }
 
@@ -246,13 +251,14 @@ void BaseApp::Run()
 	| Terminate							    |
 	|_______________________________________*/
 
-	if (!InitialiseGL()) { return; };
+	if (!InitialiseGL()) 
+		return;
 	
 	StartUp();
 	InitialiseAppElements();
 
 	while(!glfwWindowShouldClose(m_pWindow) 
-		&& glfwGetKey(m_pWindow, GLFW_KEY_ESCAPE) != GLFW_PRESS)
+		&& !Keyboard::isKeyDown(KEY_ESCAPE))
 	{
 		Update( GetDeltaTime() );
 		Render();
@@ -265,6 +271,7 @@ void BaseApp::Run()
 	}
 
 	ShutDown();
+	m_pAntTweakGUI->ShutDown();
 
 	// Destory the window and terminate process
 	glfwDestroyWindow(m_pWindow);

@@ -9,12 +9,16 @@ SkyBox::SkyBox()
 {}
 
 SkyBox::~SkyBox()
-{}
-
-void SkyBox::InitialiseDirs(const SKYBOXES& a_presetType, const FILETYPES& a_type)
 {
-	m_presetDirectires = std::vector<const_str>(SIZE);
+	glDeleteBuffers(1, &vao);
+	glDeleteBuffers(1, &vbo);
+}
 
+void SkyBox::InitialiseDirs(const SKYBOXES& a_presetType)
+{
+	m_presetDirectires = std::vector<const_str>(6);
+
+	const_str fileType = ".jpg";
 	const_str names[6]
 	{
 		"posx", "negx",
@@ -22,19 +26,11 @@ void SkyBox::InitialiseDirs(const SKYBOXES& a_presetType, const FILETYPES& a_typ
 		"posz", "negz",
 	};
 
-	const_str fileTypes[2] {
-		".png", ".jpg"
-	};
-
-	const_str fileType = fileTypes[a_type];
-
 	std::string skyDir;
 	
 	//Setup Sea Directory
 	switch (a_presetType)
 	{
-	case SkyBox::SEA:
-		skyDir = "Data/SkyBox/Sea/";
 		break;
 	case SkyBox::SKY:
 		skyDir = "Data/SkyBox/Sky/";
@@ -45,13 +41,8 @@ void SkyBox::InitialiseDirs(const SKYBOXES& a_presetType, const FILETYPES& a_typ
 	case SkyBox::CHAPEL:
 		skyDir = "Data/SkyBox/Chapel/";
 		break;
-	case SkyBox::SAINT_PETERS:
-		skyDir = "Data/SkyBox/SaintPeters/";
-		break;
-	case SkyBox::YOKOHAMA:
-		skyDir = "Data/SkyBox/Yokohama/";
-		break;
 	default:
+		printf("ERROR: No such directory (skybox).\n");
 		return;
 		break;
 	}
@@ -60,9 +51,9 @@ void SkyBox::InitialiseDirs(const SKYBOXES& a_presetType, const FILETYPES& a_typ
 		m_presetDirectires[i] = skyDir + names[i] + fileType;
 }
 
-void SkyBox::Create(const SKYBOXES& a_presetType, const FILETYPES& a_fileType)
+void SkyBox::Create(const SKYBOXES& a_presetType)
 {
-	InitialiseDirs(a_presetType, a_fileType);
+	InitialiseDirs(a_presetType);
 
 	ShaderHandler::LoadShaderProgram("SkyBox",
 		"Data/Shaders/Used/SkyBox.vert",
@@ -73,16 +64,17 @@ void SkyBox::Create(const SKYBOXES& a_presetType, const FILETYPES& a_fileType)
 	for (uint32_t i = 0; i < 6; i++)
 		faces.push_back(m_presetDirectires[i]);
 
-	m_dayTexture = TextureHandler::LoadCubeMap("SkyBox", "skybox", faces);
-	m_VAO = LoadCubeVertices();
+	m_texture = TextureHandler::LoadCubeMap("SkyBox", "skybox", faces);
 	faces.clear();
 
+	LoadCubeVertices();
+	
 	printf("SUCCESS: SkyBox Load Successful.\n\n");
 }
 
 const uint SkyBox::LoadCubeVertices()
 {
-	f32vec3 points[] = {
+	vec3 points[] = {
 		{ -1.0f, -1.0f, -1.0f },
 		{ -1.0f, -1.0f, +1.0f },
 		{ -1.0f, +1.0f, +1.0f },
@@ -126,33 +118,28 @@ const uint SkyBox::LoadCubeVertices()
 		{ +1.0f, -1.0f, +1.0f },
 	};	
 
-	uint32_t vao, vbo;
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(f32vec3) * 36, &points, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vec3) * 36, &points, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(f32vec3), NULL);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), NULL);
 
 	glBindVertexArray(0);
 
 	return vao;
 }
 
-void SkyBox::Render(const float32_t& a_condition)
+void SkyBox::Render()
 {
 	glDepthMask(GL_FALSE);
 	glUseProgram(ShaderHandler::GetShader("SkyBox"));
-	glBindVertexArray(m_VAO);
+	glBindVertexArray(vao);
 
-	//glActiveTexture(GL_TEXTURE0 + 1); // use second texture image unit
-	if (a_condition >= 0)
-		glBindTexture(GL_TEXTURE_CUBE_MAP, m_dayTexture.ID);
-	else if (a_condition < 0)
-		glBindTexture(GL_TEXTURE_CUBE_MAP, m_nightTexture.ID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture.ID);
 
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);

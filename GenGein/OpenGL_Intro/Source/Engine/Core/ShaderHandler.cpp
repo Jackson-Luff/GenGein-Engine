@@ -5,8 +5,8 @@
 
 #include "ShaderHandler.h"
 
-using ShaderMap = std::map<const_pChar, uint>;
-using DirectoryMap =  std::map<uint32_t, ShaderHandler::DirectoryData>;
+using ShaderMap = std::map<const_pChar, unsigned int>;
+using DirectoryMap =  std::map<unsigned int, ShaderHandler::DirectoryData>;
 using ShaderType = ShaderHandler::ShaderType;
 
 ShaderMap ShaderHandler::m_programMap = ShaderMap();
@@ -18,7 +18,7 @@ ShaderHandler::~ShaderHandler()
 }
 
 //Returns shader based on naming
-uint& ShaderHandler::GetShader(const_pChar a_shaderName)
+unsigned int& ShaderHandler::GetShader(const_pChar a_shaderName)
 {
 	if (DoesShaderExist(a_shaderName)) 
 		return m_programMap[a_shaderName];
@@ -35,16 +35,16 @@ const uint32_t ShaderHandler::LoadShaderProgram(const_pChar a_shaderName,
 	if (DoesShaderExist(a_shaderName) && checkForExists)
 		return m_programMap[a_shaderName];
 
-	const uint32_t vertShader = 
-		CreateShader(a_vertexShader,	ShaderType::VERT_SHADER);
-	const uint32_t fragShader =
-		CreateShader(a_pixelShader,		ShaderType::FRAG_SHADER);
-	const uint32_t geoShader =
-		CreateShader(a_geometryShader,	ShaderType::GEOM_SHADER);
-	const uint32_t tessCShader =
-		CreateShader(a_tessCntrlShader, ShaderType::TESSC_SHADER);
-	const uint32_t tessEShader =
-		CreateShader(a_tessEvalShader,	ShaderType::TESSE_SHADER);
+	uint32_t vertShader;
+	uint32_t fragShader;
+	uint32_t geoShader;
+	uint32_t tessCShader;
+	uint32_t tessEShader;
+	CreateShader(a_vertexShader,	ShaderType::VERT_SHADER, vertShader);
+	CreateShader(a_pixelShader,		ShaderType::FRAG_SHADER, fragShader);
+	CreateShader(a_geometryShader,	ShaderType::GEOM_SHADER, geoShader);
+	CreateShader(a_tessCntrlShader, ShaderType::TESSC_SHADER, tessCShader);
+	CreateShader(a_tessEvalShader,	ShaderType::TESSE_SHADER, tessEShader);
 	
 	uint32_t progID;
 	// Apply shaders to program
@@ -84,26 +84,25 @@ const uint32_t ShaderHandler::LoadShaderProgram(const_pChar a_shaderName,
 }
 
 // Initialises the content via valid shader directory
-const uint32_t ShaderHandler::CreateShader(const_pChar a_shaderDir, const ShaderType& a_type)
+const void ShaderHandler::CreateShader(const_pChar a_shaderDir, const ShaderType& a_type, uint32_t& a_ID)
 {
 	const_pChar src = ReadShaderCode(a_shaderDir);
 
 	if (a_shaderDir == NULL || src == NULL)
-		return -1;
+		return;
 
-	uint32_t shaderID = glCreateShader((uint32_t)a_type);
+	a_ID = glCreateShader((uint32_t)a_type);
 
-	glShaderSource(shaderID, 1, (const_pChar*)&src, 0);
-	glCompileShader(shaderID);
+	glShaderSource(a_ID, 1, (const_pChar*)&src, 0);
+	glCompileShader(a_ID);
 
-	if (!CheckShaderStatus(shaderID)) 
+	if (!CheckShaderStatus(a_ID))
 	{
 		printf("ERROR: Shader source directory invalid.\n");
-		return -1;
+		return;
 	}
 
 	printf("SUCCESS: Shader initialised: %s\n", a_shaderDir);
-	return shaderID;
 }
 
 const void ShaderHandler::SetUpCameraUniforms(

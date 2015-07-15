@@ -54,7 +54,7 @@ public:
 	// Deconstructed content
 	virtual void ShutDown() = 0;
 	// Update loop
-	virtual void Update( const double_t& a_dt ) = 0;
+	virtual void Update( const double& a_dt ) = 0;
 	// Render to GUI
 	virtual void Render() = 0;
 	// Run the application

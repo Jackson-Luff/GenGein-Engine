@@ -13,6 +13,7 @@ public:
 	~AntTweak();
 
 	void Initialise(GLFWwindow* a_prog, const uint32_t& a_scrnWidth, const uint32_t& a_scrnHeight);
+	void ShutDown();
 
 	void AddTweaker( c_pChar a_tweakName );
 	void RemoveTweaker( c_pChar a_tweakName );

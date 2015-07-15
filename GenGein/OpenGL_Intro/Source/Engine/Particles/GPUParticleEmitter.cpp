@@ -137,9 +137,10 @@ void GPUParticleEmitter::CreateDrawShader()
 void GPUParticleEmitter::CreateUpdateShader()
 {
 	// Create a shader
-	uint vs = ShaderHandler::CreateShader(
+	uint vs;
+	ShaderHandler::CreateShader(
 		"Data/Shaders/Particles/ParticleUpdate.vert", 
-		ShaderHandler::ShaderType::VERT_SHADER);
+		ShaderHandler::ShaderType::VERT_SHADER, vs);
 
 	m_updateShader = glCreateProgram();
 	glAttachShader(m_updateShader, vs);

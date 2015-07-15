@@ -3,8 +3,11 @@
 #include <gl_core_4_4.h>
 #include <glm\gtx\rotate_vector.hpp>
 #include <GLFW\glfw3.h>
+#include "Engine\Input\InputHandle.h"
 
 #include "FlyCamera.h"
+
+using namespace Input;
 
 // Default Constructor
 FlyCamera::FlyCamera() :
@@ -17,13 +20,14 @@ FlyCamera::FlyCamera() :
 // Constructor with flying and rotational speeds
 FlyCamera::FlyCamera(const float32_t& a_minSpeed, const float32_t& a_maxSpeed, const float32_t& a_rotationSpeed) : BaseCamera()
 {
-	SetBaseSpeed(15);
-	// Initialise data
-	m_bViewButtonClicked = false;
 	m_speed.x = a_minSpeed;
-	m_speed.y = (a_maxSpeed/a_minSpeed);
+	m_speed.y = (a_maxSpeed / a_minSpeed);
 	m_speed.z = a_maxSpeed;
 	m_fRotSpeed = a_rotationSpeed;
+	SetBaseSpeed(m_speed.y);
+	// Initialise data
+	m_bViewButtonClicked = false;
+	
 }
 
 // Deconstructor
@@ -49,23 +53,23 @@ void FlyCamera::HandleKeyboardInput(const double_t& a_dt)
 	f32vec4 moveDir(0.0f);
 
 	//Retain a direction via with button is pressed
-	if (glfwGetKey(m_pWindow, GLFW_KEY_W) == GLFW_PRESS)
+	if (Keyboard::isKeyDown(KEY_W))
 		moveDir -= vFrwrd;
-	else if (glfwGetKey(m_pWindow, GLFW_KEY_S) == GLFW_PRESS)
+	else if (Keyboard::isKeyDown(KEY_S))
 		moveDir += vFrwrd;
-	else if (glfwGetKey(m_pWindow, GLFW_KEY_A) == GLFW_PRESS)
+	else if (Keyboard::isKeyDown(KEY_A))
 		moveDir -= vRight;
-	else if (glfwGetKey(m_pWindow, GLFW_KEY_D) == GLFW_PRESS)
+	else if (Keyboard::isKeyDown(KEY_D))
 		moveDir += vRight;
-	else if (glfwGetKey(m_pWindow, GLFW_KEY_Q) == GLFW_PRESS)
+	else if (Keyboard::isKeyDown(KEY_Q))
 		moveDir += f32vec4(0.0f, 1.0f, 0.0f, 0.0f);
-	else if (glfwGetKey(m_pWindow, GLFW_KEY_E) == GLFW_PRESS)
+	else if (Keyboard::isKeyDown(KEY_E))
 		moveDir -= f32vec4(0.0f, 1.0f, 0.0f, 0.0f);
 
 	m_speed.y = GetBaseSpeed();
 
 	// Allow for speed boost
-	if (glfwGetKey(m_pWindow, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+	if (Keyboard::isKeyDown(KEY_LEFT_SHIFT) == GLFW_PRESS)
 		SetCurrFlySpeed( 10.0f * GetMaxFlySpeed() );
 	// Smoothly decend from speed boost and clip min speed
 	else if (GetCurrFlySpeed() >= GetMaxFlySpeed())
@@ -86,7 +90,7 @@ void FlyCamera::HandleKeyboardInput(const double_t& a_dt)
 void FlyCamera::HandleMouseInput(const double_t& a_dt)
 {
 	// Check for Right mouse key clicked
-	if (glfwGetMouseButton(m_pWindow, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS)
+	if (Cursor::isRightButtonDown())
 	{
 		// Check for held down
 		if (m_bViewButtonClicked == false)
