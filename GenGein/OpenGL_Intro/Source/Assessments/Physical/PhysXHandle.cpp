@@ -28,9 +28,21 @@ void PhysXHandle::ShutDown()
 	m_pPhysicsFoundation->release();
 }
 
-void PhysXHandle::Update(const double a_dt)
+void PhysXHandle::Update(const glm::mat4 a_CamWorld, const double a_dt)
 {
 	UpdatePhysX(a_dt);
+
+	if (Input::Cursor::isLeftButtonDown())
+	{
+		int ran = rand() % 100;
+		glm::vec3 pos = glm::vec3(a_CamWorld[3]);
+		glm::vec3 dir = glm::vec3(a_CamWorld[2]);
+
+		if (ran > 50)
+			AddBox(pos, glm::vec3(0.5f), 10);
+		else if (ran <= 50)
+			AddSphere(pos, 1, 10);
+	}
 }
 
 void PhysXHandle::Render(const glm::mat4& a_projView)
@@ -50,21 +62,6 @@ void PhysXHandle::Render(const glm::mat4& a_projView)
 			RenderWidget(shapes[nShapes], actor);
 		}
 		delete[] shapes;
-	}
-
-	if (Input::Cursor::isLeftButtonDown())
-	{
-		glm::vec3 pos;
-		int ranX = rand() % 50;
-		float offsetX = ranX / 50.0f;
-
-		int ranY = rand() % 100;
-		float offsetY = ranY / 100.0f;
-
-		pos.x = (offsetX * 2.0f) - offsetX;
-		pos.y = (offsetY * 2.0f) - offsetY;
-		pos.z = (offsetX * 2.0f) - offsetX;
-		AddBox(pos, glm::vec3(0.5f), 10);
 	}
 
 	Gizmos::draw(a_projView);
@@ -120,10 +117,23 @@ void PhysXHandle::RenderWidget(PxShape* a_shape, PxRigidActor* a_actor)
 	PxGeometryType::Enum type = a_shape->getGeometryType();
 	switch (type)
 	{
-	case PxGeometryType::eBOX:
-		RenderGizmoBox(a_shape, a_actor);
-	case PxGeometryType::eSPHERE:
-		RenderGizmoSphere(a_shape, a_actor);
+		case PxGeometryType::eSPHERE:
+			RenderGizmoSphere(a_shape, a_actor);
+			break;
+		case PxGeometryType::ePLANE:
+			break;
+		case PxGeometryType::eCAPSULE:
+			break;
+		case PxGeometryType::eBOX:
+			RenderGizmoBox(a_shape, a_actor);
+			break;
+		case PxGeometryType::eCONVEXMESH:
+			break;
+		case PxGeometryType::eTRIANGLEMESH:
+			break;
+		case PxGeometryType::eHEIGHTFIELD:
+			break;
+		
 	}
 }
 
@@ -156,6 +166,7 @@ void PhysXHandle::RenderGizmoBox(PxShape* a_shape, PxRigidActor* a_actor)
 	// Seriously horrid hack so i can show pickups a different colour
 	if (a_actor->getName() != NULL && strcmp(a_actor->getName(), "Pickup1"))
 	{
+		colour = glm::vec4(0, 1, 0, 1);
 	}
 	//create our box gizmo 
 	Gizmos::addAABBFilled(position, extents, colour, &M);
@@ -203,7 +214,7 @@ void PhysXHandle::SetUpEnvironment()
 	AddBox(glm::vec3(0), glm::vec3(2), 10);
 
 	// Add a cube
-	AddSphere(glm::vec3(0), 1.0f, 10);
+	//AddSphere(glm::vec3(0), 1.0f, 10);
 }
 
 void PhysXHandle::SetUpPhysX()

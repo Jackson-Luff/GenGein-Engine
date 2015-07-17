@@ -18,7 +18,7 @@ public:
 	virtual void ShutDown();
 
 	// Update loop
-	virtual void Update(const double a_dt);
+	virtual void Update(const glm::mat4 a_CamWorld, const double a_dt);
 	// Render things to screen
 	virtual void Render(const glm::mat4& a_projView);
 

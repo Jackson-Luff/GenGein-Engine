@@ -47,7 +47,7 @@ void PhysicsAssignment::Update(const double& a_dt)
 
 	//m_physicsHandle->Update(a_dt);
 
-	m_physXHandle->Update(a_dt);
+	m_physXHandle->Update(m_pBaseCamera->GetWorldTransform(), a_dt);
 }
 
 void PhysicsAssignment::Render()

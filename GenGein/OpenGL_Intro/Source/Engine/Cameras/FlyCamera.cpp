@@ -21,7 +21,7 @@ FlyCamera::FlyCamera() :
 FlyCamera::FlyCamera(const float32_t& a_minSpeed, const float32_t& a_maxSpeed, const float32_t& a_rotationSpeed) : BaseCamera()
 {
 	m_speed.x = a_minSpeed;
-	m_speed.y = (a_maxSpeed / a_minSpeed);
+	m_speed.y = (a_maxSpeed + a_minSpeed) / 2.0f;
 	m_speed.z = a_maxSpeed;
 	m_fRotSpeed = a_rotationSpeed;
 	SetBaseSpeed(m_speed.y);
