@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Dependencies\gl_core\gl_core_4_4.cpp" />
+    <ClCompile Include="..\Dependencies\gizmos\AIE\Gizmos.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysXComps\Player\PhysXPlayerController.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysXComps\Player\ControllerHitReport.cpp" />
+    <ClCompile Include="Source\Assessments\Particles\Particles.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysXComps\Particles\ParticleEmitter.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysXComps\Particles\ParticleFluidEmitter.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysComps\Assets\PhysAABB.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysComps\Assets\PhysPlane.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysComps\Assets\PhysSphere.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysComps\Assets\PhysSpringJoint.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysComps\PhysScene.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysComps\Assets\RigidBody.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysicsAssignment.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysHandle.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysXHandle.cpp" />
+    <ClCompile Include="Source\Engine\Cameras\BaseCamera.cpp" />
+    <ClCompile Include="Source\Engine\Cameras\FlyCamera.cpp" />
+    <ClCompile Include="Source\Engine\Core\BaseApp.cpp" />
+    <ClCompile Include="Source\Engine\Core\ShaderHandler.cpp" />
+    <ClCompile Include="Source\Engine\GUI\AntTweak.cpp" />
+    <ClCompile Include="Source\Engine\Input\InputHandle.cpp" />
+    <ClCompile Include="Source\Engine\Objects\BaseObject.cpp" />
+    <ClCompile Include="Source\Engine\Objects\FBXModel.cpp" />
+    <ClCompile Include="Source\Engine\Objects\ObjMesh.cpp" />
+    <ClCompile Include="Source\Engine\Particles\CPUParticleEmitter.cpp" />
+    <ClCompile Include="Source\Engine\Particles\GPUParticleEmitter.cpp" />
+    <ClCompile Include="Source\Engine\Renderer\FBO_RenderScreen.cpp" />
+    <ClCompile Include="Source\Engine\Renderer\SkyBox.cpp" />
+    <ClCompile Include="Source\Engine\Renderer\TextureHandler.cpp" />
+    <ClCompile Include="Source\Engine\TransGrid.cpp" />
+    <ClCompile Include="Source\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Assessments\Physics\PhysXComps\Player\PhysXPlayerController.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysXComps\Player\ControllerHitReport.h" />
+    <ClInclude Include="Source\Assessments\Particles\Particles.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysXComps\Particles\ParticleEmitter.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysXComps\Particles\ParticleFluidEmitter.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\PhysAABB.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\PhysActor.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\PhysPlane.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\PhysSphere.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\PhysSpringJoint.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysXComps\PhysXRagdoll.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysXComps\MemAlloc.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysComps\PhysScene.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\RigidBody.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysicsAssignment.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysHandle.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysXHandle.h" />
+    <ClInclude Include="Source\Engine\Cameras\BaseCamera.h" />
+    <ClInclude Include="Source\Engine\Cameras\FlyCamera.h" />
+    <ClInclude Include="Source\Engine\Core\BaseApp.h" />
+    <ClInclude Include="Source\Engine\Core\ShaderHandler.h" />
+    <ClInclude Include="Source\Engine\Culling.h" />
+    <ClInclude Include="Source\Engine\GUI\AntTweak.h" />
+    <ClInclude Include="Source\Engine\Input\InputHandle.h" />
+    <ClInclude Include="Source\Engine\Objects\BaseObject.h" />
+    <ClInclude Include="Source\Engine\Objects\FBXAnimation.h" />
+    <ClInclude Include="Source\Engine\Objects\FBXModel.h" />
+    <ClInclude Include="Source\Engine\Objects\ObjMesh.h" />
+    <ClInclude Include="Source\Engine\Particles\CPUParticleEmitter.h" />
+    <ClInclude Include="Source\Engine\Particles\GPUParticleEmitter.h" />
+    <ClInclude Include="Source\Engine\Particles\ParticleTypes.h" />
+    <ClInclude Include="Source\Engine\Renderer\FBO_RenderScreen.h" />
+    <ClInclude Include="Source\Engine\Renderer\SkyBox.h" />
+    <ClInclude Include="Source\Engine\Renderer\TextureHandler.h" />
+    <ClInclude Include="Source\Engine\TransGrid.h" />
+    <ClInclude Include="Source\Tutorial\CacheCohrence.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{68C8DABB-A9CA-41A7-BE9B-BE809F13DF60}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>GenGeinEngine</RootNamespace>
+    <ProjectName>GenGeinEngine</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(ProjectName)\tmp\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_SWIZZLE;GLM_FORCE_PURE;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\stb-master;$(SolutionDir)Dependencies\gl_core;$(SolutionDir)Dependencies\gizmos;$(SolutionDir)Dependencies\AntTweak\include;$(SolutionDir)Dependencies\FBXLoader\include;$(SolutionDir)Dependencies\FMOD\include;$(SolutionDir)Dependencies\PhysX\include\PhysX;$(ProjectDir)\Source\</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw\lib13;$(SolutionDir)Dependencies\AntTweak\lib;$(SolutionDir)Dependencies\FBXLoader\lib;$(SolutionDir)Dependencies\FMOD\lib;$(SolutionDir)Dependencies\PhysX\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>PhysX3DEBUG_x86.lib;PhysX3ExtensionsDEBUG.lib;PhysX3CommonDEBUG_x86.lib;PhysX3VehicleDEBUG.lib;PhysX3CharacterKinematicDEBUG_x86.lib;PhysX3CookingDEBUG_x86.lib;PhysXVisualDebuggerSDKDEBUG.lib;fmodL_vc.lib;opengl32.lib;FBXLoader_d.lib;AntTweakBar.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Profile>true</Profile>
+    </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy /Y $(SolutionDir)Data $(SolutionDir)\$(ConfigurationName)\Data\</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy Data</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;GLM_SWIZZLE;GLM_FORCE_PURE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\stb-master;$(SolutionDir)Dependencies\gl_core;$(SolutionDir)Dependencies\gizmos;$(SolutionDir)Dependencies\AntTweak\include;$(SolutionDir)Dependencies\FBXLoader\include;$(SolutionDir)Dependencies\FMOD\include;$(SolutionDir)Dependencies\PhysX\include;$(ProjectDir)\Source\</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\glfw\lib13;$(SolutionDir)Dependencies\AntTweak\lib;$(SolutionDir)Dependencies\FBXLoader\lib;$(SolutionDir)Dependencies\PhysX\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>PhysX3_x86.lib;PhysX3Extensions.lib;PhysX3Common_x86.lib;PhysX3Vehicle.lib;PhysX3CharacterKinematic_x86.lib;PhysX3Cooking_x86.lib;PhysXVisualDebuggerSDK.lib;fmodstudio64_vc.lib;fmod64_vc.lib;opengl32.lib;FBXLoader.lib;AntTweakBar.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

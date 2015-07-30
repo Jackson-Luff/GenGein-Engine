@@ -36,6 +36,7 @@ out vec4 pixelColour;
 
 void main()
 {
+
 	// =========== LIGHTING ============
 	// Diffused Light Calc's
 	vec3 lightVector = normalize(SunPos - vPosition.xyz);
