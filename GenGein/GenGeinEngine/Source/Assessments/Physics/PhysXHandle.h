@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+
 #include <PxPhysicsAPI.h>
 #include <pvd\PxVisualDebugger.h>
 
@@ -23,16 +24,9 @@ public:
 	virtual void ShutDown();
 
 	// Update loop
-	virtual void Update(const glm::mat4 a_CamWorld, const double a_dt);
+	virtual void Update(const double a_dt);
 	// Render things to screen
 	virtual void Render();
-
-	virtual void AddBox(const glm::vec3 a_pos, const glm::vec3 a_size, const float a_density);
-	virtual void AddSphere(const glm::vec3 a_pos, const float a_radius, const float a_density);
-	virtual void AddPlane(const glm::vec3 a_pos, const float a_radianOfRot, const glm::vec3 a_axisRot);
-	virtual void AddRagDoll(const glm::vec3 a_pos);
-	virtual void AddFluidSimWithContainer();
-
 private:
 
 	enum PhysXActorType
@@ -87,13 +81,20 @@ private:
 	PxArticulation* MakeRagDoll(PxPhysics* a_physics, RagDoll::RagDollNode** a_nodeArray,
 		PxTransform a_worldPos, float a_scaleFactor, PxMaterial* a_ragdollMaterial);
 
+	void AddBox(const glm::vec3 a_pos, const glm::vec3 a_size, const float a_density, PhysXActorType a_type);
+	void AddSphere(const glm::vec3 a_pos, const float a_radius, const float a_density, PhysXActorType a_type);
+	void AddPlane(const glm::vec3 a_pos, const float a_radianOfRot, const glm::vec3 a_axisRot, PhysXActorType a_type);
+	void AddRagDoll(const glm::vec3 a_pos);
+	void AddFluidSimWithContainer(const PxVec3 a_position);
+
 	void RenderWidget(PxShape* a_shape, PxRigidActor& a_actor);
+	void RenderPlane(PxShape* a_shape, PxRigidActor& a_actor);
+	void RenderSphere(PxShape* a_shape, PxRigidActor& a_actor);
 	void RenderBox(PxShape* a_shape, PxRigidActor& a_actor);
 	void RenderCapsule(PxShape* a_shape, PxRigidActor& a_actor);
-	void RenderSphere(PxShape* a_shape, PxRigidActor& a_actor);
+	
 
 	void SetUpPhysX();
-	void SetUpPlayerController();
 	void SetUpEnvironment();
 	void UpdatePhysX(const double a_dt);
 	void SetUpVisualDebugger();

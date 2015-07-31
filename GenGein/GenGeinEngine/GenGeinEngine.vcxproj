@@ -13,11 +13,7 @@
   <ItemGroup>
     <ClCompile Include="..\Dependencies\gl_core\gl_core_4_4.cpp" />
     <ClCompile Include="..\Dependencies\gizmos\AIE\Gizmos.cpp" />
-    <ClCompile Include="Source\Assessments\Physics\PhysXComps\Player\PhysXPlayerController.cpp" />
-    <ClCompile Include="Source\Assessments\Physics\PhysXComps\Player\ControllerHitReport.cpp" />
     <ClCompile Include="Source\Assessments\Particles\Particles.cpp" />
-    <ClCompile Include="Source\Assessments\Physics\PhysXComps\Particles\ParticleEmitter.cpp" />
-    <ClCompile Include="Source\Assessments\Physics\PhysXComps\Particles\ParticleFluidEmitter.cpp" />
     <ClCompile Include="Source\Assessments\Physics\PhysComps\Assets\PhysAABB.cpp" />
     <ClCompile Include="Source\Assessments\Physics\PhysComps\Assets\PhysPlane.cpp" />
     <ClCompile Include="Source\Assessments\Physics\PhysComps\Assets\PhysSphere.cpp" />
@@ -26,6 +22,10 @@
     <ClCompile Include="Source\Assessments\Physics\PhysComps\Assets\RigidBody.cpp" />
     <ClCompile Include="Source\Assessments\Physics\PhysicsAssignment.cpp" />
     <ClCompile Include="Source\Assessments\Physics\PhysHandle.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysXComps\Particles\ParticleEmitter.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysXComps\Particles\ParticleFluidEmitter.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysXComps\Player\ControllerHitReport.cpp" />
+    <ClCompile Include="Source\Assessments\Physics\PhysXComps\Player\PhysXPlayerController.cpp" />
     <ClCompile Include="Source\Assessments\Physics\PhysXHandle.cpp" />
     <ClCompile Include="Source\Engine\Cameras\BaseCamera.cpp" />
     <ClCompile Include="Source\Engine\Cameras\FlyCamera.cpp" />
@@ -45,22 +45,22 @@
     <ClCompile Include="Source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Assessments\Physics\PhysXComps\Player\PhysXPlayerController.h" />
-    <ClInclude Include="Source\Assessments\Physics\PhysXComps\Player\ControllerHitReport.h" />
     <ClInclude Include="Source\Assessments\Particles\Particles.h" />
-    <ClInclude Include="Source\Assessments\Physics\PhysXComps\Particles\ParticleEmitter.h" />
-    <ClInclude Include="Source\Assessments\Physics\PhysXComps\Particles\ParticleFluidEmitter.h" />
     <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\PhysAABB.h" />
     <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\PhysActor.h" />
     <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\PhysPlane.h" />
     <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\PhysSphere.h" />
     <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\PhysSpringJoint.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysXComps\Particles\ParticleEmitter.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysXComps\Particles\ParticleFluidEmitter.h" />
     <ClInclude Include="Source\Assessments\Physics\PhysXComps\PhysXRagdoll.h" />
     <ClInclude Include="Source\Assessments\Physics\PhysXComps\MemAlloc.h" />
     <ClInclude Include="Source\Assessments\Physics\PhysComps\PhysScene.h" />
     <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\RigidBody.h" />
     <ClInclude Include="Source\Assessments\Physics\PhysicsAssignment.h" />
     <ClInclude Include="Source\Assessments\Physics\PhysHandle.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysXComps\Player\ControllerHitReport.h" />
+    <ClInclude Include="Source\Assessments\Physics\PhysXComps\Player\PhysXPlayerController.h" />
     <ClInclude Include="Source\Assessments\Physics\PhysXHandle.h" />
     <ClInclude Include="Source\Engine\Cameras\BaseCamera.h" />
     <ClInclude Include="Source\Engine\Cameras\FlyCamera.h" />
@@ -127,7 +127,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLM_SWIZZLE;GLM_FORCE_PURE;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\stb-master;$(SolutionDir)Dependencies\gl_core;$(SolutionDir)Dependencies\gizmos;$(SolutionDir)Dependencies\AntTweak\include;$(SolutionDir)Dependencies\FBXLoader\include;$(SolutionDir)Dependencies\FMOD\include;$(SolutionDir)Dependencies\PhysX\include\PhysX;$(ProjectDir)\Source\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glfw\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\stb-master;$(SolutionDir)Dependencies\gl_core;$(SolutionDir)Dependencies\gizmos;$(SolutionDir)Dependencies\AntTweak\include;$(SolutionDir)Dependencies\FBXLoader\include;$(SolutionDir)Dependencies\FMOD\include;$(SolutionDir)Dependencies\PhysX\include;$(ProjectDir)\Source\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>

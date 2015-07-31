@@ -17,7 +17,13 @@ public:
 	void Update(const PxVec3 a_gravity, const float a_dt);
 
 	PxRigidDynamic* GetActor() const { return m_pPlayerActor; }
+
+	PxVec3 GetPositon() const { 
+		return m_pPlayerActor->getGlobalPose().p;
+	}
+
 private:
+
 	PxRigidDynamic* m_pPlayerActor;
 	PxMaterial* m_pPlayerMaterial;
 	PxController* m_pPlayerController;
@@ -25,6 +31,9 @@ private:
 
 	ControllerHitReport* m_pHitReport;
 
+	float m_movementSpeed;
+	float m_rotationSpeed;
+	float m_rotation;
 	PxVec3 m_velocity;
 	PxVec3 m_position;
 };

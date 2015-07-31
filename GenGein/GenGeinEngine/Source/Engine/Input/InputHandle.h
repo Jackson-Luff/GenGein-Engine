@@ -1,6 +1,8 @@
 #pragma once
 #include <glm\glm.hpp>
 
+class BaseCamera;
+
 /* The unknown key */
 #define KEY_UNKNOWN            -1
 
@@ -159,5 +161,21 @@ namespace Input
 	{
 	public:
 		static glm::ivec2 GetWindowSize();
+	};
+
+	class Camera
+	{
+	public:
+
+		static BaseCamera* GetCamera() { return m_cam; }
+		static void SetCamera(BaseCamera* a_newCam) { m_cam = a_newCam; }
+
+		static glm::vec3 GetCamPos();
+		static void SetCamPos(const glm::vec3 a_pos);
+
+		static glm::mat4 GetCameraWorldTrans();
+
+	private:
+		static BaseCamera* m_cam;
 	};
 };

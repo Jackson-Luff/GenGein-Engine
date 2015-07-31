@@ -26,7 +26,7 @@ public:
 	~BaseCamera();
 
 	// Inheritable update
-	virtual void Update( const double_t& a_dt) = 0;
+	virtual void Update(const double_t& a_dt) {};
 
 	// Get / Set World's Matrix Transform
 	inline const f32mat4& GetWorldTransform() const 

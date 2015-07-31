@@ -38,15 +38,5 @@ void main()
 	vCoords = vertCoords;
 	vID = gl_VertexID;
 	
-	// case the indices to the integer's so they can index an array
-	//ivec4 index = ivec4(vertIndices);
-
-	//vec4 P = bones[ index.x ] * vertPosition * vertWeight.x;
-	//P += bones[ index.y ] * vertPosition * vertWeight.y;
-	//P += bones[ index.z ] * vertPosition * vertWeight.z;
-	//P += bones[ index.w ] * vertPosition * vertWeight.w;
-	
-	vPosition.z = vertPosition.z + 0.5;
-	
 	gl_Position = Projection * View * LocalMatrix * vPosition;
 }

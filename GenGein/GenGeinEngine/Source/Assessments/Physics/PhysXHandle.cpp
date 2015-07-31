@@ -63,28 +63,36 @@ void PhysXHandle::ShutDown()
 	m_pPhysicsFoundation->release();
 }
 
-void PhysXHandle::Update(const glm::mat4 a_CamWorld, const double a_dt)
+void PhysXHandle::Update(const double a_dt)
 {
 	UpdatePhysX(a_dt);
 
 	if (Input::Cursor::isLeftButtonDown())
 	{
-		int ran = rand() % 100;
-		glm::vec3 pos = glm::vec3(a_CamWorld[3]);
-		glm::vec3 dir = glm::vec3(a_CamWorld[2]);
+		glm::mat4 world = Input::Camera::GetCameraWorldTrans();
 
-		if (ran > 50)
-			AddBox(pos, glm::vec3(0.5f), 10);
-		else if (ran <= 50)
-			AddSphere(pos, 1, 10);
+		int ran = rand() % 100;
+		glm::vec3 pos = glm::vec3(world[3]);
+		glm::vec3 dir = glm::vec3(world[2]);
+
+		PxTransform pose(PxVec3(pos.x, pos.y, pos.z));
+		PhysXRigidActor* sphereActor = new PhysXRigidActor(m_pPhysics, pose, 2.0f, DYNAMIC, m_pPhysicsMaterial, 2.0f);
+		PxRigidDynamic* actor = static_cast<PxRigidDynamic*>(sphereActor->GetActor());
+		actor->setLinearVelocity(PxVec3(dir.x, dir.y, dir.z));
+		m_physXActors.push_back(sphereActor->GetActor());
+		m_pPhysicsScene->addActor(*sphereActor->GetActor());
 	}
 
 	if (m_particleEmitter)
 		m_particleEmitter->Update(a_dt);
 
 	if (m_player)
+	{
 		m_player->Update(m_pPhysicsScene->getGravity(), (float)a_dt);
-	
+
+		PxVec3 pos = m_player->GetPositon();
+		Input::Camera::SetCamPos(glm::vec3(pos.x, pos.y, pos.z));
+	}
 }
 
 void PhysXHandle::Render()
@@ -134,36 +142,34 @@ void PhysXHandle::Render()
 	}
 }
 
-void PhysXHandle::AddBox(const glm::vec3 a_pos, const glm::vec3 a_size, const float a_density)
+void PhysXHandle::AddBox(const glm::vec3 a_pos, const glm::vec3 a_size, const float a_density, PhysXActorType a_type)
 {
 	PxTransform pose(PxVec3(a_pos.x, a_pos.y, a_pos.z));
 
 	// Add it to the render list
-	PhysXRigidActor* boxActor = new PhysXRigidActor(m_pPhysics, pose, a_size, DYNAMIC, m_pPhysicsMaterial, a_density);
+	PhysXRigidActor* boxActor = new PhysXRigidActor(m_pPhysics, pose, a_size, a_type, m_pPhysicsMaterial, a_density);
 
 	m_physXActors.push_back(boxActor->GetActor());
 	// Add it to the PhysX scene
 	m_pPhysicsScene->addActor(*boxActor->GetActor());
 }
 
-void PhysXHandle::AddSphere(const glm::vec3 a_pos, const float a_radius, const float a_density)
+void PhysXHandle::AddSphere(const glm::vec3 a_pos, const float a_radius, const float a_density, PhysXActorType a_type)
 {
 	PxTransform pose(PxVec3(a_pos.x, a_pos.y, a_pos.z));
 
-	// Add it to the render list
-	PhysXRigidActor* sphereActor = new PhysXRigidActor(m_pPhysics, pose, a_radius, DYNAMIC, m_pPhysicsMaterial, a_density);
+	PhysXRigidActor* sphereActor = new PhysXRigidActor(m_pPhysics, pose, a_radius, a_type, m_pPhysicsMaterial, a_density);
 	m_physXActors.push_back(sphereActor->GetActor());
-	// Add it to the PhysX scene
 	m_pPhysicsScene->addActor(*sphereActor->GetActor());
 }
 
-void PhysXHandle::AddPlane(const glm::vec3 a_pos, const float a_radianOfRot, const glm::vec3 a_axisRot)
+void PhysXHandle::AddPlane(const glm::vec3 a_pos, const float a_radianOfRot, const glm::vec3 a_axisRot, PhysXActorType a_type)
 {
 	PxTransform pose(PxVec3(a_pos.x, a_pos.y, a_pos.z),
 		PxQuat(a_radianOfRot, PxVec3(a_axisRot.x, a_axisRot.y, a_axisRot.z)));
 
 	// Add it to the render list
-	PhysXRigidActor* planeActor = new PhysXRigidActor(m_pPhysics, pose, STATIC, m_pPhysicsMaterial);
+	PhysXRigidActor* planeActor = new PhysXRigidActor(m_pPhysics, pose, a_type, m_pPhysicsMaterial);
 	m_physXActors.push_back(planeActor->GetActor());
 	// Add it to the PhysX scene
 	m_pPhysicsScene->addActor(*planeActor->GetActor());
@@ -205,37 +211,29 @@ void PhysXHandle::AddRagDoll(const glm::vec3 a_pos)
 	m_physXRagDollActors.push_back(ragDollArticulation);
 }
 
-void PhysXHandle::AddFluidSimWithContainer()
+void PhysXHandle::AddFluidSimWithContainer(const PxVec3 a_position)
 {
 #pragma region CreatingStaticEnvironment
-	// Setting up the plane platform
-	PxTransform pose = PxTransform(PxVec3(0.0f), PxQuat(PxHalfPi, PxVec3(0.0f, 0.0f, 1.0f)));
-	PhysXRigidActor* plane = new PhysXRigidActor(m_pPhysics, pose, STATIC, m_pPhysicsMaterial);
-	PxRigidActor* planeActor = plane->GetActor();
-	const PxU32 numShapes = planeActor->getNbShapes();
-	m_pPhysicsScene->addActor(*planeActor);
 
+	// Setting up the plane platform
 	PhysXRigidActor* box;
 	
-	float offset = 4.0f;
-	float thickness = 0.5f;
-	float height = 1.0f;
-
 	// Size
-	glm::vec3 side1(offset + thickness, height, thickness);
-	glm::vec3 side2(thickness, height, offset + thickness);
+	PxTransform pose;
+	glm::vec3 side1(4.5f, 1, 0.5f);
+	glm::vec3 side2(0.5f, 1, 4.5f);
 
 	for (int i = 0; i < 4; i++)
 	{
 		// Positioning
 		if (i == 0)
-			pose = PxTransform(PxVec3(+0.0f, thickness, +offset));
-		else if (i == 1)
-			pose = PxTransform(PxVec3(+0.0f, thickness, -offset));
-		else if (i == 2)
-			pose = PxTransform(PxVec3(+offset/2.0f, thickness, +0.0f));
-		else if (i == 3)
-			pose = PxTransform(PxVec3(-offset/2.0f, thickness, +0.0f));
+			pose = PxTransform(PxVec3(+0.0f, 0.5f, +4.0f)+ a_position);
+		else if (i == 1)			   							
+			pose = PxTransform(PxVec3(-0.0f, 0.5f, -4.0f)+ a_position);
+		else if (i == 2)			   							
+			pose = PxTransform(PxVec3(+4.0f, 0.5f, +0.0f)+ a_position);
+		else if (i == 3)			  							
+			pose = PxTransform(PxVec3(-4.0f, 0.5f, +0.0f)+ a_position);
 
 		if (i >= 2)
 		{ 
@@ -276,11 +274,12 @@ void PhysXHandle::AddFluidSimWithContainer()
 		m_pPhysicsScene->addActor(*pf);
 	
 		m_particleEmitter = new ParticleFluidEmitter(maxParticles,
-			PxVec3(0, 10, 0), pf, 0.1f, m_sphereInst);
+			PxVec3(25,10,0), pf, 0.1f, m_sphereInst);
 
 		m_particleEmitter->SetStartVelocityRange(
 			-0.001f, -250.0f, -0.001f, 0.001f, -250.0f, -0.001f);
 	}
+
 }
 
 // Private Func's:
@@ -391,6 +390,7 @@ void PhysXHandle::RenderWidget(PxShape* a_shape, PxRigidActor& a_actor)
 			RenderSphere(a_shape, a_actor);
 			break;
 		case PxGeometryType::ePLANE:
+			RenderPlane(a_shape, a_actor);
 			break;
 		case PxGeometryType::eCAPSULE:
 			RenderCapsule(a_shape, a_actor);
@@ -405,6 +405,37 @@ void PhysXHandle::RenderWidget(PxShape* a_shape, PxRigidActor& a_actor)
 		case PxGeometryType::eHEIGHTFIELD:
 			break;
 	}
+}
+
+void PhysXHandle::RenderPlane(PxShape* a_shape, PxRigidActor& a_actor)
+{
+	glm::vec3 p(55.0f, 0, 0);
+	glm::vec3 s(2.5f, 1, 2.5f);
+	m_planeInst->SetLocalTransform(glm::translate(p) * glm::scale(s));
+	m_planeInst->Render();
+}
+
+void PhysXHandle::RenderSphere(PxShape* a_shape, PxRigidActor& a_actor)
+{
+	// Get the geometry for this PhysX collision volume
+	PxSphereGeometry geo;
+	float radius = 0.5f;
+	bool status = a_shape->getSphereGeometry(geo);
+
+	if (status)
+	{
+		radius = geo.radius;
+	}
+
+	// Get the transform for this PhysX collision volume
+	PxMat44 m(PxShapeExt::getGlobalPose(*a_shape, a_actor));
+	glm::mat4 M(m.column0.x, m.column0.y, m.column0.z, m.column0.w,
+		m.column1.x, m.column1.y, m.column1.z, m.column1.w,
+		m.column2.x, m.column2.y, m.column2.z, m.column2.w,
+		m.column3.x, m.column3.y, m.column3.z, m.column3.w);
+
+	m_sphereInst->SetLocalTransform(M);
+	m_sphereInst->Render();
 }
 
 void PhysXHandle::RenderBox(PxShape* a_shape, PxRigidActor& a_actor)
@@ -457,29 +488,6 @@ void PhysXHandle::RenderCapsule(PxShape* a_shape, PxRigidActor& a_actor)
 	m_capsuleInst->Render();
 }
 
-void PhysXHandle::RenderSphere(PxShape* a_shape, PxRigidActor& a_actor)
-{
-	// Get the geometry for this PhysX collision volume
-	PxSphereGeometry geo;
-	float radius = 0.5f;
-	bool status = a_shape->getSphereGeometry(geo);
-
-	if (status)
-	{
-		radius = geo.radius;
-	}
-
-	// Get the transform for this PhysX collision volume
-	PxMat44 m(PxShapeExt::getGlobalPose(*a_shape, a_actor));
-	glm::mat4 M(m.column0.x, m.column0.y, m.column0.z, m.column0.w,
-		m.column1.x, m.column1.y, m.column1.z, m.column1.w,
-		m.column2.x, m.column2.y, m.column2.z, m.column2.w,
-		m.column3.x, m.column3.y, m.column3.z, m.column3.w);
-
-	m_sphereInst->SetLocalTransform(M);
-	m_sphereInst->Render();
-}
-
 void PhysXHandle::SetUpPhysX()
 {
 	PxAllocatorCallback *myCallback = new MemAlloc();
@@ -503,21 +511,22 @@ void PhysXHandle::SetUpPhysX()
 
 }
 
-void PhysXHandle::SetUpPlayerController()
-{
-	
-
-}
-
 void PhysXHandle::SetUpEnvironment()
 {
+	// Right
+	AddBox(glm::vec3(110, 10.0f, 0.0f), glm::vec3(0.5f, 20.0f, 55), 6.0f, STATIC);
+	// Back 
+	AddBox(glm::vec3(55, 10.0f, -55), glm::vec3(55, 20.0f, 0.5f), 6.0f, STATIC);
+	// Front Fence
+	AddBox(glm::vec3(55, 2.0f, 55), glm::vec3(55, 3.0f, 0.5f), 6.0f, STATIC);
+
 	// Add a plane
-	AddPlane(glm::vec3(0), 3.14159f / 2.0f, glm::vec3(0, 0, 1));
+	AddPlane(glm::vec3(0), 3.14159f / 2.0f, glm::vec3(0, 0, 1), STATIC);
 	
+	AddFluidSimWithContainer(PxVec3(25.0f, 0,0));
 
 	m_player = new PhysXPlayerController();
-	m_player->SetUp(m_pPhysicsScene, m_pPhysics, PxExtendedVec3(0, 10, 0));
-	m_physXActors.push_back( m_player->GetActor() );
+	m_player->SetUp(m_pPhysicsScene, m_pPhysics, PxExtendedVec3(25, 7.5f, 50));
 }
 
 void PhysXHandle::UpdatePhysX(const double a_dt)

@@ -84,7 +84,7 @@ bool ParticleFluidEmitter::AddPhysXParticle(int particleIndex)
 	//set up the buffers
 	PxU32 myIndexBuffer[] = {particleIndex};
 	PxVec3 startPos = m_position;
-	PxVec3 startVel(0, 0, 0);
+	PxVec3 startVel(0.1f);
 	//randomize starting velocity.
 	float fT = (rand() % (RAND_MAX + 1)) / (float)RAND_MAX;
 	startVel.x += m_minVelocity.x + (fT * (m_maxVelocity.x - m_minVelocity.x));

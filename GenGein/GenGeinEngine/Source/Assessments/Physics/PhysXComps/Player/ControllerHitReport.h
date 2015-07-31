@@ -27,7 +27,7 @@ public:
 	virtual void onObstacleHit(const PxControllerObstacleHit& a_hit);
 
 	// Get contact normal
-	inline const PxVec3 GetPlayerContactNormal() 
+	inline const PxVec3& GetPlayerContactNormal() 
 		{ return m_playerContactNormal; }
 
 	// Clear contact normal

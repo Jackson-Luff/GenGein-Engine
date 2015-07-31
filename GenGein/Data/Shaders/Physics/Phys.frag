@@ -3,10 +3,6 @@
 in vec4 vPosition;
 in vec4 vColour;
 in vec3 vNormal;
-in vec3 vTangent;
-in vec3 vBiNormal;
-in vec4 vIndices;
-in vec4 vWeight;
 in vec2 vCoords;
 flat in int vID;
 
@@ -32,12 +28,21 @@ float ra(in uint seed)
 }
 void main()
 {
-   // =========== LIGHTING ============
-	// Diffused Light Calc's
-	vec3 lightVector = normalize(SunPos - vPosition.xyz);
-	float brightness = dot(lightVector, normalize(vNormal) );
+	// Specular Light Calc's
+	vec3 lightVector = normalize(vec3(15,20,20) - vPosition.xyz);
+	vec3 reflectedLightVec = reflect(-lightVector, vNormal);
+	vec3 eyeVector = normalize(vec3(-60, 60, -60)- vPosition.xyz);
+	float specularity = max(0, dot(reflectedLightVec, eyeVector));
+	specularity = pow(specularity, 5.0);
 	
-	vec3 outRGB = vec3(brightness);
+	vec3 outRGB = vec3(specularity);
+	
+	int x = int(vCoords.x * 100);
+	int y = int(vCoords.y * 100);
+	
+	if(x % 10 == 2 || y % 10 == 2)
+		outRGB = vec3(1.0,0.078,0.5764);
+	
 	gl_FragColor = vec4(outRGB, 1.0);
 }
 /* Another cool thing

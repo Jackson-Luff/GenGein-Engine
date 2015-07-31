@@ -1,6 +1,7 @@
 #pragma once
 #include "Engine\Core\BaseApp.h"
 
+class FBXModel;
 class PhysXHandle;
 class PhysHandle;
 
@@ -31,6 +32,7 @@ public:
 	// Render things to screen
 	virtual void Render();
 private:
-	PhysXHandle* m_physXHandle;
-	PhysHandle* m_physicsHandle;
+	FBXModel* m_pDivWall;
+	PhysXHandle* m_pPhysXHandle;
+	PhysHandle* m_pPhysicsHandle;
 };

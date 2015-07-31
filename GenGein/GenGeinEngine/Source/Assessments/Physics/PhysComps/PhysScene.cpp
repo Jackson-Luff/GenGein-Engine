@@ -135,7 +135,7 @@ void PhysScene::Render()
 		{
 			PhysPlane* plane = dynamic_cast<PhysPlane*>(actor);
 			glm::vec3 centerPoint = plane->GetNormal() * plane->GetDistance();
-			glm::mat4 t = glm::translate(centerPoint) * glm::scale(glm::vec3(100, 0.1, 100));
+			glm::mat4 t = glm::translate(vec3(-55.0f, 0, 0)) * glm::scale(glm::vec3(2.5f, 1, 2.5f));
 			m_planeInst->SetLocalTransform(t);
 			m_planeInst->Render();
 		}
@@ -231,6 +231,10 @@ void PhysScene::CheckForCollisions()
 		{
 			PhysActor* actorA = m_actors[o];
 			PhysActor* actorB = m_actors[i];
+
+			if (actorA->GetBodyID() == BodyType::STATIC &&
+				actorB->GetBodyID() == BodyType::STATIC)
+				continue;
 
 			int MaxShapeCount = (int)ShapeType::NUMBER_OF_SHAPES;
 

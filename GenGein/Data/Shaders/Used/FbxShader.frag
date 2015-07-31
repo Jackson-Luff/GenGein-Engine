@@ -34,6 +34,11 @@ uniform float LightSpecularPower = 5.0;
 
 out vec4 pixelColour;
 
+float ra(in uint seed)
+{
+	return rand(seed++, 2) -1;
+}
+
 void main()
 {
 

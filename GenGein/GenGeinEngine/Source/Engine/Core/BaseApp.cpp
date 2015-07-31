@@ -107,7 +107,7 @@ void BaseApp::StartUp()
 	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug", "DeltaTime", TW_TYPE_DOUBLE, (void*)&m_deltaTime);
 
 	m_pSkyBox = new SkyBox();
-	m_pSkyBox->Create(SkyBox::SKY);
+	m_pSkyBox->Create(SkyBox::SPACE);
 
 	m_elapsedTime = 0;
 }

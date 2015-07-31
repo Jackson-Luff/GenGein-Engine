@@ -1,10 +1,13 @@
 #include <GLFW\glfw3.h>
-
+#include "Engine\Cameras\BaseCamera.h"
 #include "InputHandle.h"
 
 using Input::Keyboard;
 using Input::Cursor;
 using Input::Window;
+using Input::Camera;
+
+BaseCamera* Camera::m_cam = new BaseCamera();
 
 // Keyboard
 
@@ -92,4 +95,21 @@ glm::ivec2 Window::GetWindowSize()
 	glfwGetWindowSize(glfwGetCurrentContext(), &width, &height);
 
 	return glm::ivec2(width, height);
+}
+
+// Camera
+
+glm::vec3 Camera::GetCamPos()
+{
+	return glm::vec3(m_cam->GetPosition());
+}
+
+void Camera::SetCamPos(glm::vec3 a_pos)
+{
+	m_cam->SetPosition(glm::vec4(a_pos,1));
+}
+
+glm::mat4 Camera::GetCameraWorldTrans()
+{
+	return m_cam->GetWorldTransform();
 }

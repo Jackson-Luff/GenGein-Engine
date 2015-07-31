@@ -27,12 +27,21 @@ float rand(uint seed, float range)
 
 void main()
 {
-    // =========== LIGHTING ============
-	// Diffused Light Calc's
-	vec3 lightVector = normalize(SunPos - vPosition.xyz);
-	float brightness = dot(lightVector, normalize(vNormal) );
+   // Specular Light Calc's
+	vec3 lightVector = normalize(vec3(-15,20,20) - vPosition.xyz);
+	vec3 reflectedLightVec = reflect(-lightVector, vNormal);
+	vec3 eyeVector = normalize(vec3(60, 60, -60)- vPosition.xyz);
+	float specularity = max(0, dot(reflectedLightVec, eyeVector));
+	specularity = pow(specularity, 5.0);
 	
-	vec3 outRGB = vec3(brightness);
+	vec3 outRGB = vec3(specularity);
+	
+	int x = int(vCoords.x * 100);
+	int y = int(vCoords.y * 100);
+	
+	if(x % 10 == 2 || y % 10 == 2)
+		outRGB = vec3(0.0, 1.0, 1.0);
+	
 	gl_FragColor = vec4(outRGB, 1.0);
 }
 

@@ -35,7 +35,7 @@ void RigidBody::Update(const glm::vec3 a_gravity, const double a_dt)
 
 	// Linear Velocity and drag
 	m_position += m_linearVelocity * a_dt;
-	//m_linearVelocity *= m_linearDrag;
+	m_linearVelocity *= m_linearDrag;
 
 	// Angular Velocity and drag
 	float rot = 0.1f;
