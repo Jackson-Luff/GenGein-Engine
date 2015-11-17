@@ -22,7 +22,7 @@ uniform float isKeyDown;
 
 const float INVERSE_MAX_UINT = 1.0f / 4294967295.0f;
 
-vec3 newVel;
+vec3 newVel = vec3(0);
 
 float rand(uint seed, float range)
 {
@@ -40,32 +40,26 @@ void main()
 		
 	newVel = Velocity;
 	
-	vec3 Target = vec3(sin(time), cos(time), tan(time));
-	vec3 dir = normalize(Target - Position);
-	newVel += dir;
-	
-	//float a = Lifetime, b = Lifespan, c = 0.5, d = 0.5;
-	//newVel.x += (a-b)*sin(time) + b * sin(time * ((a/b)-1));
-	//newVel.y += (a-b)*sin(time) - b * sin(time * ((a/b)-1));
-	//newVel.z += (a-b)*cos(time) - b * cos(time * ((a/b)-1));
-	
-	//newVel.y = sin(newVel.y) + ( Lifetime/Lifespan * cos(time));
+	float a = Lifetime, b = Lifespan, c = 0.5, d = 0.5;
+	newVel.x = (a-b)*sin(time) + b * sin(time * ((a/b)-1));
+	newVel.y = (a-b)*sin(time) / b * cos(time * ((a/b)-1));
+	newVel.z = (a-b)*cos(time) - b * cos(time * ((a/b)-1));
+	//Initialise velocities
 	
 	vPosition = Position + (Velocity * dt);
 	vVelocity = newVel;
 	vLifetime = Lifetime + dt;
 	vLifespan = Lifespan;
 	
-	vPosition = clamp(vPosition, -1,1);
 	// if it's dead spawn a new one!
 	if(vLifetime > vLifespan)
 	{			
 		//Initialise velocity
-		vVelocity.x = rand(seed++, 2) - 1;
-		vVelocity.y = rand(seed++, 2) - 1;
-		vVelocity.z = rand(seed++, 2) - 1;
+		vVelocity.x = rand(seed++, 2) / veloMax + sin(time);
+		vVelocity.y = rand(seed++, 2) / veloMax + cos(time);
+		vVelocity.z = rand(seed++, 2) / veloMax + tan(time);
 		vVelocity = normalize(vVelocity);
-		vPosition = emitterPosition + vec3(sin(time)*0.5, tan(time)*0.5, cos(time)*0.5);
+		vPosition = emitterPosition + vec3(sin(time)*0.5, -sin(time)*0.5, cos(time)*0.5);
 		vLifetime = 0;
 		vLifespan = rand(seed++, lifeMax - lifeMin) + lifeMin;
 	}
@@ -76,7 +70,7 @@ void main()
 if((int(Position.x) % 2) == 0)
 	newVel.x += (0.5 * sin(pow(time, 2)));
 if((int(Position.x) % 2) == 0)
-	newVel.y += (0.2 * clamp(tan(time), -10, 10));
+	newVel.y += (0.2 * clamp(tan(time), -5, 5));
 if((int(Position.x) % 2) == 0)
 	newVel.z += (0.5 * cos(pow(time, 2)));
 

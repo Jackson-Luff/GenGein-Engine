@@ -13,7 +13,6 @@ FBXModel::FBXModel()
 
 FBXModel::~FBXModel()
 {
-	CleanupOpenGLBuffers();
 }
 
 bool FBXModel::LoadFBX(

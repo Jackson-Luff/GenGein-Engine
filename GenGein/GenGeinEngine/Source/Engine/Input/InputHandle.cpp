@@ -6,6 +6,7 @@ using Input::Keyboard;
 using Input::Cursor;
 using Input::Window;
 using Input::Camera;
+using Input::Time;
 
 BaseCamera* Camera::m_cam = new BaseCamera();
 
@@ -98,8 +99,22 @@ glm::ivec2 Window::GetWindowSize()
 }
 
 // Camera
+const glm::vec4 Camera::GetRight()
+{
+	return m_cam->GetWorldTransform()[0];
+}
 
-glm::vec3 Camera::GetCamPos()
+const glm::vec4 Camera::GetUp()
+{
+	return m_cam->GetWorldTransform()[1];
+}
+
+const glm::vec4 Camera::GetForward()
+{
+	return m_cam->GetWorldTransform()[2];
+}
+
+const glm::vec3 Camera::GetCamPos()
 {
 	return glm::vec3(m_cam->GetPosition());
 }
@@ -109,7 +124,12 @@ void Camera::SetCamPos(glm::vec3 a_pos)
 	m_cam->SetPosition(glm::vec4(a_pos,1));
 }
 
-glm::mat4 Camera::GetCameraWorldTrans()
+const glm::mat4& Camera::GetCameraWorldTrans()
 {
 	return m_cam->GetWorldTransform();
 }
+
+// Time
+
+double* Time::m_elaspedTime;
+double* Time::m_deltaTime;

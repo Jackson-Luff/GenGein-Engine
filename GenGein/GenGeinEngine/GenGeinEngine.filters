@@ -3,6 +3,7 @@
   <ItemGroup>
     <ClCompile Include="..\Dependencies\gizmos\AIE\Gizmos.cpp" />
     <ClCompile Include="..\Dependencies\gl_core\gl_core_4_4.cpp" />
+	 <ClCompile Include="..\Dependencies\GLHelper\GLHelper.cpp" />
     <ClCompile Include="Source\Engine\Core\ShaderHandler.cpp" />
     <ClCompile Include="Source\Engine\GUI\AntTweak.cpp" />
     <ClCompile Include="Source\Engine\Objects\BaseObject.cpp" />
@@ -19,15 +20,6 @@
     <ClCompile Include="Source\Engine\Core\BaseApp.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Source\Engine\Input\InputHandle.cpp" />
-    <ClCompile Include="Source\Assessments\Physics\PhysComps\Assets\PhysSpringJoint.cpp" />
-    <ClCompile Include="Source\Assessments\Physics\PhysComps\Assets\RigidBody.cpp" />
-    <ClCompile Include="Source\Assessments\Physics\PhysComps\PhysScene.cpp" />
-    <ClCompile Include="Source\Assessments\Physics\PhysHandle.cpp" />
-    <ClCompile Include="Source\Assessments\Physics\PhysicsAssignment.cpp" />
-    <ClCompile Include="Source\Assessments\Physics\PhysXHandle.cpp" />
-    <ClCompile Include="Source\Assessments\Physics\PhysComps\Assets\PhysAABB.cpp" />
-    <ClCompile Include="Source\Assessments\Physics\PhysComps\Assets\PhysPlane.cpp" />
-    <ClCompile Include="Source\Assessments\Physics\PhysComps\Assets\PhysSphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Tutorial\CacheCohrence.h" />
@@ -49,17 +41,5 @@
     <ClInclude Include="Source\Engine\Cameras\FlyCamera.h" />
     <ClInclude Include="Source\Engine\Core\BaseApp.h" />
     <ClInclude Include="Source\Engine\Input\InputHandle.h" />
-    <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\PhysSpringJoint.h" />
-    <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\RigidBody.h" />
-    <ClInclude Include="Source\Assessments\Physics\PhysComps\PhysScene.h" />
-    <ClInclude Include="Source\Assessments\Physics\PhysXComps\PhysXRagdoll.h" />
-    <ClInclude Include="Source\Assessments\Physics\PhysHandle.h" />
-    <ClInclude Include="Source\Assessments\Physics\PhysicsAssignment.h" />
-    <ClInclude Include="Source\Assessments\Physics\PhysXHandle.h" />
-    <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\PhysAABB.h" />
-    <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\PhysActor.h" />
-    <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\PhysPlane.h" />
-    <ClInclude Include="Source\Assessments\Physics\PhysComps\Assets\PhysSphere.h" />
-    <ClInclude Include="Source\Assessments\Physics\PhysXComps\MyAllocator.h" />
   </ItemGroup>
 </Project>

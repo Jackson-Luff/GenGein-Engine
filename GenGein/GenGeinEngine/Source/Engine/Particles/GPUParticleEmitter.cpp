@@ -175,8 +175,7 @@ void GPUParticleEmitter::CreateUpdateShader()
 	glUniform1f(loc, m_velocityMax);
 }
 
-void GPUParticleEmitter::Render(
-	const float32_t& a_dt)
+void GPUParticleEmitter::Render(float a_dt, float a_elapsedTime)
 {	 
 	// Update the particles using transform feedback
 	glUseProgram(m_updateShader);
@@ -184,6 +183,9 @@ void GPUParticleEmitter::Render(
 	// Bind time info
 	int loc = glGetUniformLocation(m_updateShader, "deltaTime");
 	glUniform1f(loc, a_dt);
+
+	loc = glGetUniformLocation(m_updateShader, "time");
+	glUniform1f(loc, a_elapsedTime);
 
 	loc = glGetUniformLocation(m_updateShader, "emitterPosition");
 	glUniform3fv(loc, 1, &m_position[0]);

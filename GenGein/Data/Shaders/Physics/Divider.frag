@@ -46,12 +46,12 @@ void main()
 	vec3 target = vec3(sin(t*vCoords.x*10), 0, cos(t*vCoords.y*10));
 	
 	// Watchdogs like background
-	target = target + (ra(seed++) / length(vCoords));
+	//target = target + (ra(seed++) / length(vCoords));
 	
 	float dist = length(target - vPosition.xyz);
 	
 	// Almost a smoke-like effect
-	dist = dist - sin(seed - t);
+	//dist = dist - sin(seed - t);
 
 	// Colouring
 	outRGB = outRGB * vec3(0.1, 1.0, 1.0) * 1-dist;

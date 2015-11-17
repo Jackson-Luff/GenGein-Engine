@@ -170,12 +170,29 @@ namespace Input
 		static BaseCamera* GetCamera() { return m_cam; }
 		static void SetCamera(BaseCamera* a_newCam) { m_cam = a_newCam; }
 
-		static glm::vec3 GetCamPos();
+		static const glm::vec4 GetRight();
+		static const glm::vec4 GetUp();
+		static const glm::vec4 GetForward();
+
+		static const glm::vec3 GetCamPos();
 		static void SetCamPos(const glm::vec3 a_pos);
 
-		static glm::mat4 GetCameraWorldTrans();
-
+		static const glm::mat4& GetCameraWorldTrans();
 	private:
 		static BaseCamera* m_cam;
+	};
+
+	class Time
+	{
+	public:
+		static const double& GetElapsedTime() { return *m_elaspedTime; }
+		static void SetElapsedTime(double& a_elapsedTime) { m_elaspedTime = &a_elapsedTime; }
+
+		static const double& GetDeltaTime() { return *m_deltaTime; }
+		static void SetDeltaTime(double& a_dt) { m_deltaTime = &a_dt; }
+
+	private:
+		static double* m_elaspedTime;
+		static double* m_deltaTime;
 	};
 };

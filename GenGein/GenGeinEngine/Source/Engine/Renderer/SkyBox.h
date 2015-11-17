@@ -1,11 +1,5 @@
 #pragma once
-#include <array>
-#include <string>
 #include <vector>
-#include <glm\glm.hpp>
-#include "Engine\Renderer\TextureHandler.h"
-
-typedef const std::string const_str;
 
 class SkyBox
 {
@@ -22,15 +16,25 @@ public:
 	SkyBox();
 	~SkyBox();
 
-	void Create(const SKYBOXES& a_presetType);
+	void Create(SKYBOXES a_presetType);
 	void Render();
+	unsigned int& GetTextureID(){ return m_cubeMapBufferID; }
 
 private:
-	void InitialiseDirs(const SKYBOXES& a_presetType);
+	struct sTexture
+	{
+		unsigned int* programID;
+		unsigned int TextureBuffID;
+		unsigned int TextureType;
+		unsigned int textureUniLoc;
+	};
+	
+	void LoadCubeMap(const char* a_prog, const char* a_name, std::vector<std::string> a_faces);
+	void LoadCubeVertices(); 
+	
+	unsigned int* m_pProgramID;
+	unsigned int m_cubeMapUniLoc;
+	unsigned int m_cubeMapBufferID;
 
-	const unsigned int LoadCubeVertices(); 
-	unsigned int vao, vbo;
-	sTexture m_texture;
-
-	std::vector<const_str> m_presetDirectires;
+	unsigned int m_VAO, m_VBO;
 };

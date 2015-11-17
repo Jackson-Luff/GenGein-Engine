@@ -1,11 +1,10 @@
 
 #include <fstream>
 #include <gl_core_4_4.h>
-#include <glm\glm.hpp>
 
 #include "ShaderHandler.h"
 
-using ShaderMap = std::map<const_pChar, unsigned int>;
+using ShaderMap = std::map<const char*, unsigned int>;
 using DirectoryMap =  std::map<unsigned int, ShaderHandler::DirectoryData>;
 using ShaderType = ShaderHandler::ShaderType;
 
@@ -18,42 +17,52 @@ ShaderHandler::~ShaderHandler()
 }
 
 //Returns shader based on naming
-unsigned int& ShaderHandler::GetShader(const_pChar a_shaderName)
+unsigned int& ShaderHandler::GetShader(const char* a_shaderName)
 {
 	if (DoesShaderExist(a_shaderName)) 
 		return m_programMap[a_shaderName];
 
-	printf("No shader exists for that name!\n");
+	printf("ERROR: No shader exists for that name!\n");
+}
+
+//Detects valid shader ID 
+void ShaderValidationAndApplication(const char* a_name, unsigned int a_progID, unsigned int a_shaderID)
+{
+	if (a_shaderID != -1)
+		glAttachShader(a_progID, a_shaderID);
+	else
+		printf("WARNING: Invalid shader entry for program: %s.\n", a_name);
 }
 
 // Create the program with shader file directories
-const uint32_t ShaderHandler::LoadShaderProgram(const_pChar a_shaderName,
-	const_pChar a_vertexShader, const_pChar a_pixelShader,
-	const_pChar a_geometryShader, const_pChar a_tessCntrlShader,
-	const_pChar a_tessEvalShader, bool checkForExists)
+const unsigned int ShaderHandler::LoadShaderProgram(const char* a_shaderName,
+	const char* a_vertexShader, const char* a_pixelShader,
+	const char* a_geometryShader, const char* a_tessCntrlShader,
+	const char* a_tessEvalShader, bool checkForExists)
 {
 	if (DoesShaderExist(a_shaderName) && checkForExists)
 		return m_programMap[a_shaderName];
 
-	uint32_t vertShader;
-	uint32_t fragShader;
-	uint32_t geoShader;
-	uint32_t tessCShader;
-	uint32_t tessEShader;
+	unsigned int vertShader	= -1;
+	unsigned int fragShader	= -1;
+	unsigned int geoShader	= -1;
+	unsigned int tessCShader = -1;
+	unsigned int tessEShader = -1;
 	CreateShader(a_vertexShader,	ShaderType::VERT_SHADER, vertShader);
 	CreateShader(a_pixelShader,		ShaderType::FRAG_SHADER, fragShader);
 	CreateShader(a_geometryShader,	ShaderType::GEOM_SHADER, geoShader);
 	CreateShader(a_tessCntrlShader, ShaderType::TESSC_SHADER, tessCShader);
 	CreateShader(a_tessEvalShader,	ShaderType::TESSE_SHADER, tessEShader);
 	
-	uint32_t progID;
 	// Apply shaders to program
-	progID = glCreateProgram();
-	glAttachShader(progID, vertShader);
-	glAttachShader(progID, fragShader);
-	glAttachShader(progID, geoShader);
-	glAttachShader(progID, tessCShader);
-	glAttachShader(progID, tessEShader);
+	unsigned int progID = glCreateProgram();
+
+	ShaderValidationAndApplication(a_shaderName, progID, vertShader);
+	ShaderValidationAndApplication(a_shaderName, progID, fragShader);
+	ShaderValidationAndApplication(a_shaderName, progID, geoShader);
+	//ShaderValidationAndApplication(a_shaderName, progID, tessCShader);
+	//ShaderValidationAndApplication(a_shaderName, progID, tessEShader);
+
 	glLinkProgram(progID);
 
 	// Check success of program for stable use
@@ -62,11 +71,12 @@ const uint32_t ShaderHandler::LoadShaderProgram(const_pChar a_shaderName,
 
 	// Deleting shaders/program to
 	// minimize memory leaks
+	
 	glDeleteShader(vertShader);
 	glDeleteShader(fragShader);
 	glDeleteShader(geoShader);
-	glDeleteShader(tessCShader);
-	glDeleteShader(tessEShader);
+	//glDeleteShader(tessCShader);
+	//glDeleteShader(tessEShader);
 
 	printf("SUCCESS: Custom Program initialised\n\n");
 
@@ -84,16 +94,16 @@ const uint32_t ShaderHandler::LoadShaderProgram(const_pChar a_shaderName,
 }
 
 // Initialises the content via valid shader directory
-const void ShaderHandler::CreateShader(const_pChar a_shaderDir, const ShaderType& a_type, uint32_t& a_ID)
+const void ShaderHandler::CreateShader(const char* a_shaderDir, ShaderType a_type, unsigned int& a_ID)
 {
-	const_pChar src = ReadShaderCode(a_shaderDir);
+	const char* src = ReadShaderCode(a_shaderDir);
 
 	if (a_shaderDir == NULL || src == NULL)
 		return;
 
-	a_ID = glCreateShader((uint32_t)a_type);
+	a_ID = glCreateShader((unsigned int)a_type);
 
-	glShaderSource(a_ID, 1, (const_pChar*)&src, 0);
+	glShaderSource(a_ID, 1, (const char**)&src, 0);
 	glCompileShader(a_ID);
 
 	if (!CheckShaderStatus(a_ID))
@@ -106,9 +116,9 @@ const void ShaderHandler::CreateShader(const_pChar a_shaderDir, const ShaderType
 }
 
 const void ShaderHandler::SetUpCameraUniforms(
-	const f32mat4& a_camProjMat,
-	const f32mat4& a_camViewMat,
-	const f32mat4& a_camWorldMat)
+	const mat4& a_camProjMat,
+	const mat4& a_camViewMat,
+	const mat4& a_camWorldMat)
 {
 	//unsigned int uiError;
 	for (auto& it : m_programMap)
@@ -127,35 +137,39 @@ const void ShaderHandler::SetUpCameraUniforms(
 }
 
 const void ShaderHandler::SetUpLightingUniforms(
-	const f32vec3& a_ambientLight,
-	const f32vec3& a_SunPos,
-	const float32_t& a_strtLightingHeight,
-	const float32_t& a_elapsedTime)
+	vec3 a_SunPos)
 {
 	//unsigned int uiError;
 	for (auto& it : m_programMap)
 	{
 		glUseProgram(it.second);
 
-		int32_t loc = glGetUniformLocation(it.second, "AmbientLight");
-		glUniform3fv(loc, 1, &a_ambientLight[0]);
-
-		loc = glGetUniformLocation(it.second, "SunPos");
+		int loc = glGetUniformLocation(it.second, "SunPos");
 		glUniform3fv(loc, 1, &a_SunPos[0]);
-		
-		loc = glGetUniformLocation(it.second, "LightingHeight");
-		glUniform1f(loc, a_strtLightingHeight);
-
-		loc = glGetUniformLocation(it.second, "time");
-		glUniform1f(loc, a_elapsedTime);
 	}
 }
 
-const void ShaderHandler::ReloadAllPrograms()
+const void ShaderHandler::SetUpTimerUniforms(
+	double a_elapsedTime,
+	double a_deltaTime)
 {
 	for (auto& it : m_programMap)
 	{
-		const_pChar name = it.first;
+		glUseProgram(it.second);
+
+		int loc = glGetUniformLocation(it.second, "elapsedTime");
+		glUniform1f(loc, (float)a_elapsedTime);
+
+		loc = glGetUniformLocation(it.second, "deltaTime");
+		glUniform1f(loc, (float)a_deltaTime);
+	}
+}
+
+void ShaderHandler::ReloadAllPrograms()
+{
+	for (auto& it : m_programMap)
+	{
+		const char* name = it.first;
 		DirectoryData& dirData = m_directoryMap[it.second];
 		glDeleteProgram(it.second);
 
@@ -169,10 +183,10 @@ const void ShaderHandler::ReloadAllPrograms()
 	}
 }
 
-const void ShaderHandler::UnloadAllPrograms()
+void ShaderHandler::UnloadAllPrograms()
 {
 	for (auto& prog : m_programMap)
-	{
+	{ 
 		glDeleteProgram(prog.second);
 	}
 
@@ -182,7 +196,7 @@ const void ShaderHandler::UnloadAllPrograms()
 }
 
 // Loops through the map to define if a shader already exists
-const bool ShaderHandler::DoesShaderExist(const_pChar& a_fileName)
+bool ShaderHandler::DoesShaderExist(const char* a_fileName)
 {
 	if (m_programMap.find(a_fileName) == m_programMap.end())
 		return false;
@@ -191,7 +205,7 @@ const bool ShaderHandler::DoesShaderExist(const_pChar& a_fileName)
 }
 
 // Checks the success of the link status within the program
-const bool ShaderHandler::CheckProgramStatus(const uint32_t &a_prog)
+bool ShaderHandler::CheckProgramStatus(unsigned int a_prog)
 {
 	// Retrieve success of linking from program object
 	int32_t success = GL_FALSE;
@@ -218,7 +232,7 @@ const bool ShaderHandler::CheckProgramStatus(const uint32_t &a_prog)
 }
 
 // Checks the success of the compile status within the shader
-const bool ShaderHandler::CheckShaderStatus(const uint32_t &a_shader)
+bool ShaderHandler::CheckShaderStatus(unsigned int a_shader)
 {
 	// Retrieve success of compiling from shader object
 	int32_t success = GL_FALSE;
@@ -243,7 +257,7 @@ const bool ShaderHandler::CheckShaderStatus(const uint32_t &a_shader)
 }
 
 // Readers in the shader from a file source
-const_pChar ShaderHandler::ReadShaderCode(const_pChar a_filePath)
+const char* ShaderHandler::ReadShaderCode(const char* a_filePath)
 {
 	if (!a_filePath)
 		return NULL;

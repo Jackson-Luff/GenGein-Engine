@@ -39,7 +39,7 @@ void main()
 	int x = int(vCoords.x * 100);
 	int y = int(vCoords.y * 100);
 	
-	if(x % 10 == 2 || y % 10 == 2)
+	if(x % 10 == 0 || y % 10 == 0)
 		outRGB = vec3(0.0, 1.0, 1.0);
 	
 	gl_FragColor = vec4(outRGB, 1.0);

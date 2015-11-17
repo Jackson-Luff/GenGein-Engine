@@ -18,7 +18,9 @@ FlyCamera::FlyCamera() :
 {}
 
 // Constructor with flying and rotational speeds
-FlyCamera::FlyCamera(const float32_t& a_minSpeed, const float32_t& a_maxSpeed, const float32_t& a_rotationSpeed) : BaseCamera()
+FlyCamera::FlyCamera(const float32_t& a_minSpeed, 
+	const float32_t& a_maxSpeed, 
+	const float32_t& a_rotationSpeed) : BaseCamera()
 {
 	m_speed.x = a_minSpeed;
 	m_speed.y = (a_maxSpeed + a_minSpeed) / 2.0f;
@@ -130,8 +132,8 @@ void FlyCamera::HandleMouseInput(const double_t& a_dt)
 void FlyCamera::CalculateRotation(const double_t& a_dt, const double_t& a_dx, const double_t& a_dy)
 {
 	// Calculate the rotation of the delta vector
-	f32mat3 xRot = f32mat3(rotate((float32_t)(a_dx * (a_dt * -GetRotSpeed())), f32vec3(0, 1, 0)));
-	f32mat3 yRot = f32mat3(rotate((float32_t)(a_dy * (a_dt * -GetRotSpeed())), f32vec3(1, 0, 0)));
+	f32mat3 xRot = f32mat3(rotate((float32_t)(a_dx * (a_dt * -m_fRotSpeed)), f32vec3(0, 1, 0)));
+	f32mat3 yRot = f32mat3(rotate((float32_t)(a_dy * (a_dt * -m_fRotSpeed)), f32vec3(1, 0, 0)));
 
 	// Make sure the magnitude is larger than 0 (divide by 0 error)
 	if(length(f32vec2(a_dx, a_dy)) > 0.01f)
@@ -146,7 +148,7 @@ void FlyCamera::CalculateRotation(const double_t& a_dt, const double_t& a_dx, co
 	m_upVector   = normalize(  m_upVector);
 
 	// Apply to the world Transform 
-	m_worldTrans[0] = f32vec4(m_sideVector, 0);
+	m_worldTrans[0] = f32vec4( m_sideVector, 0);
 	m_worldTrans[1] = f32vec4(  -m_upVector, 0);
 	m_worldTrans[2] = normalize(m_worldTrans[2]);
 	// Apply View Transform 

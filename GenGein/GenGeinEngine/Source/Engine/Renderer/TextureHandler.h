@@ -10,9 +10,10 @@ struct FBXMaterial;
 
 struct sTexture
 {
-	uint32_t ID;
 	unsigned int* programID;
-	int32_t textureUniLoc;
+	unsigned int TextureBuffID;
+	unsigned int TextureType;
+	unsigned int textureUniLoc;
 };
 
 class TextureHandler
@@ -20,7 +21,7 @@ class TextureHandler
 public:
 	
 	// Add a material based on desired name and directory
-	static const sTexture LoadTexture(const_pChar a_prog, const_pChar a_name, const_str& a_dir);
+	static const sTexture Load2DTexture(const_pChar a_prog, const_pChar a_name, const_str& a_dir);
 	static const sTexture LoadPerlin( const_pChar a_prog, const_pChar a_name, const uint32_t& a_dim);
 	static const sTexture LoadCubeMap(const_pChar a_prog, const_pChar a_name, std::vector<const_str>& a_faces);
 	static const uint32_t LoadFrameBuffer(const_pChar a_prog, const_pChar a_name, const int32_t& a_width, const int32_t& a_height);

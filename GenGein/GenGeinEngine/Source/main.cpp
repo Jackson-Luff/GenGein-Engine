@@ -1,21 +1,24 @@
+
 //#include <vld.h>
+
 #include <stdlib.h>
 #include <time.h>
 
-#include "Assessments\Physics\PhysicsAssignment.h"
-#include "Assessments\Particles\Particles.h"
+#include "Projects\Physics\PhysicsAssignment.h"
+#include "Projects\Particles\Particles.h"
+#include "Projects\TIANW\TIANW_App.h"
 
 int main(int argc, char* argv[])
 {
 	srand((unsigned int)time(NULL));
-
-	PhysicsAssignment* physics = new PhysicsAssignment(1280, 720, "Physics!");
-	physics->Run();
-	delete physics;
-
-	//Particles* particles = new Particles(1280, 720, "Particles!");
+	
+	//Particles* particles = new Particles(p1280, 720, "Particles!");
 	//particles->Run();
 	//delete particles;
+
+	TIANW_App* tomorrow = new TIANW_App(1280, 720, "Tomorrow!");
+	tomorrow->Run();
+	delete tomorrow;
 
 	return 0;
 }

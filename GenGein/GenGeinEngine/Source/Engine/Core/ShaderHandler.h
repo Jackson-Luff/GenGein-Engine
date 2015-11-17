@@ -4,7 +4,6 @@
 #include <glm\glm.hpp>
 
 using namespace glm;
-using const_pChar = const char*;
 
 ////
 // Author: Jackson Luff
@@ -18,7 +17,7 @@ using const_pChar = const char*;
 class ShaderHandler
 {
 public:
-	enum class ShaderType : uint32_t
+	enum class ShaderType : unsigned int
 	{
 		VERT_SHADER = GL_VERTEX_SHADER,
 		FRAG_SHADER = GL_FRAGMENT_SHADER,
@@ -29,52 +28,53 @@ public:
 
 	struct DirectoryData
 	{
-		const_pChar vertDir;
-		const_pChar pixeDir;
-		const_pChar geomDir;
-		const_pChar tesCDir;
-		const_pChar tesEDir;
+		const char* vertDir;
+		const char* pixeDir;
+		const char* geomDir;
+		const char* tesCDir;
+		const char* tesEDir;
 	};
 
 	// Deconstructor
 	~ShaderHandler();
 
 	//Getter for the shader program
-	static unsigned int& GetShader(const_pChar a_shaderName);
+	static unsigned int& GetShader(const char* a_shaderName);
 	// Create a GL program with inputted vert and frag shaders
-	static const uint32_t LoadShaderProgram(const_pChar a_shaderName,
-		const_pChar a_vertexShader, const_pChar a_pixelShader,
-		const_pChar a_geometryShader = nullptr, const_pChar a_tessCntrlShader = nullptr,
-		const_pChar a_tessEvalShader = nullptr,
+	static const unsigned int LoadShaderProgram(const char* a_shaderName,
+		const char* a_vertexShader, const char* a_pixelShader,
+		const char* a_geometryShader = nullptr, const char* a_tessCntrlShader = nullptr,
+		const char* a_tessEvalShader = nullptr,
 		bool checkForExists = true);
 	
 	// Initialise Shader Content
-	static const void CreateShader(const_pChar a_shaderDir, const ShaderType& a_type, uint32_t& a_IDContainer);
+	static const void CreateShader(const char* a_shaderDir, ShaderType a_type, unsigned int& a_IDContainer);
 
 	static const void SetUpCameraUniforms(
-		const f32mat4& a_camProjMat,
-		const f32mat4& a_camViewMat,
-		const f32mat4& a_camWorldMat);
+		const mat4& a_camProjMat,
+		const mat4& a_camViewMat,
+		const mat4& a_camWorldMat);
 
 	static const void SetUpLightingUniforms(
-		const f32vec3& a_ambientLight,
-		const f32vec3& a_SunPos,
-		const float32& a_strtLightingHeight,
-		const float32& a_elapsedTime);
+		vec3 a_SunPos);
 
-	static const void ReloadAllPrograms();
-	static const void UnloadAllPrograms();
+	static const void SetUpTimerUniforms(
+		double a_elapsedTime,
+		double a_deltaTime);
+
+	static void ReloadAllPrograms();
+	static void UnloadAllPrograms();
 private:
 
 	// Returns if the programID was found in the map
-	static const bool DoesShaderExist(const_pChar& a_shaderName);
+	static bool DoesShaderExist(const char* a_shaderName);
 	// Determines the success of the shader
-	static const bool CheckShaderStatus(const uint32_t& a_shaderName);
+	static bool CheckShaderStatus(unsigned int a_shaderName);
 	// Determines the success of the program
-	static const bool CheckProgramStatus(const uint32_t& prog);
+	static bool CheckProgramStatus(unsigned int prog);
 	// Reads the shader based on the directory 
-	static const_pChar ReadShaderCode(const_pChar a_filePath);
+	static const char* ReadShaderCode(const char* a_filePath);
 
 	static std::map< unsigned int, DirectoryData> m_directoryMap;
-	static std::map< const_pChar, unsigned int > m_programMap;
+	static std::map< const char*, unsigned int > m_programMap;
 };

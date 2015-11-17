@@ -31,15 +31,11 @@ public:
 
 	// Initialise GLFW window
 	bool InitialiseGL();
-	
-	// Getter for FPS count
-	inline const double& GetFPS() const
-		{ return m_FPS; }
 	// Getter for elapsed gametime 
-	inline const float& GetElapsedTime() const 
+	inline double& GetElapsedTime() 
 		{ return m_elapsedTime; }
 	// Getter for Delta Time
-	inline const double& GetDeltaTime() const 
+	inline double& GetDeltaTime() 
 		{ return m_deltaTime; }
 	// Getter for MousePosition
 	inline const dvec2 GetMousePosition() const
@@ -54,13 +50,11 @@ public:
 	// Deconstructed content
 	virtual void ShutDown() = 0;
 	// Update loop
-	virtual void Update( const double& a_dt ) = 0;
+	virtual void Update( double a_dt ) = 0;
 	// Render to GUI
 	virtual void Render() = 0;
 	// Run the application
 	void Run();
-	// Render SkyBox
-	void RenderSkyBox();
 
 protected:
 	// REMOVE:Temp hotkeys for debugging
@@ -85,9 +79,7 @@ protected:
 
 	// Set-up basic camera data
 	void ApplyLightingSetup(
-		const vec3& a_ambient,
-		const vec3& m_sunPosition,
-		const float& a_strtLightingHeight);
+		const vec3& m_sunPosition);
 
 	// Initialises Fly Camera
 	void InitialiseFlyCamera(const float& a_minSpeed,
@@ -112,19 +104,15 @@ protected:
 	BaseCamera* m_pBaseCamera;
 	// AntTweak GUI intigration
 	AntTweak* m_pAntTweakGUI;
-	// SkyBox viewer
-	SkyBox* m_pSkyBox;
 	// Sun Position
 	vec3 m_sunPosition;
 private:
 	// Initialise internal app variables and functionalities
 	void InitialiseAppElements();
-	// Holds value for elapsed time
-	float m_elapsedTime;
-	// Prev DT && FPS && Curr DT
-	double m_prevTime, m_FPS, m_deltaTime;
-	// Size of window
-	int m_width, m_height;
+	// Prev DT | Curr DT | elaspedTime
+	double m_prevTime, m_deltaTime, m_elapsedTime;
+	// Size of window | FPS count
+	int m_width, m_height, m_FPS;
 	// Title of window
 	const char* m_title;
 	// Background colour

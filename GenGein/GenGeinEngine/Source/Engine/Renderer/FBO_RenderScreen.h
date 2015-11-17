@@ -12,8 +12,8 @@ public:
 	~FBO_RenderScreen();
 
 	void Initialise(const uint32_t& a_desWidth, const uint32_t& a_desHeight);
-	void SaveOffScreenShot();
-	void Render();
+	void PrepareRenderForFBO();
+	void RenderToFBO();
 private:
 	struct VertexData
 	{
@@ -26,11 +26,11 @@ private:
 	void ExtractTextureFromFBO();
 	void AttachDepthBuffer();
 	bool ValidateFBOMesh();
-	uint32_t m_FBO, m_FBOTexture, m_FBODepth;
+	unsigned int m_FBO, m_FBOTexture, m_FBODepth;
 	
 	void SetUpViewSpace();
-	uint32_t m_VAO, m_VBO;
-	uint32_t m_width, m_height;
-	uint32_t* m_FBOShaderID;
+	uint_t m_VAO, m_VBO;
+	uint_t m_width, m_height;
+	uint_t* m_FBOShaderID;
 	int m_textureUniLoc;
 };

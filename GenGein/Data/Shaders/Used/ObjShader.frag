@@ -56,7 +56,6 @@ void main()
 		normalize( vNormal ));
 
 	vec3 N = texture(normalMap, vCoords).xyz * 2 - 1;
-	vec3 S = texture(specularMap, vCoords).xyz * 2 - 1;
 	float d = max( 0, dot( normalize( TBN * N), lightVector ));
 
 	// ============ POLISH ==============

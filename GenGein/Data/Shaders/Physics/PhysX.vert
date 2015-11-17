@@ -30,7 +30,7 @@ void main()
 {
 	vPosition = vertPosition;
 	vColour = vertColour;
-	vNormal = vertNormal.xyz;
+	vNormal = mat3(LocalMatrix) * vertNormal.xyz;
 	vTangent = vertTangent.xyz;
 	vBiNormal = vertBiNormal.xyz;
 	vIndices = vertIndices;

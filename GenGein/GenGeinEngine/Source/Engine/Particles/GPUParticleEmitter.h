@@ -19,7 +19,7 @@ public:
 		const float& a_startSize, const float& a_endSize,
 		const vec4& a_startColour, const vec4& a_endColour);
 
-	void Render(const float& a_dt);
+	void Render(float a_dt, float a_elapsedTime);
 
 	// Get / Set Positon
 	inline const vec3& GetPosition() const 

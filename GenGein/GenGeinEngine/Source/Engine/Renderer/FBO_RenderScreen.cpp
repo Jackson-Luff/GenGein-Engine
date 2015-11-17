@@ -128,7 +128,7 @@ void FBO_RenderScreen::SetUpViewSpace()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void FBO_RenderScreen::SaveOffScreenShot()
+void FBO_RenderScreen::PrepareRenderForFBO()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
 	glViewport(0, 0, m_width, m_height);
@@ -136,7 +136,7 @@ void FBO_RenderScreen::SaveOffScreenShot()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void FBO_RenderScreen::Render()
+void FBO_RenderScreen::RenderToFBO()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, m_width, m_height);

@@ -3,12 +3,12 @@
 #include <glm\glm.hpp>
 #include <glm\ext.hpp>
 #include <GLFW\glfw3.h>
+#include "GLHelper.h"
 
 #include "Engine\Input\InputHandle.h"
 #include "Engine\Renderer\TextureHandler.h"
 #include "Engine\Core\ShaderHandler.h"
 #include "Engine\GUI\AntTweak.h"
-#include "Engine\Renderer\SkyBox.h"
 #include "Engine\Cameras\BaseCamera.h"
 #include "Engine\Cameras\FlyCamera.h"
 
@@ -26,8 +26,8 @@ void error_callback(int a_error, const char* a_description)
 }
 
 BaseApp::BaseApp() :
-m_prevTime(0),
-m_deltaTime(0),
+m_prevTime(0.0),
+m_deltaTime(0.0),
 m_elapsedTime(0),
 m_FPS(0),
 m_width(0),
@@ -47,8 +47,7 @@ BaseApp::BaseApp(const int& a_width, const int& a_height, const char* a_title)
 
 BaseApp::~BaseApp()
 {
-	m_pAntTweakGUI->ShutDown();
-	delete m_pSkyBox;
+	//delete m_pSkyBox;
 	delete m_pBaseCamera;
 }
 
@@ -102,17 +101,14 @@ void BaseApp::StartUp()
 	printf("Program Shader yet to be initialised.\n\n");
 
 	// Initialise GUI and create a tweaker
-	m_pAntTweakGUI->Initialise(m_pWindow, m_width, m_height);
-	m_pAntTweakGUI->AddTweaker( "Main Tweaker" );
-	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug", "DeltaTime", TW_TYPE_DOUBLE, (void*)&m_deltaTime);
-
-	m_pSkyBox = new SkyBox();
-	m_pSkyBox->Create(SkyBox::SPACE);
+	//m_pAntTweakGUI->Initialise(m_pWindow, m_width, m_height);
+	//m_pAntTweakGUI->AddTweaker( "Main Tweaker" );
+	//m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug", "DeltaTime", TW_TYPE_DOUBLE, (void*)&m_deltaTime);
 
 	m_elapsedTime = 0;
 }
 
-void BaseApp::Update(const double& a_dt)
+void BaseApp::Update(double a_dt)
 {
 	CalculateTiming();
 
@@ -144,30 +140,14 @@ void BaseApp::CalculateTiming()
 {
 	// Calculating dt based on glfw time
 	const double currTime = glfwGetTime();
-	m_deltaTime = currTime - m_prevTime;
+	m_deltaTime = ((currTime - m_prevTime) + (1.0/60.0)) / 2.0;
 	m_prevTime = currTime;
 
-	m_elapsedTime += (float)m_deltaTime;
-	m_FPS = 1.0f / m_deltaTime;
-}
-
-void BaseApp::RenderSkyBox()
-{
-	TextureHandler::RenderAllTextures();
-
-	glDepthFunc(GL_LEQUAL);
-	glUseProgram(ShaderHandler::GetShader("SkyBox"));
-	m_pSkyBox->Render();
-	glDepthFunc(GL_LESS);
+	m_elapsedTime = glfwGetTime();
 }
 
 void BaseApp::Render()
-{
-	// Clear colour and depth buffers
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	ApplyCameraUniformSetup();
-}
+{}
 
 void BaseApp::InitialiseAppElements()
 {
@@ -175,7 +155,7 @@ void BaseApp::InitialiseAppElements()
 	ApplyCameraUniformSetup();
 
 	// Add a read only FPS output variable to the GUI tweaker specified
-	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug", "FPS: ", TW_TYPE_DOUBLE, (void*)&m_FPS);
+	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug", "FPS: ", TW_TYPE_INT32, (void*)&m_FPS);
 
 	// Add read only Camera position/speed variables to the GUI tweaker specified
 	m_pAntTweakGUI->AddVarRO("Main Tweaker", "Debug",  "X: ", TW_TYPE_FLOAT, (void*)&m_pBaseCamera->GetPosition().x);
@@ -193,15 +173,10 @@ void BaseApp::ApplyCameraUniformSetup()
 }
 
 void BaseApp::ApplyLightingSetup(
-	const f32vec3& a_ambient,
-	const f32vec3& m_sunPosition,
-	const float32_t& a_strtLightingHeight)
+	const f32vec3& m_sunPosition)
 {
 	ShaderHandler::SetUpLightingUniforms(
-		a_ambient,
-		m_sunPosition,
-		a_strtLightingHeight,
-		(float32_t)GetElapsedTime());
+		m_sunPosition);
 }
 
 void BaseApp::InitialiseFlyCamera(const float& a_minSpeed,
@@ -214,10 +189,11 @@ void BaseApp::InitialiseFlyCamera(const float& a_minSpeed,
 	FlyCamera* pFlyCam = new FlyCamera(a_minSpeed, a_maxSpeed, a_rotationSpeed);
 	pFlyCam->SetPosition(f32vec4(a_position,1));
 	pFlyCam->LookAt(a_lookAt);
-	pFlyCam->InitialisePerspective(glm::pi<float>()*0.25f, 16 / 9.f, 0.1f, 10000.0f);
+	pFlyCam->InitialisePerspective(glm::pi<float>()*0.25f, 16 / 9.f, 0.1f, 100000.0f);
 	pFlyCam->SetInputWindow(m_pWindow);
 	m_pBaseCamera = pFlyCam;
 }
+
 //
 //void BaseApp::InitialisePanZoomCamera(
 //	const float32_t& a_moveSpeed,
@@ -254,15 +230,24 @@ void BaseApp::Run()
 	if (!InitialiseGL()) 
 		return;
 	
+	GL_DEBUG_HELP::GLHelpers::TurnOnDebugLogging();
+
 	StartUp();
-	InitialiseAppElements();
+	//InitialiseAppElements();
 
 	while(!glfwWindowShouldClose(m_pWindow) 
 		&& !Keyboard::isKeyDown(KEY_ESCAPE))
 	{
+		//printf("%f\n", 1.0f/m_deltaTime);
 		Update( m_deltaTime );
+
+		ShaderHandler::SetUpTimerUniforms(m_elapsedTime, m_deltaTime);
+
+		// Clear colour and depth buffers
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		ApplyCameraUniformSetup();
 		Render();
-		m_pAntTweakGUI->Draw();
+		//m_pAntTweakGUI->Draw();
 
 		// Swap Buffers of Window
 		glfwSwapBuffers(m_pWindow);
@@ -271,7 +256,8 @@ void BaseApp::Run()
 	}
 
 	ShutDown();
-	m_pAntTweakGUI->ShutDown();
+	
+	//m_pAntTweakGUI->ShutDown();
 	
 	ShaderHandler::UnloadAllPrograms();
 

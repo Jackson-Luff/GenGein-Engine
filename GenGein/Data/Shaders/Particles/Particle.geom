@@ -6,6 +6,7 @@ layout(triangle_strip, max_vertices = 4) out;
 
 // Input data from vertex shader
 in vec3 vPosition[];
+in vec3 vVelocity[];
 in float vLifetime[];
 in float vLifespan[];
 
@@ -23,6 +24,7 @@ uniform mat4 Projection;
 uniform mat4 View;
 uniform mat4 World;
 uniform float time;
+uniform float deltaTime;
 
 const float INVERSE_MAX_UINT = 1.0f / 4294967295.0f;
 
@@ -38,7 +40,7 @@ float rand(uint seed, float range)
 void main()
 {
 	// Interp colour
-	vColour = mix( colourStart, colourEnd, vLifetime[0] / vLifespan[0] );
+	vColour = mix( vec4(0.1,0.8,1.0,0.5), vec4(1,0,1,1), (vLifetime[0] / vLifespan[0])-0.5 );
 	
 	// Calculate the size and create the corners of a quad
 	float halfSize = mix(sizeStart, sizeEnd, vLifetime[0] / vLifespan[0] ) * 0.5f;

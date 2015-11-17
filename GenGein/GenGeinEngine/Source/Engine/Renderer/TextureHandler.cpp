@@ -13,7 +13,7 @@ using TextureMap = std::vector<std::pair<const_pChar, sTexture>>;
 TextureMap TextureHandler::m_textureMap = TextureMap();
 
 // Add a texture based on desired name and directory
-const sTexture TextureHandler::LoadTexture(const_pChar a_prog, const_pChar a_name, const_str& a_dir)
+const sTexture TextureHandler::Load2DTexture(const_pChar a_prog, const_pChar a_name, const_str& a_dir)
 {
 	if (DoesTextureExist(a_name)) 
 		return m_textureMap[GetTextureIndex(a_name)].second;
@@ -42,8 +42,8 @@ const sTexture TextureHandler::LoadTexture(const_pChar a_prog, const_pChar a_nam
 	if (imgFormat == 4)
 		imgFormat = GL_RGBA;
 
-	glGenTextures(1, &texture.ID);
-	glBindTexture(GL_TEXTURE_2D, texture.ID);
+	glGenTextures(1, &texture.TextureBuffID);
+	glBindTexture(GL_TEXTURE_2D, texture.TextureBuffID);
 	glTexImage2D(GL_TEXTURE_2D, 0, imgFormat,
 		imgWidth, imgHeight, 0, imgFormat, GL_UNSIGNED_BYTE, data);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -55,6 +55,7 @@ const sTexture TextureHandler::LoadTexture(const_pChar a_prog, const_pChar a_nam
 	printf("SUCCESS: %s Texture Loaded.\n", a_name);
 
 	texture.programID = &ShaderHandler::GetShader(a_prog);
+	texture.TextureType = GL_TEXTURE_2D;
 	texture.textureUniLoc = glGetUniformLocation(*texture.programID, a_name);
 	m_textureMap.push_back({ a_name, texture });
 
@@ -90,8 +91,8 @@ const sTexture TextureHandler::LoadPerlin(const_pChar a_prog, const_pChar a_name
 		}
 	}
 
-	glGenTextures(1, &perlin.ID);
-	glBindTexture(GL_TEXTURE_2D, perlin.ID);
+	glGenTextures(1, &perlin.TextureBuffID);
+	glBindTexture(GL_TEXTURE_2D, perlin.TextureBuffID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, a_dim, a_dim, 0, GL_RED, GL_FLOAT, perlin_data);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -99,8 +100,9 @@ const sTexture TextureHandler::LoadPerlin(const_pChar a_prog, const_pChar a_name
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	perlin.programID = &ShaderHandler::GetShader(a_prog);
+	perlin.TextureType = GL_TEXTURE_2D;
 	perlin.textureUniLoc = glGetUniformLocation(*perlin.programID, a_name);
-
+	
 	m_textureMap.push_back({ a_name, perlin });
 
 	delete[] perlin_data;
@@ -112,8 +114,8 @@ const sTexture TextureHandler::LoadPerlin(const_pChar a_prog, const_pChar a_name
 const sTexture TextureHandler::LoadCubeMap(const_pChar a_prog, const_pChar a_name, std::vector<const_str>& a_faces)
 {
 	sTexture cubeMapTexture;
-	glGenTextures(1, &cubeMapTexture.ID);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture.ID);
+	glGenTextures(1, &cubeMapTexture.TextureBuffID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture.TextureBuffID);
 
 	int width, height, format;
 	unsigned char* data;
@@ -141,8 +143,7 @@ const sTexture TextureHandler::LoadCubeMap(const_pChar a_prog, const_pChar a_nam
 		if (format == 4)
 			format = GL_RGBA;
 
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, format,
-			width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 
 		stbi_image_free(data);
 	}
@@ -155,8 +156,8 @@ const sTexture TextureHandler::LoadCubeMap(const_pChar a_prog, const_pChar a_nam
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 	cubeMapTexture.programID = &ShaderHandler::GetShader(a_prog);
+	cubeMapTexture.TextureType = GL_TEXTURE_CUBE_MAP;
 	cubeMapTexture.textureUniLoc = glGetUniformLocation(*cubeMapTexture.programID, a_name);
-	m_textureMap.push_back({ a_name, cubeMapTexture });
 
 	return cubeMapTexture;
 }
@@ -189,8 +190,9 @@ const void TextureHandler::LoadFBXTexture(const_pChar a_prog, const FBXMaterial*
 
 		sTexture texture = sTexture();
 		
-		texture.ID = a_mat->textures[i]->handle;
+		texture.TextureBuffID = a_mat->textures[i]->handle;
 		texture.programID = &ShaderHandler::GetShader(a_prog);
+		texture.TextureType = GL_TEXTURE_2D;
 		texture.textureUniLoc = glGetUniformLocation(*texture.programID, types[i]);
 		m_textureMap.push_back({ a_mat->textures[i]->path.c_str(), texture });
 	}
@@ -205,14 +207,14 @@ const uint32_t TextureHandler::LoadFrameBuffer(const_pChar a_prog, const_pChar a
 	glGenFramebuffers(1, &m_fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
 
-	glGenTextures(1, &FBO.ID);
-	glBindTexture(GL_TEXTURE_2D, FBO.ID);
+	glGenTextures(1, &FBO.TextureBuffID);
+	glBindTexture(GL_TEXTURE_2D, FBO.TextureBuffID);
 
 	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, a_width, a_height);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, FBO.ID, 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, FBO.TextureBuffID, 0);
 
 	glGenRenderbuffers(1, &m_fboDepth);
 	glBindRenderbuffer(GL_RENDERBUFFER, m_fboDepth);
@@ -236,6 +238,7 @@ const uint32_t TextureHandler::LoadFrameBuffer(const_pChar a_prog, const_pChar a
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	FBO.programID = &ShaderHandler::GetShader(a_prog);
+	FBO.TextureType = GL_TEXTURE_2D;
 	FBO.textureUniLoc = glGetUniformLocation(*FBO.programID, a_name);
 	m_textureMap.push_back({ a_name, FBO });
 
@@ -278,14 +281,14 @@ const void TextureHandler::UnloadTexture(const_pChar a_name)
 {
 	sTexture texture = GetTexture(a_name);
 	
-	glDeleteTextures(1, &texture.ID);
+	glDeleteTextures(1, &texture.TextureBuffID);
 }
 
 const void TextureHandler::UnloadAllTextures()
 {
 	for (auto& it : m_textureMap)
 	{
-		glDeleteTextures(1, &(it.second).ID);
+		glDeleteTextures(1, &(it.second).TextureBuffID);
 	}
 
 	m_textureMap.clear();
@@ -302,9 +305,9 @@ const void TextureHandler::RenderAllTextures()
 
 		//Set Texture Slot
 		glUseProgram(*it.second.programID);
-		glUniform1i(it.second.textureUniLoc, i);
+		glUniform1i(it.second.textureUniLoc, it.second.TextureBuffID);
 		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(GL_TEXTURE_2D, it.second.ID);
+		glBindTexture(it.second.TextureType, it.second.TextureBuffID);
 		i++;
 	}
 }
